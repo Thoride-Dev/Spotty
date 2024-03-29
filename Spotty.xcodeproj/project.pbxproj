@@ -16,6 +16,7 @@
 		43F82E8E2BB614D70003107C /* SpottyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E8D2BB614D70003107C /* SpottyTests.swift */; };
 		43F82E982BB614D70003107C /* SpottyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E972BB614D70003107C /* SpottyUITests.swift */; };
 		43F82E9A2BB614D70003107C /* SpottyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */; };
+		51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		43F82E932BB614D70003107C /* SpottyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpottyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		43F82E972BB614D70003107C /* SpottyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyUITests.swift; sourceTree = "<group>"; };
 		43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightFetcher.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				43F82E802BB614D70003107C /* Persistence.swift */,
 				43F82E822BB614D70003107C /* Spotty.xcdatamodeld */,
 				43F82E7D2BB614D70003107C /* Preview Content */,
+				51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */,
 			);
 			path = Spotty;
 			sourceTree = "<group>";
@@ -197,7 +200,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					43F82E732BB614D50003107C = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -264,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				43F82E812BB614D70003107C /* Persistence.swift in Sources */,
+				51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */,
 				43F82E7A2BB614D50003107C /* ContentView.swift in Sources */,
 				43F82E842BB614D70003107C /* Spotty.xcdatamodeld in Sources */,
 				43F82E782BB614D50003107C /* SpottyApp.swift in Sources */,
@@ -339,6 +343,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -399,6 +404,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -425,9 +431,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -454,9 +461,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
