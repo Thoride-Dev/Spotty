@@ -19,7 +19,7 @@ struct FlightDetailView: View {
 
 
 struct ContentView: View {
-    @StateObject private var flightFetcher = FlightFetcher()
+    @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
 
     var body: some View {
         TabView {
@@ -57,17 +57,22 @@ struct ContentView: View {
                 }
             
             // Settings tab content
-            Text("Settings")
-                .tabItem {
-                    Image(systemName: "gear")
-                    Text("Settings")
-                }
+            NavigationView {
+                            SettingsView()
+                        }
+            .tabItem {
+                Label("Settings", systemImage: "gear")
+            }
         }
         .environmentObject(flightFetcher) // If you want to use flightFetcher across tabs
         .environment(\.colorScheme, .light) // Forces light mode for this view
     }
 }
-
+struct ContentView_Previews2: PreviewProvider {
+    static var previews: some View {
+        ContentView().environmentObject(UserSettings())
+    }
+}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
