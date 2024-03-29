@@ -2,29 +2,28 @@ import SwiftUI
 
 struct FlightDetailView: View {
     let flight: Flight
-    
 
     var body: some View {
         VStack {
             Text("Flight Details")
                 .font(.headline)
             Text("Call Sign: \(flight.callSign ?? "N/A")")
-            
-            
-            // Add more details about the flight here
+            Text("Airline: \(flight.tailNumber ?? "N/A")")
+            Text("Type: \(flight.type ?? "N/A")")
+            Text("Registration: \(flight.registration ?? "N/A")")
         }
         .padding()
-        .navigationBarTitle("Flight \(flight.id)", displayMode: .inline)
-        
+        .navigationBarTitle("Flight \(flight.callSign ?? "Unknown")", displayMode: .inline)
     }
 }
+
 
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher()
 
     var body: some View {
         TabView {
-            // Nearby tab content
+            // x tab content
             VStack {
                 if flightFetcher.flights.isEmpty {
                     Text("Fetching flights nearby...")
@@ -34,6 +33,9 @@ struct ContentView: View {
                             NavigationLink(destination: FlightDetailView(flight: flight)) {
                                 Text(flight.callSign ?? "Unknown Call Sign")
                             }
+                        }
+                        .refreshable {
+                            flightFetcher.refreshFlights()
                         }
                         .navigationBarTitle("Nearby Flights")
                     }

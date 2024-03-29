@@ -5,7 +5,6 @@ import Combine
 struct AircraftInfo: Codable {
     let modeS: String
     let manufacturer: String?
-    let operatorFlagCode: String?
     let registeredOwners: String?
     let registration: String?
     let type: String?
@@ -14,7 +13,6 @@ struct AircraftInfo: Codable {
     enum CodingKeys: String, CodingKey {
         case modeS = "ModeS"
         case manufacturer = "Manufacturer"
-        case operatorFlagCode = "OperatorFlagCode"
         case registeredOwners = "RegisteredOwners"
         case registration = "Registration"
         case type = "Type"
@@ -23,12 +21,15 @@ struct AircraftInfo: Codable {
 }
 
 struct Flight: Identifiable {
-    let id: String // Using icao24 as the unique identifier
+    let id: String  // This is the modeS
     let callSign: String?
     let registration: String?
+    let type: String?
+    let tailNumber: String?
 }
 
 class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
+    private var seenCallSigns = Set<String>()
     private let locationManager = CLLocationManager()
     private let radiusKm: Double = 30
     private let earthRadiusKm: Double = 6371
@@ -40,7 +41,18 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
     }
+    
+    func refreshFlights() {
+        // Stop previous location updates (if needed)
+        locationManager.stopUpdatingLocation()
 
+        // Start location updates which will trigger a new fetch
+        startLocationUpdates()
+
+        // You could also directly call `calculateBoundingBox` with the last known location
+        // to refresh the flights without starting location updates again.
+        // This depends on how you want to structure the refresh logic.
+    }
     func startLocationUpdates() {
         locationManager.startUpdatingLocation()
     }
@@ -69,7 +81,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         guard let url = URL(string: urlString) else { return }
         
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let data = data, error == nil else {
+            guard let self = self, let data = data, error == nil else {
                 print("Network request failed: \(error?.localizedDescription ?? "No error description")")
                 return
             }
@@ -77,17 +89,25 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
             do {
                 if let jsonResult = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let states = jsonResult["states"] as? [[Any]] {
-                    states.forEach { state in
+                    var localSeenCallSigns = Set<String>()
+                    
+                    for state in states {
                         guard let icao24 = state[0] as? String,
-                              let callSign = state[1] as? String else { return }
+                              let callSignUnwrapped = state[1] as? String else { continue }
 
-                        self?.fetchAircraftInfo(hex: icao24) { aircraftInfoOptional in
-                            // Ensure aircraftInfo is not nil before proceeding
+                        let callSign = callSignUnwrapped.trimmingCharacters(in: .whitespaces)
+                        
+                        // Filter out call signs that are too short or don't have enough information
+                        if callSign.isEmpty || callSign.count < 3 || !callSign.contains(where: { $0.isNumber }) { continue }
+                        
+                        // Ensure we don't process duplicate call signs
+                        if localSeenCallSigns.contains(callSign) { continue }
+                        localSeenCallSigns.insert(callSign)
+
+                        self.fetchAircraftInfo(hex: icao24) { aircraftInfoOptional in
                             guard let aircraftInfo = aircraftInfoOptional else { return }
                             
-                            // Now that aircraftInfo is unwrapped, check for relevant information
                             let hasRelevantInfo = aircraftInfo.manufacturer != nil ||
-                                                  aircraftInfo.operatorFlagCode != nil ||
                                                   aircraftInfo.registeredOwners != nil ||
                                                   aircraftInfo.registration != nil ||
                                                   aircraftInfo.type != nil ||
@@ -95,8 +115,11 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
 
                             if hasRelevantInfo {
                                 DispatchQueue.main.async {
-                                    // Use the unwrapped aircraftInfo to append a new Flight
-                                    self?.flights.append(Flight(id: aircraftInfo.modeS, callSign: callSign, registration: aircraftInfo.registration))
+                                    self.flights.append(Flight(id: aircraftInfo.modeS,
+                                                                callSign: callSign,
+                                                                registration: aircraftInfo.registration,
+                                                                type: aircraftInfo.type,
+                                                                tailNumber: aircraftInfo.registeredOwners))
                                 }
                             }
                         }
@@ -110,6 +133,9 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
 
 
+
+
+
     private func fetchAircraftInfo(hex: String, completion: @escaping (AircraftInfo?) -> Void) {
         guard let url = URL(string: "https://hexdb.io/api/v1/aircraft/\(hex)") else {
             print("Invalid URL")
@@ -119,20 +145,18 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 print("Error fetching aircraft info: \(error?.localizedDescription ?? "Unknown error")")
-                completion(nil)  // Notify the caller that the fetch failed.
+                completion(nil)  // If there's an error, don't proceed with this aircraft.
                 return
             }
             
             do {
                 let decoder = JSONDecoder()
                 let aircraftInfo = try decoder.decode(AircraftInfo.self, from: data)
-                // Assuming 'modeS' is mandatory, check if it's present and not empty.
-                guard !aircraftInfo.modeS.isEmpty else {
-                    print("Aircraft info missing essential 'ModeS' data; skipping.")
-                    completion(nil)  // Essential info is missing, so don't proceed with this aircraft.
-                    return
-                }
-                completion(aircraftInfo)  // Successfully decoded and contains essential info.
+                completion(aircraftInfo)  // Successfully decoded, all keys are present.
+            } catch DecodingError.keyNotFound(_, let context) {
+                // If a key is missing, don't proceed with this aircraft.
+                print("Missing key: \(context.debugDescription)")
+                completion(nil)
             } catch {
                 print("Error decoding aircraft info: \(error)")
                 completion(nil)  // There was a problem decoding, so don't proceed with this aircraft.
@@ -140,5 +164,6 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         }
         task.resume()
     }
+
 
 }
