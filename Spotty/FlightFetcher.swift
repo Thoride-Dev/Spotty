@@ -115,13 +115,17 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
 
                             if hasRelevantInfo {
                                 DispatchQueue.main.async {
-                                    self.flights.append(Flight(id: aircraftInfo.modeS,
-                                                                callSign: callSign,
-                                                                registration: aircraftInfo.registration,
-                                                                type: aircraftInfo.type,
-                                                                tailNumber: aircraftInfo.registeredOwners))
+                                    // Check if the list already contains a flight with the same id (modeS)
+                                    if !self.flights.contains(where: { $0.id == aircraftInfo.modeS }) {
+                                        self.flights.append(Flight(id: aircraftInfo.modeS,
+                                                                    callSign: callSign,
+                                                                    registration: aircraftInfo.registration,
+                                                                    type: aircraftInfo.type,
+                                                                    tailNumber: aircraftInfo.registeredOwners))
+                                    }
                                 }
                             }
+
                         }
                     }
                 }
