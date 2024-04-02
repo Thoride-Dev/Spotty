@@ -23,8 +23,17 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            // x tab content
             VStack {
+                Text("Nearby Flights")
+                    .font(.largeTitle)
+                    .padding()
+                
+                if let lastUpdated = flightFetcher.lastUpdated {
+                    Text("Last updated: \(lastUpdated, formatter: Self.dateFormatter)")
+                        .font(.caption)
+                        .padding(.bottom, 1)
+                }
+                
                 if flightFetcher.flights.isEmpty {
                     Text("Fetching flights nearby...")
                 } else {
@@ -37,7 +46,7 @@ struct ContentView: View {
                         .refreshable {
                             flightFetcher.refreshFlights()
                         }
-                        .navigationBarTitle("Nearby Flights")
+                        .navigationBarTitleDisplayMode(.inline)
                     }
                 }
             }
@@ -58,16 +67,23 @@ struct ContentView: View {
             
             // Settings tab content
             NavigationView {
-                            SettingsView()
-                        }
+                SettingsView()
+            }
             .tabItem {
                 Label("Settings", systemImage: "gear")
             }
         }
-        .environmentObject(flightFetcher) // If you want to use flightFetcher across tabs
-        .environment(\.colorScheme, .light) // Forces light mode for this view
+        .environmentObject(flightFetcher) // Ensure you pass flightFetcher as an environment object
+    }
+    
+    private static var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .medium
+        return formatter
     }
 }
+
 struct ContentView_Previews2: PreviewProvider {
     static var previews: some View {
         ContentView().environmentObject(UserSettings())
