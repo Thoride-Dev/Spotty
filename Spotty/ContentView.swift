@@ -1,37 +1,42 @@
 import SwiftUI
 
-
 struct CustomFlightView: View {
     let flight: Flight
     @State private var isChecked: Bool = false
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(flight.callSign ?? "Unknown Flight")
-                    .font(.headline)
-                HStack {
-                    Text("\(nil ?? "N/A") -> \(nil ?? "N/A")")
-                        .font(.subheadline)
-                    Spacer()
-                    Image(systemName: "airplane")
-                    Text(flight.type ?? "N/A")
-                    Spacer()
-                    Image(systemName: "flag")
-                    Text(flight.registration ?? "N/A")
+        Button(action: {
+            // Toggle the checkbox when the entire card is tapped
+            self.isChecked.toggle()
+        }) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(flight.callSign ?? "Unknown Flight")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    HStack {
+                        Text("\(nil ?? "N/A") -> \(nil ?? "N/A")")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "airplane")
+                        Text(flight.type ?? "N/A")
+                        Spacer()
+                        Image(systemName: "flag")
+                        Text(flight.registration ?? "N/A")
+                    }
                 }
+                
+                Spacer()
+                
+                // Checkbox circle
+                Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.primary)
             }
-            
-            Spacer()
-            
-            // Checkbox circle
-            Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .onTapGesture {
-                    self.isChecked.toggle()
-                }
         }
+        .buttonStyle(PlainButtonStyle())
         .padding()
         .overlay(
             RoundedRectangle(cornerRadius: 10)
@@ -39,6 +44,8 @@ struct CustomFlightView: View {
         )
     }
 }
+
+
 
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
