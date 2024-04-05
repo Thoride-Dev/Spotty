@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class UserSettings: ObservableObject {
-    @Published var isDebugModeEnabled: Bool = true
+    @Published var isDebugModeEnabled: Bool = false
 }
 
 struct SettingsView: View {
