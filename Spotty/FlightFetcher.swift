@@ -36,6 +36,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     private var userSettings: UserSettings
 
     @Published var flights: [Flight] = []
+    @Published var lastUpdated: Date?
     
     
     init(userSettings: UserSettings) {
@@ -48,25 +49,36 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     
     func refreshFlights() {
         DispatchQueue.main.async {
-            //Clear existing flights data to reflect the refresh state in the UI.
             self.flights.removeAll()
             self.seenCallSigns.removeAll()
         }
 
-        // compatability issue - checking location auth status lags UI
-        
-        // Stop previous location updates
-//        locationManager.stopUpdatingLocation()
-
-        // Check if location services are enabled and authorized before starting updates
-//        if locationManager.authorizationStatus() {
-//
-//        } else {
-//            if self.userSettings.isDebugModeEnabled {
-//                print("Location services not enabled")
-//            }
-//        }
+        // Check if location services are enabled and if the app is authorized to use them
+        if CLLocationManager.locationServicesEnabled() {
+            switch locationManager.authorizationStatus {
+                case .authorizedWhenInUse, .authorizedAlways:
+                    // Location services are authorized, start updating location
+                    startLocationUpdates()
+                case .notDetermined:
+                    // The user has not yet made a choice regarding whether the app can use location services
+                    locationManager.requestWhenInUseAuthorization()
+                case .restricted, .denied:
+                    // The app is not authorized to use location services
+                    if userSettings.isDebugModeEnabled {
+                        print("Location services not authorized or restricted.")
+                    }
+                @unknown default:
+                    // Handle any future cases
+                    break
+            }
+        } else {
+            // Location services are not enabled
+            if userSettings.isDebugModeEnabled {
+                print("Location services not enabled.")
+            }
+        }
     }
+
 
     func startLocationUpdates() {
         locationManager.startUpdatingLocation()
@@ -132,6 +144,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
 
                             if hasRelevantInfo {
                                 DispatchQueue.main.async {
+                                    self.lastUpdated = Date()
                                     // Check if the list already contains a flight with the same id (modeS)
                                     if !self.flights.contains(where: { $0.id == aircraftInfo.modeS }) {
                                         self.flights.append(Flight(id: aircraftInfo.modeS,
