@@ -1,24 +1,5 @@
 import SwiftUI
 
-struct FlightDetailView: View {
-    let flight: Flight
-
-    var body: some View {
-        VStack {
-            Text("Flight Details")
-                .font(.headline)
-            Text("Call Sign: \(flight.callSign ?? "N/A")")
-            Text("Airline: \(flight.type ?? "N/A")")
-            Text("Type: \(flight.type ?? "N/A")")
-            Text("Registration: \(flight.registration ?? "N/A")")
-        }
-        .padding()
-        .navigationBarTitle("Flight \(flight.callSign ?? "Unknown")", displayMode: .inline)
-    }
-}
-
-import SwiftUI
-
 
 struct CustomFlightView: View {
     let flight: Flight
@@ -66,16 +47,6 @@ struct ContentView: View {
         TabView {
             // Nearby flights tab
             VStack {
-                Text("Nearby Flights")
-                    .font(.largeTitle)
-                    .padding()
-                
-                if let lastUpdated = flightFetcher.lastUpdated {
-                    Text("Last updated: \(lastUpdated, formatter: Self.dateFormatter)")
-                        .font(.caption)
-                        .padding(.bottom, 1)
-                }
-                
                 if flightFetcher.flights.isEmpty {
                     Text("Fetching flights nearby...")
                 } else {
@@ -89,6 +60,10 @@ struct ContentView: View {
                     }
                     .refreshable {
                         flightFetcher.refreshFlights()
+                    }
+                }
+            }
+            .onAppear {
                 flightFetcher.startLocationUpdates()
             }
             .tabItem {
@@ -116,18 +91,6 @@ struct ContentView: View {
     }
 }
 
-        .environmentObject(flightFetcher) // Ensure you pass flightFetcher as an environment object
-    }
-    
-    private static var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .medium
-        return formatter
-    static var previews: some View {
-        ContentView().environmentObject(UserSettings())
-    }
-}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environmentObject(UserSettings())
