@@ -1,21 +1,50 @@
 import SwiftUI
 
-struct FlightDetailView: View {
+struct CustomFlightView: View {
     let flight: Flight
+    @State private var isChecked: Bool = false
 
     var body: some View {
-        VStack {
-            Text("Flight Details")
-                .font(.headline)
-            Text("Call Sign: \(flight.callSign ?? "N/A")")
-            Text("Airline: \(flight.tailNumber ?? "N/A")")
-            Text("Type: \(flight.type ?? "N/A")")
-            Text("Registration: \(flight.registration ?? "N/A")")
+        Button(action: {
+            // Toggle the checkbox when the entire card is tapped
+            self.isChecked.toggle()
+        }) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(flight.callSign ?? "Unknown Flight")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    HStack {
+                        Text("\(nil ?? "N/A") -> \(nil ?? "N/A")")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "airplane")
+                        Text(flight.type ?? "N/A")
+                        Spacer()
+                        Image(systemName: "flag")
+                        Text(flight.registration ?? "N/A")
+                    }
+                }
+                
+                Spacer()
+                
+                // Checkbox circle
+                Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.primary)
+            }
         }
+        .buttonStyle(PlainButtonStyle())
         .padding()
-        .navigationBarTitle("Flight \(flight.callSign ?? "Unknown")", displayMode: .inline)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.gray, lineWidth: 1)
+        )
     }
 }
+
 
 
 struct ContentView: View {
@@ -23,30 +52,21 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
+            // Nearby flights tab
             VStack {
-                Text("Nearby Flights")
-                    .font(.largeTitle)
-                    .padding()
-                
-                if let lastUpdated = flightFetcher.lastUpdated {
-                    Text("Last updated: \(lastUpdated, formatter: Self.dateFormatter)")
-                        .font(.caption)
-                        .padding(.bottom, 1)
-                }
-                
                 if flightFetcher.flights.isEmpty {
                     Text("Fetching flights nearby...")
                 } else {
-                    NavigationView {
-                        List(flightFetcher.flights) { flight in
-                            NavigationLink(destination: FlightDetailView(flight: flight)) {
-                                Text(flight.callSign ?? "Unknown Call Sign")
+                    ScrollView {
+                        VStack(spacing: 10) {
+                            ForEach(flightFetcher.flights) { flight in
+                                CustomFlightView(flight: flight)
                             }
                         }
-                        .refreshable {
-                            flightFetcher.refreshFlights()
-                        }
-                        .navigationBarTitleDisplayMode(.inline)
+                        .padding(.horizontal)
+                    }
+                    .refreshable {
+                        flightFetcher.refreshFlights()
                     }
                 }
             }
@@ -57,40 +77,29 @@ struct ContentView: View {
                 Image(systemName: "dot.radiowaves.left.and.right")
                 Text("Nearby")
             }
-            
+
             // Spotted tab content
-            Text("Spotted")
+            Text("Spotted flights will be displayed here.")
                 .tabItem {
                     Image(systemName: "eye.fill")
                     Text("Spotted")
                 }
-            
+
             // Settings tab content
             NavigationView {
                 SettingsView()
             }
             .tabItem {
-                Label("Settings", systemImage: "gear")
+                Image(systemName: "gear")
+                Text("Settings")
             }
         }
-        .environmentObject(flightFetcher) // Ensure you pass flightFetcher as an environment object
-    }
-    
-    private static var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .medium
-        return formatter
+        .environment(\.colorScheme, .light) // Forces light mode for this view
     }
 }
 
-struct ContentView_Previews2: PreviewProvider {
-    static var previews: some View {
-        ContentView().environmentObject(UserSettings())
-    }
-}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView().environmentObject(UserSettings())
     }
 }
