@@ -1,54 +1,118 @@
 import SwiftUI
 
 struct CustomFlightView: View {
+    @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     let flight: Flight
     @State private var isChecked: Bool = false
+    private var isFlightSpotted: Bool {
+        spottedFlightsStore.spottedFlights.contains(where: { $0.id == flight.id })
+    }
 
     var body: some View {
         Button(action: {
-            // Toggle the checkbox when the entire card is tapped
-            self.isChecked.toggle()
+            withAnimation(.easeIn(duration: 0.15)) {
+                self.isChecked.toggle()
+            }
+            if self.isChecked {
+                self.spottedFlightsStore.addFlight(self.flight)
+            } else {
+                self.spottedFlightsStore.removeFlight(self.flight)
+            }
         }) {
             HStack {
-                VStack(alignment: .leading) {
-                    Text(flight.callSign ?? "Unknown Flight")
+                // VStack for the call sign and image
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(flight.callSign ?? "Unknown")
                         .font(.headline)
                         .foregroundColor(.primary)
+                    Image("preview-airline")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50) // Adjust the size as needed
+                }
+                .frame(width: 60) // Fix the width for the call sign and image section
+
+                // Fixed-width space before the vertical divider
+                Spacer()
+                    .frame(width: 20) // Adjust the width as needed
+                
+                // Vertical Divider
+                Rectangle()
+                    .fill(Color.gray)
+                    .frame(width: 1, height: 50) // Adjust height as needed
+                
+                // Fixed-width space after the vertical divider
+                Spacer()
+                    .frame(width: 20) // Adjust the width as needed
+                
+                // Right side VStack
+                VStack(alignment: .center, spacing: 8) { // Adjust the spacing as needed
+                    // Destination Text
+                    Text("N/A -> N/A")
+                        .font(.largeTitle)
+                        
+                    // Airplane Type and Registration
                     HStack {
-                        Text("\(nil ?? "N/A") -> \(nil ?? "N/A")")
-                            .font(.subheadline)
-                            .foregroundColor(.primary)
-                        Spacer()
                         Image(systemName: "airplane")
+                            .foregroundColor(.primary)
                         Text(flight.type ?? "N/A")
-                        Spacer()
+                            .foregroundColor(.primary)
                         Image(systemName: "flag")
                         Text(flight.registration ?? "N/A")
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
-                
-                // Checkbox circle
                 Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
                     .foregroundColor(.primary)
+                
+                
             }
+            .padding(.vertical, 10) // Vertical padding within the HStack
+            .padding(.horizontal, 20)
+        
         }
         .buttonStyle(PlainButtonStyle())
-        .padding()
+        .background(Color.white) // Set the background color for the shadow to be effective
+        .cornerRadius(10) // Rounded corners
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .frame(width: 400, height: 150) // Set the fixed size for the button's frame
         .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.gray, lineWidth: 1)
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Color.clear, lineWidth: 1)
+                
+                .onAppear {
+                    // Initialize isChecked based on whether the flight is spotted
+                    self.isChecked = isFlightSpotted
+                }
         )
+        
+    }
+    
+}
+
+struct SpottedFlightsView: View {
+    @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
+
+    var body: some View {
+        List {
+            ForEach(spottedFlightsStore.spottedFlights) { storableFlight in
+                VStack(alignment: .leading) {
+                    Text(storableFlight.callSign ?? "Unknown CallSign")
+                        .font(.headline)
+                }
+            }
+        }
+        .navigationTitle("Spotted Flights")
     }
 }
 
-
-
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
+    @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
 
     var body: some View {
         TabView {
@@ -78,28 +142,29 @@ struct ContentView: View {
                 Text("Nearby")
             }
 
-            // Spotted tab content
-            Text("Spotted flights will be displayed here.")
+            SpottedFlightsView()
                 .tabItem {
                     Image(systemName: "eye.fill")
                     Text("Spotted")
+                
+                .environmentObject(spottedFlightsStore)
                 }
 
-            // Settings tab content
             NavigationView {
-                SettingsView()
+                SettingsView() // Make sure you have a SettingsView defined or replace this with your settings content
             }
             .tabItem {
-                Image(systemName: "gear")
-                Text("Settings")
+                Label("Settings", systemImage: "gear")
             }
         }
-        .environment(\.colorScheme, .light) // Forces light mode for this view
+        // Assuming .light mode is desired across the app; adjust as needed
+        .environment(\.colorScheme, .light)
     }
 }
 
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(UserSettings())
+        ContentView().environmentObject(SpottedFlightsStore())
     }
 }

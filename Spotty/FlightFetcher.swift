@@ -27,6 +27,24 @@ struct Flight: Identifiable {
     let type: String?
     let tailNumber: String?
 }
+struct StorableFlight: Codable, Identifiable {
+    let id: String
+    let callSign: String?
+    let registration: String?
+    let type: String?
+    let tailNumber: String?
+    
+    init(from flight: Flight) {
+        self.id = flight.id
+        self.callSign = flight.callSign
+        self.registration = flight.registration
+        self.type = flight.type
+        self.tailNumber = flight.tailNumber
+    }
+    
+    // If you can reconstruct Flight from StorableFlight, you might add a method or initializer here.
+    // For now, it seems we just need to identify flights, not fully reconstruct them.
+}
 
 class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     private var seenCallSigns = Set<String>()
@@ -44,7 +62,6 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         super.init()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
-        // Additional setup...
     }
     
     func refreshFlights() {
@@ -101,6 +118,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         let lomax = location.longitude + dx
 
         fetchFlightData(lamin: lamin, lomin: lomin, lamax: lamax, lomax: lomax)
+     
     }
 
     private func fetchFlightData(lamin: Double, lomin: Double, lamax: Double, lomax: Double) {
