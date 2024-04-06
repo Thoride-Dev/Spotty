@@ -439,7 +439,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
@@ -469,7 +469,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
