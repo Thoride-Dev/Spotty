@@ -96,19 +96,48 @@ struct CustomFlightView: View {
 
 struct SpottedFlightsView: View {
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
+    @State private var showingConfirmation = false
 
     var body: some View {
-        List {
-            ForEach(spottedFlightsStore.spottedFlights) { storableFlight in
-                VStack(alignment: .leading) {
-                    Text(storableFlight.callSign ?? "Unknown CallSign")
-                        .font(.headline)
+        NavigationView {
+            List {
+                ForEach(spottedFlightsStore.spottedFlights) { flight in
+                    Text(flight.callSign ?? "Unknown CallSign")
+                }
+                .onDelete(perform: deleteItems) // Swipe to delete individual flights
+            }
+            .navigationTitle("Spotted Flights")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingConfirmation = true // Show confirmation for clearing all flights
+                    }) {
+                        Image(systemName: "trash")
+                    }
+                    .disabled(spottedFlightsStore.spottedFlights.isEmpty)
                 }
             }
+            .alert(isPresented: $showingConfirmation) {
+                Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("Do you want to delete all spotted flights?"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        spottedFlightsStore.clearFlights() // Clears all flights
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
         }
-        .navigationTitle("Spotted Flights")
+    }
+
+    // Function to delete individual flights
+    private func deleteItems(at offsets: IndexSet) {
+        spottedFlightsStore.spottedFlights.remove(atOffsets: offsets)
+        // Ensure to handle any necessary updates or persistence changes here as well
     }
 }
+
+
 
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
@@ -120,6 +149,7 @@ struct ContentView: View {
             VStack {
                 if flightFetcher.flights.isEmpty {
                     Text("Fetching flights nearby...")
+                    ProgressView()
                 } else {
                     ScrollView {
                         VStack(spacing: 10) {
@@ -148,6 +178,7 @@ struct ContentView: View {
                     Text("Spotted")
                 
                 .environmentObject(spottedFlightsStore)
+                    
                 }
 
             NavigationView {
@@ -159,6 +190,20 @@ struct ContentView: View {
         }
         // Assuming .light mode is desired across the app; adjust as needed
         .environment(\.colorScheme, .light)
+    }
+}
+
+struct ClearSpottedFlightsButton: View {
+    @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
+
+    var body: some View {
+        Button("Clear Spotted Flights") {
+            spottedFlightsStore.clearFlights()
+        }
+        .padding()
+        .background(Color.red) // Styling for the button
+        .foregroundColor(.white)
+        .clipShape(Capsule()) // Makes the button have rounded corners
     }
 }
 

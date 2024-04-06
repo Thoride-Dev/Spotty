@@ -18,7 +18,9 @@ class SpottedFlightsStore: ObservableObject {
     init() {
         self.spottedFlights = SpottedFlightsStore.loadSpottedFlights()
     }
-
+    func clearFlights() {
+        self.spottedFlights.removeAll()
+    }
     func addFlight(_ flight: Flight) {
         let storableFlight = StorableFlight(from: flight)
         if !self.spottedFlights.contains(where: { $0.id == flight.id }) {
