@@ -21,25 +21,26 @@ struct CustomFlightView: View {
         }) {
             HStack {
                 // VStack for the call sign and image
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text(flight.callSign ?? "Unknown")
                         .font(.headline)
-                        .foregroundColor(.primary)
+                        .foregroundColor(.primary) // Ensures text color is set to the primary color
+
                     Image("preview-airline")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 50, height: 50) // Adjust the size as needed
+                        .frame(width: 80, height: 50) // Adjust the size as needed
                 }
                 .frame(width: 60) // Fix the width for the call sign and image section
 
                 // Fixed-width space before the vertical divider
                 Spacer()
-                    .frame(width: 20) // Adjust the width as needed
+                    .frame(width: 40) // Adjust the width as needed
                 
                 // Vertical Divider
                 Rectangle()
                     .fill(Color.gray)
-                    .frame(width: 1, height: 50) // Adjust height as needed
+                    .frame(width: 1, height: 80) // Adjust height as needed
                 
                 // Fixed-width space after the vertical divider
                 Spacer()
@@ -48,8 +49,16 @@ struct CustomFlightView: View {
                 // Right side VStack
                 VStack(alignment: .center, spacing: 8) { // Adjust the spacing as needed
                     // Destination Text
-                    Text("\(flight.origin ?? "N/A") -> \(flight.destination ?? "N/A")")
-                        .font(.largeTitle)
+                    HStack(spacing: 8) {
+                        Text(flight.origin ?? "N/A")
+                        
+                        Image(systemName: "arrow.forward")
+                            .font(.title)
+                        
+                        Text(flight.destination ?? "N/A")
+                    }
+                    .font(.title)
+
                         
                     // Airplane Type and Registration
                     HStack {
