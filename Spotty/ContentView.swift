@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CustomFlightView: View {
+    let fetcher = AirportInfoFetcher()
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     let flight: Flight
     @State private var isChecked: Bool = false
@@ -52,6 +53,7 @@ struct CustomFlightView: View {
                     HStack(spacing: 8) {
                         Text(flight.origin ?? "N/A")
                         
+                        
                         Image(systemName: "arrow.forward")
                             .font(.title)
                         
@@ -66,7 +68,7 @@ struct CustomFlightView: View {
                             .foregroundColor(.primary)
                         Text(flight.type ?? "N/A")
                             .foregroundColor(.primary)
-                        Image(systemName: "flag")
+                        Image("airplane.tail")
                         Text(flight.registration ?? "N/A")
                     }
                 }
@@ -129,6 +131,9 @@ struct SpottedFlightsView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             Text("ICAO: \(flight.id)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Text("Date Spotted: \(flight.formattedDate)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }

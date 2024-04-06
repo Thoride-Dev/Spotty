@@ -35,6 +35,13 @@ struct StorableFlight: Codable, Identifiable {
     let registration: String?
     let type: String?
     let tailNumber: String?
+    let dateSpotted: Date
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short // Uses the user's preferred date format
+        formatter.timeStyle = .short // Uses the user's preferred time format
+        return formatter.string(from: dateSpotted)
+    }
     
     init(from flight: Flight) {
         self.id = flight.id
@@ -42,6 +49,7 @@ struct StorableFlight: Codable, Identifiable {
         self.registration = flight.registration
         self.type = flight.type
         self.tailNumber = flight.tailNumber
+        self.dateSpotted = Date()
     }
     
     // If you can reconstruct Flight from StorableFlight, you might add a method or initializer here.
