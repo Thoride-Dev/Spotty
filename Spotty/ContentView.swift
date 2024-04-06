@@ -48,7 +48,7 @@ struct CustomFlightView: View {
                 // Right side VStack
                 VStack(alignment: .center, spacing: 8) { // Adjust the spacing as needed
                     // Destination Text
-                    Text("N/A -> N/A")
+                    Text("\(flight.origin ?? "N/A") -> \(flight.destination ?? "N/A")")
                         .font(.largeTitle)
                         
                     // Airplane Type and Registration
