@@ -88,3 +88,6 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+# Ignore specific project file for Spotty.xcodeproj
+Spotty.xcodeproj/project.pbxproj
