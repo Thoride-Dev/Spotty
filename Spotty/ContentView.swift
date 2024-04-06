@@ -7,7 +7,6 @@ struct CustomFlightView: View {
     private var isFlightSpotted: Bool {
         spottedFlightsStore.spottedFlights.contains(where: { $0.id == flight.id })
     }
-
     var body: some View {
         Button(action: {
             withAnimation(.easeIn(duration: 0.15)) {
@@ -122,7 +121,12 @@ struct SpottedFlightsView: View {
                             Text("ICAO: \(flight.id)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
-                            Text("Origin: \(flight)")
+                            Text("Origin: \(flight.origin?.name ?? "N/A") - \(flight.origin?.country_code ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Text("Destination: \(flight.destination?.name ?? "N/A")- \(flight.destination?.country_code ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
                         }
                         
                         Spacer()
