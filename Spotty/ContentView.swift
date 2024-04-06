@@ -110,10 +110,16 @@ struct SpottedFlightsView: View {
                                 .font(.headline)
                             
                             // Displaying the tail number if available
+                            Text("Airline: \(flight.tailNumber ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                             Text("Registration: \(flight.registration ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             Text("Aircraft: \(flight.type ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Text("ICAO: \(flight.id)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
