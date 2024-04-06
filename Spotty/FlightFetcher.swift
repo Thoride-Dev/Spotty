@@ -20,14 +20,14 @@ struct AircraftInfo: Codable {
     }
 }
 
-struct Flight: Identifiable {
+struct Flight: Codable, Identifiable {
     let id: String  // This is the modeS
     let callSign: String?
     let registration: String?
     let type: String?
     let tailNumber: String?
-    let origin: String?
-    let destination: String?
+    let origin: Airport?
+    let destination: Airport?
 }
 struct StorableFlight: Codable, Identifiable {
     let id: String
@@ -35,17 +35,40 @@ struct StorableFlight: Codable, Identifiable {
     let registration: String?
     let type: String?
     let tailNumber: String?
+    let origin: Airport?
+    let destination: Airport?
     
-    init(from flight: Flight) {
-        self.id = flight.id
-        self.callSign = flight.callSign
-        self.registration = flight.registration
-        self.type = flight.type
-        self.tailNumber = flight.tailNumber
+    enum CodingKeys: String, CodingKey {
+        case id
+        case callSign = "call_sign"
+        case registration
+        case type
+        case tailNumber = "tail_number"
+        case origin
+        case destination
     }
     
-    // If you can reconstruct Flight from StorableFlight, you might add a method or initializer here.
-    // For now, it seems we just need to identify flights, not fully reconstruct them.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.callSign = try container.decodeIfPresent(String.self, forKey: .callSign)
+        self.registration = try container.decodeIfPresent(String.self, forKey: .registration)
+        self.type = try container.decodeIfPresent(String.self, forKey: .type)
+        self.tailNumber = try container.decodeIfPresent(String.self, forKey: .tailNumber)
+        self.origin = try container.decodeIfPresent(Airport.self, forKey: .origin)
+        self.destination = try container.decodeIfPresent(Airport.self, forKey: .destination)
+    }
+}
+
+
+struct Airport: Codable{
+    let icao: String?
+    let iata: String?
+    let name: String?
+    let country_code: String?
+    let latitude: Float?
+    let longitude: Float?
+    let region_name: String?
 }
 
 class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
@@ -163,19 +186,24 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                             aircraftInfo.icaoTypeCode != nil
                             
                             self.getRouteInfo(for: callSign) { origin, destination in
-                                
-                                if hasRelevantInfo {
-                                    DispatchQueue.main.async {
-                                        self.lastUpdated = Date()
-                                        // Check if the list already contains a flight with the same id (modeS)
-                                        if !self.flights.contains(where: { $0.id == aircraftInfo.modeS }) {
-                                            self.flights.append(Flight(id: aircraftInfo.modeS,
-                                                                       callSign: callSign,
-                                                                       registration: aircraftInfo.registration,
-                                                                       type: aircraftInfo.type,
-                                                                       tailNumber: aircraftInfo.registeredOwners,
-                                                                       origin: origin,
-                                                                       destination: destination))
+                                if origin != nil && destination != nil {
+                                    let origin_aiport = self.getAirportInfo(for: origin!)
+                                    let destination_airport = self.getAirportInfo(for: destination!)
+                                    
+                                    
+                                    if hasRelevantInfo {
+                                        DispatchQueue.main.async {
+                                            self.lastUpdated = Date()
+                                            // Check if the list already contains a flight with the same id (modeS)
+                                            if !self.flights.contains(where: { $0.id == aircraftInfo.modeS }) {
+                                                self.flights.append(Flight(id: aircraftInfo.modeS,
+                                                                           callSign: callSign,
+                                                                           registration: aircraftInfo.registration,
+                                                                           type: aircraftInfo.type,
+                                                                           tailNumber: aircraftInfo.registeredOwners,
+                                                                           origin: origin_aiport!,
+                                                                           destination: destination_airport!))
+                                            }
                                         }
                                     }
                                 }
@@ -273,6 +301,51 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         } else {
             print("Invalid URL")
             completion(nil, nil)
+        }
+    }
+    
+    func getAirportInfo(for icao: String) -> Airport? {
+        let urlString = "https://hexdb.io/api/v1/airport/icao/\(icao)"
+        if let url = URL(string: urlString) {
+            let semaphore = DispatchSemaphore(value: 0)
+            var airportInfo: Airport?
+            
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                defer { semaphore.signal() }
+                
+                if let error = error {
+                    print("Error: \(error)")
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    print("Error: Invalid response")
+                    return
+                }
+                
+                if let data = data {
+                    do {
+                        if let airportData = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                            airportInfo = Airport(icao: airportData["icao"] as? String,
+                                                  iata: airportData["iata"] as? String,
+                                                  name: airportData["airport"] as? String,
+                                                  country_code: airportData["country_code"] as? String,
+                                                  latitude: airportData["latitude"] as? Float,
+                                                  longitude: airportData["longitude"] as? Float,
+                                                  region_name: airportData["region_name"] as? String)
+                        }
+                    } catch {
+                        print("Error parsing JSON: \(error)")
+                    }
+                }
+            }.resume()
+            
+            semaphore.wait()
+            return airportInfo
+        } else {
+            print("Invalid URL")
+            return nil
         }
     }
 }

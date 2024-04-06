@@ -48,7 +48,7 @@ struct CustomFlightView: View {
                 // Right side VStack
                 VStack(alignment: .center, spacing: 8) { // Adjust the spacing as needed
                     // Destination Text
-                    Text("\(flight.origin ?? "N/A") -> \(flight.destination ?? "N/A")")
+                    Text("\(flight.origin?.icao ?? "N/A") -> \(flight.destination?.icao ?? "N/A")")
                         .font(.largeTitle)
                         
                     // Airplane Type and Registration
@@ -108,7 +108,7 @@ struct SpottedFlightsView: View {
                             // Assuming callSign is used for the airline name or flight number
                             Text(flight.callSign ?? "Unknown Flight")
                                 .font(.headline)
-                            
+
                             // Displaying the tail number if available
                             Text("Airline: \(flight.tailNumber ?? "N/A")")
                                 .font(.subheadline)
@@ -122,6 +122,7 @@ struct SpottedFlightsView: View {
                             Text("ICAO: \(flight.id)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
+                            Text("Origin: \(flight)")
                         }
                         
                         Spacer()
