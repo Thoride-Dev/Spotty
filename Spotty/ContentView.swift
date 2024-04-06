@@ -102,7 +102,25 @@ struct SpottedFlightsView: View {
         NavigationView {
             List {
                 ForEach(spottedFlightsStore.spottedFlights) { flight in
-                    Text(flight.callSign ?? "Unknown CallSign")
+                    // Using HStack to place text views side by side
+                    HStack {
+                        VStack(alignment: .leading) {
+                            // Assuming callSign is used for the airline name or flight number
+                            Text(flight.callSign ?? "Unknown Flight")
+                                .font(.headline)
+                            
+                            // Displaying the tail number if available
+                            Text("Registration: \(flight.registration ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Text("Aircraft: \(flight.type ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                    }
                 }
                 .onDelete(perform: deleteItems) // Swipe to delete individual flights
             }
@@ -129,11 +147,10 @@ struct SpottedFlightsView: View {
             }
         }
     }
-
-    // Function to delete individual flights
+    
+    // Assuming you have a deleteItems function defined for the onDelete modifier
     private func deleteItems(at offsets: IndexSet) {
         spottedFlightsStore.spottedFlights.remove(atOffsets: offsets)
-        // Ensure to handle any necessary updates or persistence changes here as well
     }
 }
 
