@@ -149,6 +149,7 @@ struct ContentView: View {
             VStack {
                 if flightFetcher.flights.isEmpty {
                     Text("Fetching flights nearby...")
+                    ProgressView()
                 } else {
                     ScrollView {
                         VStack(spacing: 10) {
