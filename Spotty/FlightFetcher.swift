@@ -28,6 +28,7 @@ struct Flight: Codable, Identifiable {
     let tailNumber: String?
     let origin: Airport?
     let destination: Airport?
+    let position: Position?
     var dateSpotted: Date
     var formattedDate: String {
         let formatter = DateFormatter()
@@ -37,6 +38,10 @@ struct Flight: Codable, Identifiable {
     }
 }
 
+struct Position: Codable {
+    let longitude: Float?
+    let latitude: Float?
+}
 
 struct Airport: Codable {
     var icao = "N/A"
@@ -141,9 +146,12 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                     
                     for state in states {
                         guard let icao24 = state[0] as? String,
-                              let callSignUnwrapped = state[1] as? String else { continue }
+                              let callSignUnwrapped = state[1] as? String,
+                              let current_long = state[5] as? Float,
+                              let current_lat = state[6] as? Float else { continue }
                         
                         let callSign = callSignUnwrapped.trimmingCharacters(in: .whitespaces)
+                        let current_pos = Position(longitude: current_long, latitude: current_lat)
                         
                         // Filter out call signs that are too short or don't have enough information
                         if callSign.isEmpty || callSign.count < 3 || !callSign.contains(where: { $0.isNumber }) { continue }
@@ -201,6 +209,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                                                    tailNumber: aircraftInfo.registeredOwners,
                                                                    origin: originAirport,
                                                                    destination: destinationAirport,
+                                                                   position: current_pos,
                                                                    dateSpotted: Date()))
                                     }
                                 }
