@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CustomFlightView: View {
-    let fetcher = AirportInfoFetcher()
+    //let fetcher = AirportInfoFetcher()
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     let flight: Flight
     @State private var isChecked: Bool = false
@@ -50,7 +50,7 @@ struct CustomFlightView: View {
                 VStack(alignment: .center, spacing: 8) { // Adjust the spacing as needed
                     // Destination Text
                     HStack(spacing: 8) {
-                        Text(flight.origin?.icao ?? ?? "N/A")
+                        Text(flight.origin?.icao ?? "N/A")
                         
                         
                         Image(systemName: "arrow.forward")
@@ -134,7 +134,7 @@ struct SpottedFlightsView: View {
                             Text("Origin: \(flight.origin?.name ?? "N/A") - \(flight.origin?.country_code ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
-                            Text("Destination: \(flight.destination?.name ?? "N/A")- \(flight.destination?.country_code ?? "N/A")")
+                            Text("Destination: \(flight.destination?.name ?? "N/A") - \(flight.destination?.country_code ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             Text("Date Spotted: \(flight.formattedDate)")
