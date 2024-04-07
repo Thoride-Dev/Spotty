@@ -8,7 +8,6 @@ struct CustomFlightView: View {
     private var isFlightSpotted: Bool {
         spottedFlightsStore.spottedFlights.contains(where: { $0.id == flight.id })
     }
-
     var body: some View {
         Button(action: {
             withAnimation(.easeIn(duration: 0.15)) {
@@ -51,17 +50,16 @@ struct CustomFlightView: View {
                 VStack(alignment: .center, spacing: 8) { // Adjust the spacing as needed
                     // Destination Text
                     HStack(spacing: 8) {
-                        Text(flight.origin ?? "N/A")
+                        Text(flight.origin?.icao ?? ?? "N/A")
                         
                         
                         Image(systemName: "arrow.forward")
                             .font(.title)
                         
-                        Text(flight.destination ?? "N/A")
+                        Text(flight.destination?.icao ?? "N/A")
                     }
                     .font(.title)
-
-                        
+                  
                     // Airplane Type and Registration
                     HStack {
                         Image(systemName: "airplane")
@@ -119,7 +117,7 @@ struct SpottedFlightsView: View {
                             // Assuming callSign is used for the airline name or flight number
                             Text(flight.callSign ?? "Unknown Flight")
                                 .font(.headline)
-                            
+
                             // Displaying the tail number if available
                             Text("Airline: \(flight.tailNumber ?? "N/A")")
                                 .font(.subheadline)
@@ -133,6 +131,12 @@ struct SpottedFlightsView: View {
                             Text("ICAO: \(flight.id)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
+                            Text("Origin: \(flight.origin?.name ?? "N/A") - \(flight.origin?.country_code ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Text("Destination: \(flight.destination?.name ?? "N/A")- \(flight.destination?.country_code ?? "N/A")")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
                             Text("Date Spotted: \(flight.formattedDate)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
