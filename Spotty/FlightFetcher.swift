@@ -28,6 +28,13 @@ struct Flight: Codable, Identifiable {
     let tailNumber: String?
     let origin: Airport?
     let destination: Airport?
+    var dateSpotted: Date
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short // Uses the user's preferred date format
+        formatter.timeStyle = .short // Uses the user's preferred time format
+        return formatter.string(from: dateSpotted)
+    }
 }
 
 
@@ -193,7 +200,8 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                                                    type: aircraftInfo.type,
                                                                    tailNumber: aircraftInfo.registeredOwners,
                                                                    origin: originAirport,
-                                                                   destination: destinationAirport))
+                                                                   destination: destinationAirport,
+                                                                   dateSpotted: Date()))
                                     }
                                 }
                             }
