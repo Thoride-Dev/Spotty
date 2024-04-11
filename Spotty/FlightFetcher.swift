@@ -28,7 +28,7 @@ struct Flight: Codable, Identifiable {
     let tailNumber: String?
     let origin: Airport?
     let destination: Airport?
-    let position: Position?
+    var position: Position?
     var dateSpotted: Date
     var formattedDate: String {
         let formatter = DateFormatter()
@@ -39,8 +39,8 @@ struct Flight: Codable, Identifiable {
 }
 
 struct Position: Codable {
-    let longitude: Float?
-    let latitude: Float?
+    let longitude: Double?
+    let latitude: Double?
 }
 
 struct Airport: Codable {
@@ -115,16 +115,16 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     private func calculateBoundingBox(location: CLLocationCoordinate2D) {
-        let C = 2 * .pi * earthRadiusKm
-        let dy = radiusKm * 360 / C
-        let dx = dy * cos(location.latitude * .pi / 180)
+        let dx = (asin(radiusKm / (earthRadiusKm * cos(.pi * location.latitude / 180)))) * 180 / .pi
+        let dy = (asin(radiusKm / earthRadiusKm)) * 180 / .pi
         
         let lamin = location.latitude - dy
         let lomin = location.longitude - dx
         let lamax = location.latitude + dy
         let lomax = location.longitude + dx
-        
+    
         self.fetchFlightData(lamin: lamin, lomin: lomin, lamax: lamax, lomax: lomax)
+
     }
     
     private func fetchFlightData(lamin: Double, lomin: Double, lamax: Double, lomax: Double) {
@@ -146,10 +146,10 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                     
                     for state in states {
                         guard let icao24 = state[0] as? String,
-                              let callSignUnwrapped = state[1] as? String,
-                              let current_long = state[5] as? Float,
-                              let current_lat = state[6] as? Float else { continue }
+                              let callSignUnwrapped = state[1] as? String else { continue }
                         
+                        let current_long = state[5] as? Double
+                        let current_lat = state[6] as? Double
                         let callSign = callSignUnwrapped.trimmingCharacters(in: .whitespaces)
                         let current_pos = Position(longitude: current_long, latitude: current_lat)
                         
@@ -200,25 +200,32 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                     }
 
                                     group.notify(queue: .main) {
-                                        guard !self.flights.contains(where: { $0.id == aircraftInfo.modeS }) else { return }
+                                        guard let existingFlightIndex = self.flights.firstIndex(where: { $0.id == aircraftInfo.modeS }) else {
+                                            // Flight not in list, add new flight
+                                            let cur_flight = Flight(id: aircraftInfo.modeS,
+                                                                       callSign: callSign,
+                                                                       registration: aircraftInfo.registration,
+                                                                       type: aircraftInfo.type,
+                                                                       tailNumber: aircraftInfo.registeredOwners,
+                                                                       origin: originAirport,
+                                                                       destination: destinationAirport,
+                                                                       position: current_pos,
+                                                                       dateSpotted: Date())
+                                            
+                                            FlightSorter.addFlightToList(cur_flight, to: &self.flights)
+                                            return
+                                        }
 
-                                        self.flights.append(Flight(id: aircraftInfo.modeS,
-                                                                   callSign: callSign,
-                                                                   registration: aircraftInfo.registration,
-                                                                   type: aircraftInfo.type,
-                                                                   tailNumber: aircraftInfo.registeredOwners,
-                                                                   origin: originAirport,
-                                                                   destination: destinationAirport,
-                                                                   position: current_pos,
-                                                                   dateSpotted: Date()))
+                                        // Flight already in list, update position
+                                        self.flights[existingFlightIndex].position = current_pos
+
+                                        
                                     }
                                 }
                             }
-
-
                         }
                     }
-                    print(self.flights)
+                    //print(self.flights)
                 }
             } catch {
                 if self.userSettings.isDebugModeEnabled {
