@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4322415A2BC8522A002FC755 /* FlightSorter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432241592BC8522A002FC755 /* FlightSorter.swift */; };
 		43F82E782BB614D50003107C /* SpottyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E772BB614D50003107C /* SpottyApp.swift */; };
 		43F82E7A2BB614D50003107C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E792BB614D50003107C /* ContentView.swift */; };
 		43F82E7C2BB614D70003107C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43F82E7B2BB614D70003107C /* Assets.xcassets */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		432241592BC8522A002FC755 /* FlightSorter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSorter.swift; sourceTree = "<group>"; };
 		43F82E742BB614D50003107C /* Spotty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spotty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43F82E772BB614D50003107C /* SpottyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyApp.swift; sourceTree = "<group>"; };
 		43F82E792BB614D50003107C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				43F82E822BB614D70003107C /* Spotty.xcdatamodeld */,
 				43F82E7D2BB614D70003107C /* Preview Content */,
 				51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */,
+				432241592BC8522A002FC755 /* FlightSorter.swift */,
 			);
 			path = Spotty;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 			files = (
 				43F82E812BB614D70003107C /* Persistence.swift in Sources */,
 				518C54862BB749B2009CD716 /* UserSettings.swift in Sources */,
+				4322415A2BC8522A002FC755 /* FlightSorter.swift in Sources */,
 				51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */,
 				43F82E7A2BB614D50003107C /* ContentView.swift in Sources */,
 				43F82E842BB614D70003107C /* Spotty.xcdatamodeld in Sources */,
