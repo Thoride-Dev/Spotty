@@ -9,6 +9,7 @@ struct AircraftInfo: Codable {
     let registration: String?
     let type: String?
     let icaoTypeCode: String?
+    let operatorFlagCode: String?
 
     enum CodingKeys: String, CodingKey {
         case modeS = "ModeS"
@@ -17,6 +18,7 @@ struct AircraftInfo: Codable {
         case registration = "Registration"
         case type = "Type"
         case icaoTypeCode = "ICAOTypeCode"
+        case operatorFlagCode = "preview-airline"
     }
 }
 
@@ -28,6 +30,7 @@ struct Flight: Codable, Identifiable {
     let tailNumber: String?
     let origin: Airport?
     let destination: Airport?
+    var OperatorFlagCode: String?
     var position: Position?
     var dateSpotted: Date
     var formattedDate: String {
@@ -209,6 +212,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                                                        tailNumber: aircraftInfo.registeredOwners,
                                                                        origin: originAirport,
                                                                        destination: destinationAirport,
+                                                                       OperatorFlagCode: aircraftInfo.operatorFlagCode,
                                                                        position: current_pos,
                                                                        dateSpotted: Date())
                                             

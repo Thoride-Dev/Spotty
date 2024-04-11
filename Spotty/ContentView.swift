@@ -26,7 +26,7 @@ struct CustomFlightView: View {
                         .font(.headline)
                         .foregroundColor(.primary) // Ensures text color is set to the primary color
 
-                    Image("preview-airline")
+                    Image("\(flight.OperatorFlagCode ?? "preview-airline")")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 80, height: 50) // Adjust the size as needed
