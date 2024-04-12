@@ -18,7 +18,7 @@ struct AircraftInfo: Codable {
         case registration = "Registration"
         case type = "Type"
         case icaoTypeCode = "ICAOTypeCode"
-        case operatorFlagCode = "preview-airline"
+        case operatorFlagCode = "OperatorFlagCode"
     }
 }
 
