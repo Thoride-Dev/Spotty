@@ -29,6 +29,33 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+<<<<<<< HEAD
+=======
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "43F82E882BB614D70003107C"
+               BuildableName = "SpottyTests.xctest"
+               BlueprintName = "SpottyTests"
+               ReferencedContainer = "container:Spotty.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "43F82E922BB614D70003107C"
+               BuildableName = "SpottyUITests.xctest"
+               BlueprintName = "SpottyUITests"
+               ReferencedContainer = "container:Spotty.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+>>>>>>> main
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -50,6 +77,16 @@
             ReferencedContainer = "container:Spotty.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+<<<<<<< HEAD
+=======
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "IDEPreferLogStreaming"
+            value = "YES"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
+>>>>>>> main
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

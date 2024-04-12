@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class SpottedFlightsStore: ObservableObject {
-    @Published var spottedFlights: [StorableFlight] {
+    @Published var spottedFlights: [Flight] {
         didSet {
             saveSpottedFlights()
         }
@@ -22,7 +22,8 @@ class SpottedFlightsStore: ObservableObject {
         self.spottedFlights.removeAll()
     }
     func addFlight(_ flight: Flight) {
-        let storableFlight = StorableFlight(from: flight)
+        var storableFlight = flight
+        storableFlight.dateSpotted = Date()
         if !self.spottedFlights.contains(where: { $0.id == flight.id }) {
             self.spottedFlights.append(storableFlight)
         }
@@ -39,9 +40,9 @@ class SpottedFlightsStore: ObservableObject {
         }
     }
 
-    private static func loadSpottedFlights() -> [StorableFlight] {
+    private static func loadSpottedFlights() -> [Flight] {
         guard let data = UserDefaults.standard.data(forKey: "SpottedFlights"),
-              let decoded = try? JSONDecoder().decode([StorableFlight].self, from: data) else {
+              let decoded = try? JSONDecoder().decode([Flight].self, from: data) else {
             return []
         }
         return decoded
