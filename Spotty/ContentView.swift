@@ -64,7 +64,7 @@ struct CustomFlightView: View {
                     HStack {
                         Image(systemName: "airplane")
                             .foregroundColor(.primary)
-                        Text(flight.type ?? "N/A")
+                        Text(flight.icaoType ?? "N/A")
                             .foregroundColor(.primary)
                         Image("airplane.tail")
                         Text(flight.registration ?? "N/A")
