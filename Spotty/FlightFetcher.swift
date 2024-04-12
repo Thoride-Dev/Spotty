@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import CoreLocation
 import Combine
 
@@ -202,6 +203,13 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                             group.leave()
                                         }
                                     }
+                                    
+                                    var ofc = aircraftInfo.operatorFlagCode
+                                    if UIImage(named: aircraftInfo.operatorFlagCode ?? "") == nil {
+                                        ofc = "preview-airline"
+                                    }
+
+
 
                                     group.notify(queue: .main) {
                                         guard let existingFlightIndex = self.flights.firstIndex(where: { $0.id == aircraftInfo.modeS }) else {
@@ -214,7 +222,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                                                        tailNumber: aircraftInfo.registeredOwners,
                                                                        origin: originAirport,
                                                                        destination: destinationAirport,
-                                                                       OperatorFlagCode: aircraftInfo.operatorFlagCode,
+                                                                       OperatorFlagCode: ofc,
                                                                        position: current_pos,
                                                                        dateSpotted: Date())
                                             
@@ -300,7 +308,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                         if let routeInfo = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                            let route = routeInfo["route"] as? String {
                             let routeComponents = route.components(separatedBy: "-")
-                            guard routeComponents.count <= 3 else {
+                            guard routeComponents.count <= 3 && routeComponents.count > 1 else {
                                 print("Invalid route format")
                                 completion(nil, nil)
                                 return
