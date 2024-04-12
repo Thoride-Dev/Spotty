@@ -29,6 +29,8 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+<<<<<<< HEAD
+=======
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -53,6 +55,7 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
+>>>>>>> main
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -74,6 +77,8 @@
             ReferencedContainer = "container:Spotty.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+<<<<<<< HEAD
+=======
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "IDEPreferLogStreaming"
@@ -81,6 +86,7 @@
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
+>>>>>>> main
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
