@@ -27,6 +27,7 @@ struct Flight: Codable, Identifiable {
     let callSign: String?
     let registration: String?
     let type: String?
+    let icaoType: String?
     let tailNumber: String?
     let origin: Airport?
     let destination: Airport?
@@ -209,6 +210,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                                                        callSign: callSign,
                                                                        registration: aircraftInfo.registration,
                                                                        type: aircraftInfo.type,
+                                                                       icaoType: aircraftInfo.icaoTypeCode,
                                                                        tailNumber: aircraftInfo.registeredOwners,
                                                                        origin: originAirport,
                                                                        destination: destinationAirport,
