@@ -3742,7 +3742,6 @@
 				432247702BC8885D002FC755 /* LMU.png in Resources */,
 				4322473E2BC8885D002FC755 /* KDA.png in Resources */,
 				432245EA2BC8885D002FC755 /* BTA.png in Resources */,
->>>>>>> main
 				43F82E7F2BB614D70003107C /* Preview Assets.xcassets in Resources */,
 				432245A62BC8885D002FC755 /* AVN.png in Resources */,
 				432246392BC8885D002FC755 /* CYD.png in Resources */,
