@@ -225,6 +225,7 @@ struct SpottedFlightsView: View {
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
+    @EnvironmentObject var userSettings: UserSettings
 
     var body: some View {
         TabView {
@@ -244,11 +245,17 @@ struct ContentView: View {
                     }
                     .refreshable {
                         flightFetcher.refreshFlights()
+                        print("-------------------- REFRESHING --------------------")
                     }
                 }
             }
             .onAppear {
                 flightFetcher.startLocationUpdates()
+                // Check the user settings and refresh if needed
+                if userSettings.isRefreshOnTap {
+                    flightFetcher.refreshFlights()
+                    print("-------------------- REFRESHING --------------------")
+                }
             }
             .tabItem {
                 Image(systemName: "dot.radiowaves.left.and.right")
@@ -265,7 +272,7 @@ struct ContentView: View {
                 }
 
             NavigationView {
-                SettingsView() // Make sure you have a SettingsView defined or replace this with your settings content
+                SettingsView()
             }
             .tabItem {
                 Label("Settings", systemImage: "gear")
