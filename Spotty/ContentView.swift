@@ -170,7 +170,7 @@ struct SpottedFlightsView: View {
                             Text("Aircraft: \(flight.type ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
-                            Text("ICAO: \(flight.id)")
+                            Text("ICAO: \(flight.id ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             Text("Origin: \(flight.origin?.name ?? "N/A") - \(flight.origin?.country_code ?? "N/A")")
