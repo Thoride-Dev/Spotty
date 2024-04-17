@@ -306,65 +306,122 @@ struct CardView: View {
     }
 
     var body: some View {
-        VStack(alignment: .center){
-            ZStack(alignment: .topLeading) {
-                if let imageURL = flight.imageURL {
-                    ImageLoaderView(imageURL: imageURL)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .shadow(radius: 5)
-                } else {
-                    Color.gray
-                        .aspectRatio(contentMode: .fill)
-                        .frame(maxWidth: .infinity, idealHeight: UIScreen.main.bounds.width * 9 / 16)
-                        .clipped()
-                        .cornerRadius(20)
-                }
-                
-                //Callsign
-                GeometryReader { geometry in
-                    let maxSize = min(geometry.size.width, geometry.size.height) * 0.15
-                    let fontSize = min(maxSize, 14) // Adjust the maximum font size as needed
+        Button(action: {
+            withAnimation(.easeIn(duration: 0.15)) {
+                self.isChecked.toggle()
+            }
+            if self.isChecked {
+                self.spottedFlightsStore.addFlight(self.flight)
+            } else {
+                self.spottedFlightsStore.removeFlight(self.flight)
+            }
+        }) {
+            VStack(alignment: .center){
+                ZStack(alignment: .topLeading) {
+                    if let imageURL = flight.imageURL {
+                        ImageLoaderView(imageURL: imageURL)
+                            .clipShape(RoundedRectangle(cornerRadius: 30))
+                            .shadow(radius: 5)
+                    } else {
+                        Color.gray
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: .infinity, idealHeight: UIScreen.main.bounds.width * 9 / 16)
+                            .clipped()
+                            .cornerRadius(30)
+                    }
                     
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.white)
-                        .shadow(radius: 5)
-                        .padding() // Add padding to adjust the card size
-                        .overlay(
-                            VStack {
-                                // Other content
-                                Text(flight.callSign ?? "N/A")
-                                    .font(.system(size: fontSize, weight: .bold))
-                                    .foregroundColor(.black)
-                                    .padding()
-                                
-                                // Add more content as needed
+                    //Callsign
+                    GeometryReader { geometry in
+                        let maxSize = min(geometry.size.width, geometry.size.height) * 0.15
+                        let fontSize = min(maxSize, 13.5) // can change font size here
+                        
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.white)
+                            .shadow(radius: 5)
+                            .padding() // Add padding to adjust the card size
+                            .overlay(
+                                VStack {
+                                    // callsign display
+                                    Text(flight.callSign ?? "N/A")
+                                        .font(.system(size: fontSize, weight: .bold))
+                                        .foregroundColor(.black)
+                                        .padding()
+                                }
+                            )
+                            .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .center)
+                        // Ensure card adapts to different screen sizes
+                    }
+                    
+                    
+                    
+                }
+                .frame(maxWidth: .infinity)
+                
+                ZStack(alignment: .bottomLeading){
+                    //Logo
+                    GeometryReader { geometry in
+                        HStack{
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white)
+                                    .shadow(radius: 5)
+                                    .frame(width: 50, height: 50) // Adjust the size of the circle
+                                Image("\(flight.OperatorFlagCode ?? "preview-airline")")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 40, height: 40) // Adjust the size of the image inside the circle
                             }
-                        )
-                        .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .center)
-                    // Ensure card adapts to different screen sizes
+                            .padding(EdgeInsets(top: 0, leading: 18, bottom: 25, trailing: 0))
+                            .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .bottomLeading)
+                            
+                            ZStack{
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.white)
+                                    .shadow(radius: 5)
+                                    .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 3, alignment: .bottomLeading)
+                                    .overlay(
+                                        HStack {
+                                            // Plane info
+                                            Image(systemName: "airplane")
+                                                .foregroundColor(.primary)
+                                                .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0))
+                                            Text(flight.icaoType ?? "N/A")
+                                                .font(.system(size: 19))
+                                                .foregroundColor(.primary)
+                                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
+                                            Image("airplane.tail")
+                                                .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0))
+                                            Text(flight.registration ?? "N/A")
+                                                .font(.system(size: 19))
+                                                .foregroundColor(.primary)
+                                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
+                                            Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .foregroundColor(.primary)
+                                                .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
+                                        }
+                                    )
+                                    .padding(EdgeInsets(top: -62, leading: -30, bottom: 20, trailing: 20))
+                                
+                            }
+                            
+                        }
+                        // Ensure card adapts to different screen sizes
+                    }
+                    
+                    GeometryReader { geometry in
+                        
+                    }
+                    
                 }
             }
-            .frame(maxWidth: .infinity)
-            
-            
-            //Logo
-            GeometryReader { geometry in
-                ZStack {
-                    Circle()
-                        .fill(Color.white)
-                        .shadow(radius: 5)
-                        .frame(width: 50, height: 50) // Adjust the size of the circle
-                    Image("\(flight.OperatorFlagCode ?? "preview-airline")")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40) // Adjust the size of the image inside the circle
-                }
-                .padding(EdgeInsets(top: 0, leading: 18, bottom: 25, trailing: 0))
-                .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .bottomLeading)
-                // Ensure card adapts to different screen sizes
-            }
+            .padding(EdgeInsets(top: 0, leading: 2, bottom: -10, trailing: 2))
         }
-        .padding(EdgeInsets(top: 0, leading: 2, bottom: -10, trailing: 2))
+        .onAppear {
+            // Initialize isChecked based on whether the flight is spotted
+            self.isChecked = isFlightSpotted
+        }
     }
     
     struct ImageLoaderView: View {
@@ -391,11 +448,20 @@ struct CardView: View {
                     .cornerRadius(16) // Apply corner radius if desired
                     
             } else {
-                Text("Loading image...")
-                    .onAppear {
-                        loadImage(from: imageURL) { loadedImage in
-                            DispatchQueue.main.async {
-                                self.image = loadedImage
+                ZStack{
+                    RoundedRectangle(cornerRadius: 30)
+                        .fill(Color.gray)
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: .infinity, idealHeight: UIScreen.main.bounds.width * 9 / 16)
+                        .clipped()
+                        .cornerRadius(30)
+                        .shadow(radius: 5)
+                    Text("No image...")
+                        .onAppear {
+                            loadImage(from: imageURL) { loadedImage in
+                                DispatchQueue.main.async {
+                                    self.image = loadedImage
+                                }
                             }
                         }
                     }
