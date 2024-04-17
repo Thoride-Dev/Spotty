@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CustomFlightView: View {
+    
     //let fetcher = AirportInfoFetcher()
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     let flight: Flight
@@ -30,6 +31,11 @@ struct CustomFlightView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 80, height: 50) // Adjust the size as needed
+                    if let imageURL = flight.imageURL {
+                        ImageLoaderView(imageURL: imageURL)
+                    } else {
+                        Text("No Image")
+                    }
                 }
                 .frame(width: 60) // Fix the width for the call sign and image section
 
@@ -101,6 +107,42 @@ struct CustomFlightView: View {
         
     }
     
+    struct ImageLoaderView: View {
+        let imageURL: URL
+        
+        func loadImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data, error == nil else {
+                    completion(nil)
+                    return
+                }
+                completion(UIImage(data: data))
+            }.resume()
+        }
+
+        @State private var image: UIImage? = nil
+
+        var body: some View {
+            if let image = image {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100) // Set the frame size as needed
+                    .clipped() // Clip the image to the frame
+                    .cornerRadius(10) // Apply corner radius if desired
+            } else {
+                Text("Loading image...")
+                    .onAppear {
+                        loadImage(from: imageURL) { loadedImage in
+                            DispatchQueue.main.async {
+                                self.image = loadedImage
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
 }
 
 struct SpottedFlightsView: View {
@@ -128,7 +170,7 @@ struct SpottedFlightsView: View {
                             Text("Aircraft: \(flight.type ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
-                            Text("ICAO: \(flight.id)")
+                            Text("ICAO: \(flight.id ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             Text("Origin: \(flight.origin?.name ?? "N/A") - \(flight.origin?.country_code ?? "N/A")")
