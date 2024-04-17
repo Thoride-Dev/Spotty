@@ -4,7 +4,7 @@ import CoreLocation
 import Combine
 
 struct AircraftInfo: Codable {
-    let modeS: String
+    let modeS: String?
     let manufacturer: String?
     let registeredOwners: String?
     let registration: String?
@@ -24,7 +24,7 @@ struct AircraftInfo: Codable {
 }
 
 struct Flight: Codable, Identifiable {
-    let id: String  // This is the modeS
+    let id: String?  // This is the modeS
     let callSign: String?
     let registration: String?
     let type: String?
@@ -34,6 +34,7 @@ struct Flight: Codable, Identifiable {
     let destination: Airport?
     var OperatorFlagCode: String?
     var position: Position?
+    let imageURL: URL?
     var dateSpotted: Date
     var formattedDate: String {
         let formatter = DateFormatter()
@@ -173,7 +174,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                             aircraftInfo.registration != nil ||
                             aircraftInfo.type != nil ||
                             aircraftInfo.icaoTypeCode != nil
-                            print("\(aircraftInfo.modeS)/\(callSign)")
+                            print("\(String(describing: aircraftInfo.modeS))/\(callSign)")
                             
                             self.getRouteInfo(for: callSign) { (origin, destination) in
                                 DispatchQueue.main.async {
@@ -208,8 +209,16 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                     if UIImage(named: aircraftInfo.operatorFlagCode ?? "") == nil {
                                         ofc = "preview-airline"
                                     }
-
-
+                                    
+                                    var imageURL: URL?
+                                    if let hex = aircraftInfo.modeS {
+                                        group.enter()
+                                        self.getImageURL(hex: hex) { url in
+                                            imageURL = url
+                                            group.leave()
+                                        }
+                                    }
+                                    
 
                                     group.notify(queue: .main) {
                                         guard let existingFlightIndex = self.flights.firstIndex(where: { $0.id == aircraftInfo.modeS }) else {
@@ -224,6 +233,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                                                        destination: destinationAirport,
                                                                        OperatorFlagCode: ofc,
                                                                        position: current_pos,
+                                                                       imageURL: imageURL,
                                                                        dateSpotted: Date())
                                             
                                             FlightSorter.addFlightToList(cur_flight, to: &self.flights)
@@ -376,6 +386,32 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         }
     }
 
-
+    func getImageURL(hex: String, completion: @escaping (URL?) -> Void) {
+        let imageLinkURL = URL(string: "https://hexdb.io/hex-image-thumb?hex=\(hex)")!
+        
+        let task = URLSession.shared.dataTask(with: imageLinkURL) { (data, response, error) in
+            guard let data = data else {
+                print("Error: No data")
+                completion(nil)
+                return
+            }
+            
+            guard let imageURLString = String(data: data, encoding: .utf8) else {
+                print("Error: Invalid image URL")
+                completion(nil)
+                return
+            }
+            
+            guard let imageURL = URL(string: "https:" + imageURLString) else {
+                print("Error: Invalid image URL format")
+                completion(nil)
+                return
+            }
+            
+            completion(imageURL)
+        }
+        
+        task.resume()
+    }
     
 }
