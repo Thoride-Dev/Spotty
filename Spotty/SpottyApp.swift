@@ -16,7 +16,7 @@ struct SpottyApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(userSettings) // Correctly pass UserSettings as an environment object here
+                .environmentObject(userSettings) 
                 .environmentObject(spottedFlightsStore)
         }
     }
