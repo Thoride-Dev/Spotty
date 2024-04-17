@@ -359,12 +359,12 @@ struct CardView: View {
                         .scaledToFit()
                         .frame(width: 40, height: 40) // Adjust the size of the image inside the circle
                 }
-                .padding()
+                .padding(EdgeInsets(top: 0, leading: 18, bottom: 25, trailing: 0))
                 .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .bottomLeading)
                 // Ensure card adapts to different screen sizes
             }
         }
-        .padding(EdgeInsets(top: -2, leading: 2, bottom: 0, trailing: 2))
+        .padding(EdgeInsets(top: 0, leading: 2, bottom: -10, trailing: 2))
     }
     
     struct ImageLoaderView: View {
