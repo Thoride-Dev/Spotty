@@ -1,150 +1,5 @@
 import SwiftUI
 
-struct CustomFlightView: View {
-    
-    //let fetcher = AirportInfoFetcher()
-    @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
-    let flight: Flight
-    @State private var isChecked: Bool = false
-    private var isFlightSpotted: Bool {
-        spottedFlightsStore.spottedFlights.contains(where: { $0.id == flight.id })
-    }
-    var body: some View {
-        Button(action: {
-            withAnimation(.easeIn(duration: 0.15)) {
-                self.isChecked.toggle()
-            }
-            if self.isChecked {
-                self.spottedFlightsStore.addFlight(self.flight)
-            } else {
-                self.spottedFlightsStore.removeFlight(self.flight)
-            }
-        }) {
-            HStack {
-                // VStack for the call sign and image
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(flight.callSign ?? "Unknown")
-                        .font(.headline)
-                        .foregroundColor(.primary) // Ensures text color is set to the primary color
-
-                    Image("\(flight.OperatorFlagCode ?? "preview-airline")")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 80, height: 50) // Adjust the size as needed
-                    if let imageURL = flight.imageURL {
-                        ImageLoaderView(imageURL: imageURL)
-                    } else {
-                        Text("No Image")
-                    }
-                }
-                .frame(width: 60) // Fix the width for the call sign and image section
-
-                // Fixed-width space before the vertical divider
-                Spacer()
-                    .frame(width: 40) // Adjust the width as needed
-                
-                // Vertical Divider
-                Rectangle()
-                    .fill(Color.gray)
-                    .frame(width: 1, height: 80) // Adjust height as needed
-                
-                // Fixed-width space after the vertical divider
-                Spacer()
-                    .frame(width: 20) // Adjust the width as needed
-                
-                // Right side VStack
-                VStack(alignment: .center, spacing: 8) { // Adjust the spacing as needed
-                    // Destination Text
-                    HStack(spacing: 8) {
-                        Text(flight.origin?.icao ?? "N/A")
-                        
-                        
-                        Image(systemName: "arrow.forward")
-                            .font(.title)
-                        
-                        Text(flight.destination?.icao ?? "N/A")
-                    }
-                    .font(.title)
-                  
-                    // Airplane Type and Registration
-                    HStack {
-                        Image(systemName: "airplane")
-                            .foregroundColor(.primary)
-                        Text(flight.icaoType ?? "N/A")
-                            .foregroundColor(.primary)
-                        Image("airplane.tail")
-                        Text(flight.registration ?? "N/A")
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
-                Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.primary)
-                
-                
-            }
-            .padding(.vertical, 10) // Vertical padding within the HStack
-            .padding(.horizontal, 20)
-        
-        }
-        .buttonStyle(PlainButtonStyle())
-        .background(Color.white) // Set the background color for the shadow to be effective
-        .cornerRadius(10) // Rounded corners
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-        .frame(width: 400, height: 150) // Set the fixed size for the button's frame
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.clear, lineWidth: 1)
-                
-                .onAppear {
-                    // Initialize isChecked based on whether the flight is spotted
-                    self.isChecked = isFlightSpotted
-                }
-        )
-        
-    }
-    
-    struct ImageLoaderView: View {
-        let imageURL: URL
-        
-        func loadImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
-            URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard let data = data, error == nil else {
-                    completion(nil)
-                    return
-                }
-                completion(UIImage(data: data))
-            }.resume()
-        }
-
-        @State private var image: UIImage? = nil
-
-        var body: some View {
-            if let image = image {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 100, height: 100) // Set the frame size as needed
-                    .clipped() // Clip the image to the frame
-                    .cornerRadius(10) // Apply corner radius if desired
-            } else {
-                Text("Loading image...")
-                    .onAppear {
-                        loadImage(from: imageURL) { loadedImage in
-                            DispatchQueue.main.async {
-                                self.image = loadedImage
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    
-}
-
 struct SpottedFlightsView: View {
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     @State private var showingConfirmation = false
@@ -386,13 +241,13 @@ struct CardView: View {
                                                 .foregroundColor(.primary)
                                                 .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0))
                                             Text(flight.icaoType ?? "N/A")
-                                                .font(.system(size: 19))
+                                                .font(.system(size: 19, weight: .bold))
                                                 .foregroundColor(.primary)
                                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
                                             Image("airplane.tail")
                                                 .padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0))
                                             Text(flight.registration ?? "N/A")
-                                                .font(.system(size: 19))
+                                                .font(.system(size: 19, weight: .bold))
                                                 .foregroundColor(.primary)
                                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
                                             Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
@@ -422,6 +277,7 @@ struct CardView: View {
             // Initialize isChecked based on whether the flight is spotted
             self.isChecked = isFlightSpotted
         }
+        .opacity(self.isChecked ? 0.3 : 1.0) // Adjust the opacity value as needed
     }
     
     struct ImageLoaderView: View {
