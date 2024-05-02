@@ -10,6 +10,7 @@ import SwiftUI
 
 class UserSettings: ObservableObject {
     @Published var isDebugModeEnabled: Bool = false
+    @Published var isRefreshOnTap: Bool = false
 }
 
 struct SettingsView: View {
@@ -21,6 +22,12 @@ struct SettingsView: View {
                 .onChange(of: userSettings.isDebugModeEnabled) { newValue in
                     debugModeToggled(newValue)
                 }
+            Section(header: Text("Nearby")) {
+                Toggle("Refresh on Tap", isOn: $userSettings.isRefreshOnTap)
+                    .onChange(of: userSettings.isRefreshOnTap) { newValue in
+                        refreshTapToggle(newValue)
+                    }
+            }
         }
         .navigationTitle("Settings")
     }
@@ -32,6 +39,13 @@ struct SettingsView: View {
         } else {
             print("Debug mode is now OFF")
             
+        }
+    }
+    func refreshTapToggle(_ isEnabled: Bool) {
+        if isEnabled {
+            print("refreshing on tap")
+        } else {
+            print("NOT refrshing on tap")
         }
     }
 }
