@@ -75,6 +75,54 @@ struct SpottedFlightsView: View {
     }
 }
 
+struct SearchView: View {
+    @State private var searchText: String = ""
+    @State private var flight: Flight? = nil
+    @ObservedObject private var flightSearch = FlightSearch()
+
+    var body: some View {
+        VStack {
+            SearchBar(text: $searchText, placeholder: "Search by hex or registration") { text in
+                self.searchFlight(text)
+            }
+            .padding()
+
+            if let flight = flight {
+                CardView(flight: flight)
+            } else {
+                Text("No flight found")
+                    .foregroundColor(.gray)
+                    .padding()
+            }
+        }
+    }
+
+    private func searchFlight(_ searchText: String) {
+        flightSearch.searchFlight(hexOrReg: searchText) { flight in
+            DispatchQueue.main.async {
+                self.flight = flight
+            }
+        }
+    }
+}
+
+struct SearchBar: View {
+    @Binding var text: String
+    var placeholder: String
+    var onCommit: (String) -> Void
+
+    var body: some View {
+        HStack {
+            TextField(placeholder, text: $text, onCommit: {
+                self.onCommit(self.text)
+            })
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .padding(.horizontal)
+            .disableAutocorrection(true)
+            .autocapitalization(.none)
+        }
+    }
+}
 
 
 struct ContentView: View {
@@ -124,6 +172,12 @@ struct ContentView: View {
                 
                 .environmentObject(spottedFlightsStore)
                     
+                }
+            
+            SearchView()
+                .tabItem{
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
                 }
 
             NavigationView {

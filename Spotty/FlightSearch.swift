@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class FlightSearch {
+class FlightSearch: ObservableObject {
     
     func searchFlight(hexOrReg: String, completion: @escaping (Flight?) -> Void) {
         // Check if input is hex or registration
@@ -113,6 +113,15 @@ class FlightSearch {
                                     ofc = "preview-airline"
                                 }
                                 
+                                var imageURL: URL?
+                                if let hex = aircraftInfo.modeS {
+                                    group.enter()
+                                    flightFetcher.getImageURL(hex: hex) { url in
+                                        imageURL = url
+                                        group.leave()
+                                    }
+                                }
+                                
                                 // Flight not in list, add new flight
                                 let cur_flight = Flight(id: aircraftInfo.modeS,
                                                         callSign: callSign,
@@ -124,6 +133,7 @@ class FlightSearch {
                                                         destination: destinationAirport,
                                                         OperatorFlagCode: ofc,
                                                         position: current_pos,
+                                                        imageURL: imageURL,
                                                         dateSpotted: Date())
                                 
                                 
