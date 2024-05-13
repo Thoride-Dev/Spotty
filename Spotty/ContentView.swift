@@ -151,40 +151,32 @@ struct ContentView: View {
     var body: some View {
         TabView {
             // Nearby flights tab
-            NavigationView(){
-                VStack {
-                    Text("Planes")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, alignment: .leading) // Align the title to the leading edge
-                        .padding()
-                    
-                    if flightFetcher.flights.isEmpty {
-                        Text("Fetching flights nearby...")
-                        ProgressView()
-                    } else {
-                        ScrollView {
-                            VStack(spacing: 10) {
-                                ForEach(flightFetcher.flights) { flight in
-                                    CardView(flight: flight)
-                                }
+            VStack {
+                if flightFetcher.flights.isEmpty {
+                    Text("Fetching flights nearby...")
+                    ProgressView()
+                } else {
+                    ScrollView {
+                        VStack(spacing: 10) {
+                            ForEach(flightFetcher.flights) { flight in
+                                CardView(flight: flight)
                             }
-                            .padding(.horizontal)
                         }
-                        .refreshable {
-                            flightFetcher.refreshFlights()
-                            print("-------------------- REFRESHING --------------------")
-                        }
-                        .clipped()
+                        .padding(.horizontal)
                     }
-                }
-                .onAppear {
-                    flightFetcher.startLocationUpdates()
-                    // Check the user settings and refresh if needed
-                    if userSettings.isRefreshOnTap {
+                    .refreshable {
                         flightFetcher.refreshFlights()
                         print("-------------------- REFRESHING --------------------")
                     }
+                    .clipped()
+                }
+            }
+            .onAppear {
+                flightFetcher.startLocationUpdates()
+                // Check the user settings and refresh if needed
+                if userSettings.isRefreshOnTap {
+                    flightFetcher.refreshFlights()
+                    print("-------------------- REFRESHING --------------------")
                 }
             }
             .tabItem {
