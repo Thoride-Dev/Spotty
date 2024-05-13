@@ -78,29 +78,47 @@ struct SpottedFlightsView: View {
 struct SearchView: View {
     @State private var searchText: String = ""
     @State private var flight: Flight? = nil
+    @State private var cardId = UUID() // Unique ID for CardView
+    @State private var isLoading = false
     @ObservedObject private var flightSearch = FlightSearch()
 
     var body: some View {
         VStack {
-            SearchBar(text: $searchText, placeholder: "Search by hex or registration") { text in
-                self.searchFlight(text)
-            }
-            .padding()
-
-            if let flight = flight {
-                CardView(flight: flight)
-            } else {
-                Text("No flight found")
-                    .foregroundColor(.gray)
-                    .padding()
+            ScrollView {
+                SearchBar(text: $searchText, placeholder: "Search by hex or registration") { text in
+                    self.searchFlight(text)
+                }
+                .padding()
+                
+                if isLoading {
+                    ProgressView()
+                        .padding()
+                } else if let flight = flight {
+                    CardView(flight: flight)
+                        .padding(.horizontal)
+                        .id(cardId) // Assign unique ID to CardView
+                } else {
+                    Text("No flight found")
+                        .foregroundColor(.gray)
+                        .padding()
+                }
             }
         }
+        .clipped()
     }
 
     private func searchFlight(_ searchText: String) {
+        isLoading = true
         flightSearch.searchFlight(hexOrReg: searchText) { flight in
             DispatchQueue.main.async {
+                isLoading = false
+                // Create a new instance of Flight with updated properties
                 self.flight = flight
+                self.cardId = UUID()
+                if flight == nil{
+                    self.flight = nil
+                }
+                return
             }
         }
     }
@@ -133,31 +151,40 @@ struct ContentView: View {
     var body: some View {
         TabView {
             // Nearby flights tab
-            VStack {
-                if flightFetcher.flights.isEmpty {
-                    Text("Fetching flights nearby...")
-                    ProgressView()
-                } else {
-                    ScrollView {
-                        VStack(spacing: 10) {
-                            ForEach(flightFetcher.flights) { flight in
-                                CardView(flight: flight)
+            NavigationView(){
+                VStack {
+                    Text("Planes")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading) // Align the title to the leading edge
+                        .padding()
+                    
+                    if flightFetcher.flights.isEmpty {
+                        Text("Fetching flights nearby...")
+                        ProgressView()
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 10) {
+                                ForEach(flightFetcher.flights) { flight in
+                                    CardView(flight: flight)
+                                }
                             }
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
+                        .refreshable {
+                            flightFetcher.refreshFlights()
+                            print("-------------------- REFRESHING --------------------")
+                        }
+                        .clipped()
                     }
-                    .refreshable {
+                }
+                .onAppear {
+                    flightFetcher.startLocationUpdates()
+                    // Check the user settings and refresh if needed
+                    if userSettings.isRefreshOnTap {
                         flightFetcher.refreshFlights()
                         print("-------------------- REFRESHING --------------------")
                     }
-                }
-            }
-            .onAppear {
-                flightFetcher.startLocationUpdates()
-                // Check the user settings and refresh if needed
-                if userSettings.isRefreshOnTap {
-                    flightFetcher.refreshFlights()
-                    print("-------------------- REFRESHING --------------------")
                 }
             }
             .tabItem {
