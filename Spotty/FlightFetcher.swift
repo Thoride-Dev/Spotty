@@ -265,7 +265,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     
     
     
-    private func fetchAircraftInfo(hex: String, completion: @escaping (AircraftInfo?) -> Void) {
+    public func fetchAircraftInfo(hex: String, completion: @escaping (AircraftInfo?) -> Void) {
         guard let url = URL(string: "https://hexdb.io/api/v1/aircraft/\(hex)") else {
             if self.userSettings.isDebugModeEnabled {
                 print("Invalid URL")
