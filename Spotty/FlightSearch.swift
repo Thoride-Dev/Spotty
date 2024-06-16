@@ -49,7 +49,7 @@ class FlightSearch: ObservableObject {
                     
         let callSign = hexCode
         let current_pos = Position(longitude: 0.0, latitude: 0.0)
-        let flightFetcher = FlightFetcher(userSettings: UserSettings())
+        let flightFetcher = FlightFetcher()
         flightFetcher.fetchAircraftInfo(hex: hexCode) { aircraftInfoOptional in
             guard let aircraftInfo = aircraftInfoOptional else { return }
             
