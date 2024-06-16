@@ -64,14 +64,10 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     private let locationManager = CLLocationManager()
     private let radiusKm: Double = 30
     private let earthRadiusKm: Double = 6371
-    private var userSettings: UserSettings
-    
     @Published var flights: [Flight] = []
     @Published var lastUpdated: Date?
     
-    
-    init(userSettings: UserSettings) {
-        self.userSettings = userSettings
+    override init() {
         super.init()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -94,18 +90,17 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                 locationManager.requestWhenInUseAuthorization()
             case .restricted, .denied:
                 // The app is not authorized to use location services
-                if userSettings.isDebugModeEnabled {
-                    print("Location services not authorized or restricted.")
-                }
+
+            print("Location services not authorized or restricted.")
+                
             @unknown default:
                 // Handle any future cases
                 break
             }
         } else {
             // Location services are not enabled
-            if userSettings.isDebugModeEnabled {
-                print("Location services not enabled.")
-            }
+            print("Location services not enabled.")
+            
         }
     }
     
@@ -139,9 +134,9 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self, let data = data, error == nil else {
-                if self!.userSettings.isDebugModeEnabled {
-                    print("Network request failed: \(error?.localizedDescription ?? "No error description")")
-                }
+
+                print("Network request failed: \(error?.localizedDescription ?? "No error description")")
+                
                 return
             }
             
@@ -252,9 +247,8 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                     //print(self.flights)
                 }
             } catch {
-                if self.userSettings.isDebugModeEnabled {
                     print("Error decoding JSON: \(error)")
-                }
+                
                 
             }
         }
@@ -267,17 +261,15 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     
     public func fetchAircraftInfo(hex: String, completion: @escaping (AircraftInfo?) -> Void) {
         guard let url = URL(string: "https://hexdb.io/api/v1/aircraft/\(hex)") else {
-            if self.userSettings.isDebugModeEnabled {
                 print("Invalid URL")
-            }
+            
             return
         }
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
-                if self.userSettings.isDebugModeEnabled {
+   
                     print("Error fetching aircraft info: \(error?.localizedDescription ?? "Unknown error")")
-                }
                 completion(nil)  // If there's an error, don't proceed with this aircraft.
                 return
             }
@@ -288,14 +280,13 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                 completion(aircraftInfo)  // Successfully decoded, all keys are present.
             } catch DecodingError.keyNotFound(_, let context) {
                 // If a key is missing, don't proceed with this aircraft.
-                if self.userSettings.isDebugModeEnabled {
                     print("Missing key: \(context.debugDescription)")
-                }
+                
                 completion(nil)
             } catch {
-                if self.userSettings.isDebugModeEnabled {
+         
                     print("Error decoding aircraft info: \(error)")
-                }
+                
                 completion(nil)  // There was a problem decoding, so don't proceed with this aircraft.
             }
         }

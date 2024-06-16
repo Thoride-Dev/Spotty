@@ -144,7 +144,7 @@ struct SearchBar: View {
 
 
 struct ContentView: View {
-    @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
+    @StateObject private var flightFetcher = FlightFetcher()
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     @EnvironmentObject var userSettings: UserSettings
 
