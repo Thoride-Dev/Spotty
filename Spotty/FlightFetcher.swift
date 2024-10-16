@@ -142,10 +142,11 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                         guard let icao24 = plane["hex"] as? String,
                               let callSignUnwrapped = plane["flight"] as? String else { continue }
                         
-                        let current_long = plane["lat"] as? Double
-                        let current_lat = plane["lon"] as? Double
+                        let current_long = plane["lon"] as? Double
+                        let current_lat = plane["lat"] as? Double
                         let callSign = callSignUnwrapped.trimmingCharacters(in: .whitespaces)
                         let current_pos = Position(longitude: current_long, latitude: current_lat)
+                
                         
                         // Filter out call signs that are too short or don't have enough information
                         if callSign.isEmpty || callSign.count < 3 || !callSign.contains(where: { $0.isNumber }) { continue }

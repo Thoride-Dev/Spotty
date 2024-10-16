@@ -41,6 +41,12 @@ struct SpottedFlightsView: View {
                             Text("Destination: \(flight.destination?.name ?? "N/A") - \(flight.destination?.country_code ?? "N/A")")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
+                            Text("Latitude:  \(flight.position?.latitude ?? 0.00)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Text("Longitude:  \(flight.position?.longitude ?? 0.00)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
                             Text("Date Spotted: \(flight.formattedDate)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
@@ -80,7 +86,4 @@ struct SpottedFlightsView: View {
     private func deleteItems(at offsets: IndexSet) {
         spottedFlightsStore.spottedFlights.remove(atOffsets: offsets)
     }
-}
-#Preview {
-    SpottedFlightStore()
 }

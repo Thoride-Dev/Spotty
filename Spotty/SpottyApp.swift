@@ -8,6 +8,7 @@
 import SwiftUI
 
 @main
+@available(iOS 17.0, *)
 struct SpottyApp: App {
     let persistenceController = PersistenceController.shared
     @StateObject var userSettings = UserSettings()

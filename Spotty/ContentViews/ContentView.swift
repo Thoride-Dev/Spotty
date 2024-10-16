@@ -69,7 +69,7 @@ struct SearchBar: View {
     }
 }
 
-
+@available(iOS 17.0, *)
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
@@ -150,7 +150,7 @@ struct ClearSpottedFlightsButton: View {
     }
 }
 
-
+@available(iOS 17.0, *)
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environmentObject(SpottedFlightsStore())
