@@ -62,7 +62,7 @@ struct Airport: Codable {
 class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     private var seenCallSigns = Set<String>()
     private let locationManager = CLLocationManager()
-    private let radiusKm: Double = 30
+    private let radiusKm: Double = 15
     private let earthRadiusKm: Double = 6371
     private var userSettings: UserSettings
     
@@ -115,26 +115,14 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
         locationManager.stopUpdatingLocation()
-        self.calculateBoundingBox(location: location.coordinate)
+        guard let location = locations.last else { return }
+        let distance = radiusKm
+        self.fetchFlightData(coordinates: location.coordinate, distance: distance)
     }
     
-    private func calculateBoundingBox(location: CLLocationCoordinate2D) {
-        let dx = (asin(radiusKm / (earthRadiusKm * cos(.pi * location.latitude / 180)))) * 180 / .pi
-        let dy = (asin(radiusKm / earthRadiusKm)) * 180 / .pi
-        
-        let lamin = location.latitude - dy
-        let lomin = location.longitude - dx
-        let lamax = location.latitude + dy
-        let lomax = location.longitude + dx
-    
-        self.fetchFlightData(lamin: lamin, lomin: lomin, lamax: lamax, lomax: lomax)
-
-    }
-    
-    private func fetchFlightData(lamin: Double, lomin: Double, lamax: Double, lomax: Double) {
-        let urlString = "https://opensky-network.org/api/states/all?lamin=\(lamin)&lomin=\(lomin)&lamax=\(lamax)&lomax=\(lomax)"
+    private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Double) {
+        let urlString = "https://api.adsb.lol/v2/lat/\(coordinates.latitude)/lon/\(coordinates.longitude)/dist/\(distance)"
         guard let url = URL(string: urlString) else { return }
         
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -147,15 +135,15 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
             
             do {
                 if let jsonResult = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let states = jsonResult["states"] as? [[Any]] {
+                   let planes = jsonResult["ac"] as? [[String: Any]] {
                     var localSeenCallSigns = Set<String>()
                     
-                    for state in states {
-                        guard let icao24 = state[0] as? String,
-                              let callSignUnwrapped = state[1] as? String else { continue }
+                    for plane in planes {
+                        guard let icao24 = plane["hex"] as? String,
+                              let callSignUnwrapped = plane["flight"] as? String else { continue }
                         
-                        let current_long = state[5] as? Double
-                        let current_lat = state[6] as? Double
+                        let current_long = plane["lat"] as? Double
+                        let current_lat = plane["lon"] as? Double
                         let callSign = callSignUnwrapped.trimmingCharacters(in: .whitespaces)
                         let current_pos = Position(longitude: current_long, latitude: current_lat)
                         
@@ -169,11 +157,9 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                         self.fetchAircraftInfo(hex: icao24) { aircraftInfoOptional in
                             guard let aircraftInfo = aircraftInfoOptional else { return }
                             
-                            let hasRelevantInfo = aircraftInfo.manufacturer != nil ||
-                            aircraftInfo.registeredOwners != nil ||
+                            let hasRelevantInfo =
                             aircraftInfo.registration != nil ||
-                            aircraftInfo.type != nil ||
-                            aircraftInfo.icaoTypeCode != nil
+                            aircraftInfo.type != nil
                             print("\(String(describing: aircraftInfo.modeS))/\(callSign)")
                             
                             self.getRouteInfo(for: callSign) { (origin, destination) in
@@ -402,7 +388,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                 return
             }
             
-            guard let imageURL = URL(string: "https:" + imageURLString) else {
+            guard let imageURL = URL(string: imageURLString) else {
                 print("Error: Invalid image URL format")
                 completion(nil)
                 return
