@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1003,7 +1003,6 @@
 		4322491D2BC8885D002FC755 /* ZTF.png in Resources */ = {isa = PBXBuildFile; fileRef = 4322453B2BC8885D002FC755 /* ZTF.png */; };
 		4322491F2BC97CBD002FC755 /* FlightSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4322491E2BC97CBD002FC755 /* FlightSearch.swift */; };
 		43F82E782BB614D50003107C /* SpottyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E772BB614D50003107C /* SpottyApp.swift */; };
-		43F82E7A2BB614D50003107C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E792BB614D50003107C /* ContentView.swift */; };
 		43F82E7C2BB614D70003107C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43F82E7B2BB614D70003107C /* Assets.xcassets */; };
 		43F82E7F2BB614D70003107C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43F82E7E2BB614D70003107C /* Preview Assets.xcassets */; };
 		43F82E812BB614D70003107C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E802BB614D70003107C /* Persistence.swift */; };
@@ -2031,7 +2030,6 @@
 		4322491E2BC97CBD002FC755 /* FlightSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSearch.swift; sourceTree = "<group>"; };
 		43F82E742BB614D50003107C /* Spotty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spotty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43F82E772BB614D50003107C /* SpottyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyApp.swift; sourceTree = "<group>"; };
-		43F82E792BB614D50003107C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		43F82E7B2BB614D70003107C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		43F82E7E2BB614D70003107C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		43F82E802BB614D70003107C /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -2045,6 +2043,10 @@
 		51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightFetcher.swift; sourceTree = "<group>"; };
 		51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottedFlightsStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		43FBDE8E2CBF786C00447302 /* ContentViews */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ContentViews; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		43F82E712BB614D50003107C /* Frameworks */ = {
@@ -3094,9 +3096,9 @@
 		43F82E762BB614D50003107C /* Spotty */ = {
 			isa = PBXGroup;
 			children = (
+				43FBDE8E2CBF786C00447302 /* ContentViews */,
 				4322453C2BC8885D002FC755 /* logos */,
 				43F82E772BB614D50003107C /* SpottyApp.swift */,
-				43F82E792BB614D50003107C /* ContentView.swift */,
 				51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */,
 				518C54852BB749B2009CD716 /* UserSettings.swift */,
 				43F82E7B2BB614D70003107C /* Assets.xcassets */,
@@ -3149,6 +3151,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				43FBDE8E2CBF786C00447302 /* ContentViews */,
 			);
 			name = Spotty;
 			productName = Spotty;
@@ -4263,7 +4268,6 @@
 				4322415A2BC8522A002FC755 /* FlightSorter.swift in Sources */,
 				51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */,
 				4322491F2BC97CBD002FC755 /* FlightSearch.swift in Sources */,
-				43F82E7A2BB614D50003107C /* ContentView.swift in Sources */,
 				43F82E842BB614D70003107C /* Spotty.xcdatamodeld in Sources */,
 				51F4B8252BC06D6000CC4B71 /* SpottedFlightsStore.swift in Sources */,
 				43F82E782BB614D50003107C /* SpottyApp.swift in Sources */,

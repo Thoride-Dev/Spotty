@@ -62,7 +62,7 @@ struct Airport: Codable {
 class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     private var seenCallSigns = Set<String>()
     private let locationManager = CLLocationManager()
-    private let radiusKm: Double = 15
+    private let radiusKm: Double = 30
     private let earthRadiusKm: Double = 6371
     private var userSettings: UserSettings
     
