@@ -94,7 +94,7 @@ struct SearchView: View {
                     ProgressView()
                         .padding()
                 } else if let flight = flight {
-                    CardView(flight: flight)
+                    ImageLoaderView(flight: flight, imageURL: flight.imageURL!)
                         .padding(.horizontal)
                         .id(cardId) // Assign unique ID to CardView
                 } else {
@@ -159,7 +159,8 @@ struct ContentView: View {
                     ScrollView {
                         VStack(spacing: 10) {
                             ForEach(flightFetcher.flights) { flight in
-                                CardView(flight: flight)
+                                let imageURL = flight.imageURL
+                                ImageLoaderView(flight: flight, imageURL: imageURL!)
                             }
                         }
                         .padding(.horizontal)
@@ -235,7 +236,9 @@ struct ContentView_Previews: PreviewProvider {
 struct CardView: View {
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     let flight: Flight
+    let loadedImage: Image?
     @State private var isChecked: Bool = false
+    @State private var offsetY: CGFloat = UIScreen.main.bounds.height // Start off-screen
     private var isFlightSpotted: Bool {
         spottedFlightsStore.spottedFlights.contains(where: { $0.id == flight.id })
     }
@@ -253,9 +256,12 @@ struct CardView: View {
         }) {
             VStack(alignment: .center){
                 ZStack(alignment: .topLeading) {
-                    if let imageURL = flight.imageURL {
-                        ImageLoaderView(imageURL: imageURL)
-                            .clipShape(RoundedRectangle(cornerRadius: 30))
+                    if let image = loadedImage {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipped() // Clip the image to the frame
+                            .cornerRadius(30) // Apply corner radius if desired
                             .shadow(radius: 5)
                     } else {
                         Color.gray
@@ -353,55 +359,51 @@ struct CardView: View {
             }
             .padding(EdgeInsets(top: 0, leading: 2, bottom: -10, trailing: 2))
         }
+        .offset(y: offsetY)  // Apply the animated offset
         .onAppear {
             // Initialize isChecked based on whether the flight is spotted
             self.isChecked = isFlightSpotted
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.8, blendDuration: 0)) {
+                offsetY = 0  // Move it to its final position
+            }
         }
         .opacity(self.isChecked ? 0.3 : 1.0) // Adjust the opacity value as needed
     }
-    
-    struct ImageLoaderView: View {
-        let imageURL: URL
-        
-        func loadImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
-            URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard let data = data, error == nil else {
-                    completion(nil)
-                    return
-                }
-                completion(UIImage(data: data))
-            }.resume()
+}
+
+struct ImageLoaderView: View {
+    @State private var isImageLoaded = false // Track if the image has been loaded
+    @State private var loadedImage: Image? = nil // Store the loaded image
+    let flight: Flight
+    let imageURL: URL
+
+    var body: some View {
+        VStack {
+
+            if isImageLoaded {
+                CardView(flight: flight, loadedImage: loadedImage) // Show CardView once image is fully loaded
+            }
         }
+        .onAppear {
+            // Start loading the image in the background
+            loadImageFromURL()
+        }
+    }
 
-        @State private var image: UIImage? = nil
+    // Simulate image loading from a URL or some other async source
+    func loadImageFromURL() {
 
-        var body: some View {
-            if let image = image {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .clipped() // Clip the image to the frame
-                    .cornerRadius(16) // Apply corner radius if desired
-                    
-            } else {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 30)
-                        .fill(Color.gray)
-                        .aspectRatio(16/9, contentMode: .fill)
-                        .frame(maxWidth: .infinity)
-                        .clipped()
-                        .cornerRadius(30)
-                        .shadow(radius: 5)
-                    Text("No image...")
-                        .onAppear {
-                            loadImage(from: imageURL) { loadedImage in
-                                DispatchQueue.main.async {
-                                    self.image = loadedImage
-                                }
-                            }
-                        }
-                    }
+        
+        // Load the image data asynchronously
+        DispatchQueue.global().async {
+            if let data = try? Data(contentsOf: imageURL), let uiImage = UIImage(data: data) {
+                // Once the image is loaded, update the UI on the main thread
+                DispatchQueue.main.async {
+                    self.loadedImage = Image(uiImage: uiImage)
+                    self.isImageLoaded = true
                 }
             }
         }
+    }
 }
+
