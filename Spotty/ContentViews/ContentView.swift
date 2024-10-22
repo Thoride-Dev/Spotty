@@ -133,6 +133,13 @@ struct ContentView: View {
         }
         // Assuming .light mode is desired across the app; adjust as needed
         .environment(\.colorScheme, .light)
+        .toolbarBackground(.white, for: .tabBar)
+        .onAppear {
+            let apparence = UITabBarAppearance()
+            apparence.configureWithTransparentBackground()
+            if #available(iOS 15.0, *) {UITabBar.appearance().scrollEdgeAppearance = apparence}
+        }
+        
     }
 }
 

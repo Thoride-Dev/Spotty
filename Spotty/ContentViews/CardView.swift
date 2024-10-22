@@ -51,7 +51,7 @@ struct CardView: View {
                         let fontSize = min(maxSize, 13.5) // can change font size here
                         
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white)
+                            .fill(.regularMaterial)
                             .shadow(radius: 5)
                             .padding() // Add padding to adjust the card size
                             .overlay(
@@ -62,8 +62,12 @@ struct CardView: View {
                                         .foregroundColor(.black)
                                         .padding()
                                 }
+                                
+
+
                             )
                             .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .center)
+
                         // Ensure card adapts to different screen sizes
                     }
                     
@@ -78,7 +82,7 @@ struct CardView: View {
                         HStack{
                             ZStack {
                                 Circle()
-                                    .fill(Color.white)
+                                    .fill(.regularMaterial)
                                     .shadow(radius: 5)
                                     .frame(width: 50, height: 50) // Adjust the size of the circle
                                 Image("\(flight.OperatorFlagCode ?? "preview-airline")")
@@ -91,7 +95,7 @@ struct CardView: View {
                             
                             ZStack{
                                 RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color.white)
+                                    .fill(.regularMaterial)
                                     .shadow(radius: 5)
                                     .frame(width: geometry.size.width * 0.7, height: geometry.size.height * 3, alignment: .bottomLeading)
                                     .overlay(

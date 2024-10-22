@@ -1010,6 +1010,7 @@
 		43F82E8E2BB614D70003107C /* SpottyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E8D2BB614D70003107C /* SpottyTests.swift */; };
 		43F82E982BB614D70003107C /* SpottyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E972BB614D70003107C /* SpottyUITests.swift */; };
 		43F82E9A2BB614D70003107C /* SpottyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */; };
+		43FBDE992CC7218E00447302 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 43FBDE982CC7218E00447302 /* BottomSheet */; };
 		518C54862BB749B2009CD716 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518C54852BB749B2009CD716 /* UserSettings.swift */; };
 		51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */; };
 		51F4B8252BC06D6000CC4B71 /* SpottedFlightsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */; };
@@ -2053,6 +2054,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43FBDE992CC7218E00447302 /* BottomSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3228,6 +3230,9 @@
 				Base,
 			);
 			mainGroup = 43F82E6B2BB614D50003107C;
+			packageReferences = (
+				43FBDE972CC7218E00447302 /* XCRemoteSwiftPackageReference "BottomSheet" */,
+			);
 			productRefGroup = 43F82E752BB614D50003107C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -4599,6 +4604,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		43FBDE972CC7218E00447302 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lucaszischka/BottomSheet";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		43FBDE982CC7218E00447302 /* BottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 43FBDE972CC7218E00447302 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			productName = BottomSheet;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		43F82E822BB614D70003107C /* Spotty.xcdatamodeld */ = {

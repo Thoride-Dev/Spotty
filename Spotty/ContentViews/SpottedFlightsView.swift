@@ -79,6 +79,7 @@ struct SpottedFlightsView: View {
                     secondaryButton: .cancel()
                 )
             }
+
         }
     }
     
