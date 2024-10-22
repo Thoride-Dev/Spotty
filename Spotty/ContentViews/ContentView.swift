@@ -97,7 +97,7 @@ struct ContentView: View {
                         flightFetcher.refreshFlights()
                         print("-------------------- REFRESHING --------------------")
                     }
-                    .clipped()
+                    //.clipped()
                 }
             }
             .onAppear {
@@ -133,7 +133,7 @@ struct ContentView: View {
         }
         // Assuming .light mode is desired across the app; adjust as needed
         .environment(\.colorScheme, .light)
-        .toolbarBackground(.white, for: .tabBar)
+        .toolbarBackground(.hidden, for: .tabBar)
         .onAppear {
             let apparence = UITabBarAppearance()
             apparence.configureWithTransparentBackground()

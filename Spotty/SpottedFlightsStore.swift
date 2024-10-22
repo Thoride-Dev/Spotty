@@ -24,9 +24,8 @@ class SpottedFlightsStore: ObservableObject {
     func addFlight(_ flight: Flight) {
         var storableFlight = flight
         storableFlight.dateSpotted = Date()
-        if !self.spottedFlights.contains(where: { $0.id == flight.id }) {
-            self.spottedFlights.append(storableFlight)
-        }
+        self.spottedFlights.append(storableFlight)
+
     }
 
     func removeFlight(_ flight: Flight) {

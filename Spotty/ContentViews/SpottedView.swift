@@ -60,7 +60,7 @@ struct MapView: View {
                 }
             }) {
                 ZStack{
-                    
+                    SpottedFlightsView()
                 }
             }
             .customBackground {
