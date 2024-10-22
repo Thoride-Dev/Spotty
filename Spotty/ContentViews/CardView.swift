@@ -13,6 +13,7 @@ struct CardView: View {
     let loadedImage: Image?
     @State private var isChecked: Bool = false
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height // Start off-screen
+
     private var isFlightSpotted: Bool {
         spottedFlightsStore.spottedFlights.contains(where: { $0.id == flight.id })
     }
@@ -62,12 +63,9 @@ struct CardView: View {
                                         .foregroundColor(.black)
                                         .padding()
                                 }
-                                
-
-
-                            )
+                             )
                             .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .center)
-
+                        
                         // Ensure card adapts to different screen sizes
                     }
                     
@@ -146,8 +144,27 @@ struct CardView: View {
             }
         }
         .opacity(self.isChecked ? 0.3 : 1.0) // Adjust the opacity value as needed
+        .contextMenu {
+            Button {
+                // Add this item to a list of favorites.
+            } label: {
+                Label("Open Camera", systemImage: "camera")
+            }
+            
+            if(self.isChecked){
+                Button {
+                    self.spottedFlightsStore.addFlight(flight)
+                    print(flight)
+                } label: {
+                    Label("Re-add Flight", systemImage: "arrow.counterclockwise")
+                }
+                
+            }
+        }
+       
     }
 }
+
 
 struct ImageLoaderView: View {
     @State private var isImageLoaded = false // Track if the image has been loaded
