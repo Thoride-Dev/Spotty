@@ -52,58 +52,87 @@ struct MapView: View {
                     .relativeTop(0.975)
                 ], headerContent: {
                     //A SearchBar as headerContent.
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                        TextField("Search", text: self.$searchText)
-                    }
-                    .foregroundColor(Color(UIColor.secondaryLabel))
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 5)
-                    .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
-                    .padding([.horizontal, .bottom])
-                    .onTapGesture {
-                        self.bottomSheetPosition = .relativeTop(0.975)
+                    VStack {
+                        HStack{
+                            Text("My Spots")
+                                .font(.title)
+                                .foregroundColor(Color(UIColor.label))
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Image(systemName: "square.and.arrow.up")
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .bold()
+
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(EdgeInsets(top: -5, leading: 0, bottom: 0, trailing: 0))
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                            TextField("Search", text: self.$searchText)
+                        }
+                        .foregroundColor(Color(UIColor.secondaryLabel))
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 5)
+                        .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
+                        .padding([.horizontal, .bottom])
+                        .onTapGesture {
+                            self.bottomSheetPosition = .relativeTop(0.975)
+                        }
                     }
                 }) {
                     
                     ScrollView{
-                        VStack{
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 30)
-                                    .fill(LinearGradient(
-                                        gradient: .init(colors: [Color(red: 185 / 255, green: 221 / 255, blue: 237 / 255), Color(red: 211 / 255, green: 198 / 255, blue: 245 / 255)]),
-                                        startPoint: .init(x: 0.7, y: 0),
-                                        endPoint: .init(x: 0.3, y: 0.6)
-                                      ))
-                                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.32 , alignment: .bottomLeading)
-                                FlightPieChartView(flights: spottedFlightsStore.spottedFlights)
+                        if(spottedFlightsStore.spottedFlights.count == 0) {
+                            VStack{
+                                Text("No flights spotted yet.")
+                                    .font(.headline)
+                                    .foregroundColor(.secondary)
+                                Text("Get out there and spot some planes, then you'll see beautiful charts here!")
+                                    .foregroundColor(.secondary)
+                                    .font(.callout)
+                                    .padding()
+                                    .multilineTextAlignment(.center)
                             }
-                            .offset(y: offsetY)  // Apply the animated offset
-                            .onAppear {
-                                // Initialize isChecked based on whether the flight is spotted
-                                withAnimation(.spring(response: 0.8, dampingFraction: 0.8, blendDuration: 0).delay(0.2)) {
-                                    offsetY = 0  // Move it to its final position
+                        }
+                        else {
+                            VStack{
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 30)
+                                        .fill(LinearGradient(
+                                            gradient: .init(colors: [Color(red: 185 / 255, green: 221 / 255, blue: 237 / 255), Color(red: 211 / 255, green: 198 / 255, blue: 245 / 255)]),
+                                            startPoint: .init(x: 0.7, y: 0),
+                                            endPoint: .init(x: 0.3, y: 0.6)
+                                        ))
+                                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.32 , alignment: .bottomLeading)
+                                    FlightPieChartView(flights: spottedFlightsStore.spottedFlights)
                                 }
-                            }
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 30)
-                                    .fill(LinearGradient(
-                                        gradient: .init(colors: [Color(red: 15 / 255, green: 234 / 255, blue: 88 / 255), Color(red: 45 / 255, green: 217 / 255, blue: 236 / 255)]),
-                                        startPoint: .init(x: 0.7, y: 0),
-                                        endPoint: .init(x: 0.3, y: 0.6)
-                                      ))
-                                    .opacity(0.35)
-                                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.32 , alignment: .bottomLeading)
-                                AirlineBarChartView(flights: spottedFlightsStore.spottedFlights)
-                            }
-                            .offset(y: offsetY_2)  // Apply the animated offset
-                            .onAppear {
-                                // Initialize isChecked based on whether the flight is spotted
-                                withAnimation(.spring(response: 0.8, dampingFraction: 0.8, blendDuration: 0).delay(0.4)) {
-                                    offsetY_2 = 0  // Move it to its final position
+                                .offset(y: offsetY)  // Apply the animated offset
+                                .onAppear {
+                                    // Initialize isChecked based on whether the flight is spotted
+                                    withAnimation(.spring(response: 0.8, dampingFraction: 0.8, blendDuration: 0).delay(0.2)) {
+                                        offsetY = 0  // Move it to its final position
+                                    }
                                 }
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 30)
+                                        .fill(LinearGradient(
+                                            gradient: .init(colors: [Color(red: 15 / 255, green: 234 / 255, blue: 88 / 255), Color(red: 45 / 255, green: 217 / 255, blue: 236 / 255)]),
+                                            startPoint: .init(x: 0.7, y: 0),
+                                            endPoint: .init(x: 0.3, y: 0.6)
+                                        ))
+                                        .opacity(0.35)
+                                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.32 , alignment: .bottomLeading)
+                                    AirlineBarChartView(flights: spottedFlightsStore.spottedFlights)
+                                }
+                                .offset(y: offsetY_2)  // Apply the animated offset
+                                .onAppear {
+                                    // Initialize isChecked based on whether the flight is spotted
+                                    withAnimation(.spring(response: 0.8, dampingFraction: 0.8, blendDuration: 0).delay(0.4)) {
+                                        offsetY_2 = 0  // Move it to its final position
+                                    }
+                                }
+                                //SpottedFlightsView()
                             }
-                            //SpottedFlightsView()
                         }
                     }
                     
@@ -202,10 +231,10 @@ struct AirlineBarChartView: View {
     var body: some View {
         VStack {
             Text("Top 5 Airlines")
-                .font(.title2)
+                .font(.title)
                 .bold()
-                .padding(.top)
-                .multilineTextAlignment(.leading)
+                .padding(EdgeInsets(top: 20, leading: 40, bottom: 0, trailing: 40))
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             // Horizontal bar chart
             Chart(airlineCounts, id: \.operatorFlagCode) { data in
