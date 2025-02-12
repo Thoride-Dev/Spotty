@@ -21,7 +21,7 @@ struct SpottedView: View {
 @available(iOS 17.0, *)
 struct MapView: View {
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
-    @State var bottomSheetPosition: BottomSheetPosition = .relative(0.5)
+    @State var bottomSheetPosition: BottomSheetPosition = .relative(0.55)
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height // Start off-screen
     @State private var offsetY_2: CGFloat = UIScreen.main.bounds.height // Start off-screen
     
@@ -47,9 +47,9 @@ struct MapView: View {
                     MapPitchToggle()
                 }
                 .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, switchablePositions: [
-                    .relative(0.190),
-                    .relative(0.5),
-                    .relativeTop(0.975)
+                    .relative(0.25),
+                    .relative(0.55),
+                    .relativeTop(0.99)
                 ], headerContent: {
                     //A SearchBar as headerContent.
                     VStack {
@@ -76,7 +76,7 @@ struct MapView: View {
                         .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
                         .padding([.horizontal, .bottom])
                         .onTapGesture {
-                            self.bottomSheetPosition = .relativeTop(0.975)
+                            self.bottomSheetPosition = .relativeTop(0.99)
                         }
                     }
                 }) {
@@ -109,7 +109,7 @@ struct MapView: View {
                                 .offset(y: offsetY)  // Apply the animated offset
                                 .onAppear {
                                     // Initialize isChecked based on whether the flight is spotted
-                                    withAnimation(.spring(response: 0.8, dampingFraction: 0.8, blendDuration: 0).delay(0.2)) {
+                                    withAnimation(.easeOut(duration: 0.4).delay(0.2)) {
                                         offsetY = 0  // Move it to its final position
                                     }
                                 }
@@ -127,7 +127,25 @@ struct MapView: View {
                                 .offset(y: offsetY_2)  // Apply the animated offset
                                 .onAppear {
                                     // Initialize isChecked based on whether the flight is spotted
-                                    withAnimation(.spring(response: 0.8, dampingFraction: 0.8, blendDuration: 0).delay(0.4)) {
+                                    withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
+                                        offsetY_2 = 0  // Move it to its final position
+                                    }
+                                }
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 30)
+                                        .fill(LinearGradient(
+                                            gradient: .init(colors: [Color(red: 242 / 255, green: 156 / 255, blue: 70 / 255), Color(red: 218 / 255, green: 224 / 255, blue: 136 / 255)]),
+                                            startPoint: .init(x: 0.4, y: 0.8),
+                                            endPoint: .init(x: 0, y: 0.2)
+                                        ))
+                                        .opacity(0.35)
+                                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.15 , alignment: .bottomLeading)
+                                    ICAOProgressView(flights: spottedFlightsStore.spottedFlights)
+                                }
+                                .offset(y: offsetY_2)  // Apply the animated offset
+                                .onAppear {
+                                    // Initialize isChecked based on whether the flight is spotted
+                                    withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
                                         offsetY_2 = 0  // Move it to its final position
                                     }
                                 }
@@ -263,6 +281,50 @@ struct AirlineBarChartView: View {
             .chartLegend(.hidden)
             .padding(EdgeInsets(top: 0, leading: 40, bottom: 10, trailing: 40))
         }
+    }
+}
+
+struct ICAOProgressView: View {
+    let flights: [Flight]
+    let totalICAOTypes = 274
+    
+    var uniqueICAOTypesCount: Int {
+        Set(flights.compactMap { $0.icaoType }).count
+    }
+    
+    var progress: Double {
+        Double(uniqueICAOTypesCount) / Double(totalICAOTypes)
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("\(uniqueICAOTypesCount) / \(totalICAOTypes) Planes Discovered")
+                .font(.title3)
+                .bold()
+                .padding(.bottom, 5)
+            
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(height: 20)
+                        .foregroundColor(Color(.systemGray4))
+                    
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: geometry.size.width * progress, height: 20)
+                        .foregroundColor(.blue)
+                        .animation(.easeInOut, value: progress)
+                }
+            }
+            .frame(height: 20)
+            
+            HStack {
+                Text("\(Int(progress * 100))% Completed")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+            }
+        }
+        .padding(EdgeInsets(top: 0, leading: 40, bottom: 10, trailing: 40))
     }
 }
 
