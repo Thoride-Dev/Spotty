@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CardView: View {
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     let flight: Flight
     let loadedImage: Image?
@@ -49,25 +50,24 @@ struct CardView: View {
                     //Callsign
                     GeometryReader { geometry in
                         let maxSize = min(geometry.size.width, geometry.size.height) * 0.15
-                        let fontSize = min(maxSize, 13.5) // can change font size here
-                        
+                        let fontSize = min(maxSize, 13.5) // Adjust font size here
+
                         RoundedRectangle(cornerRadius: 16)
                             .fill(.regularMaterial)
                             .shadow(radius: 5)
                             .padding() // Add padding to adjust the card size
                             .overlay(
                                 VStack {
-                                    // callsign display
+                                    // Callsign display
                                     Text(flight.callSign ?? "N/A")
                                         .font(.system(size: fontSize, weight: .bold))
-                                        .foregroundColor(.black)
+                                        .foregroundColor(colorScheme == .dark ? .white : .black)
                                         .padding()
                                 }
-                             )
+                            )
                             .frame(width: geometry.size.width * 0.3, height: geometry.size.height * 0.3, alignment: .center)
-                        
-                        // Ensure card adapts to different screen sizes
                     }
+
                     
                     
                     

@@ -88,7 +88,6 @@ struct ContentView: View {
             }
         }
         // Assuming .light mode is desired across the app; adjust as needed
-        .environment(\.colorScheme, .light)
         .toolbarBackground(.hidden, for: .tabBar)
         .onAppear {
             let apparence = UITabBarAppearance()
