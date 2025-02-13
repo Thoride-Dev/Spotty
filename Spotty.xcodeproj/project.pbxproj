@@ -1011,7 +1011,6 @@
 		43F82E982BB614D70003107C /* SpottyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E972BB614D70003107C /* SpottyUITests.swift */; };
 		43F82E9A2BB614D70003107C /* SpottyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */; };
 		43FBDE992CC7218E00447302 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 43FBDE982CC7218E00447302 /* BottomSheet */; };
-		518C54862BB749B2009CD716 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518C54852BB749B2009CD716 /* UserSettings.swift */; };
 		51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */; };
 		51F4B8252BC06D6000CC4B71 /* SpottedFlightsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */; };
 /* End PBXBuildFile section */
@@ -2040,7 +2039,6 @@
 		43F82E932BB614D70003107C /* SpottyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpottyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		43F82E972BB614D70003107C /* SpottyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyUITests.swift; sourceTree = "<group>"; };
 		43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		518C54852BB749B2009CD716 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightFetcher.swift; sourceTree = "<group>"; };
 		51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottedFlightsStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -3102,7 +3100,6 @@
 				4322453C2BC8885D002FC755 /* logos */,
 				43F82E772BB614D50003107C /* SpottyApp.swift */,
 				51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */,
-				518C54852BB749B2009CD716 /* UserSettings.swift */,
 				43F82E7B2BB614D70003107C /* Assets.xcassets */,
 				43F82E802BB614D70003107C /* Persistence.swift */,
 				43F82E822BB614D70003107C /* Spotty.xcdatamodeld */,
@@ -4269,7 +4266,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				43F82E812BB614D70003107C /* Persistence.swift in Sources */,
-				518C54862BB749B2009CD716 /* UserSettings.swift in Sources */,
 				4322415A2BC8522A002FC755 /* FlightSorter.swift in Sources */,
 				51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */,
 				4322491F2BC97CBD002FC755 /* FlightSearch.swift in Sources */,

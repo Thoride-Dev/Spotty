@@ -2,68 +2,6 @@ import SwiftUI
 
 
 
-struct SearchView: View {
-    @State private var searchText: String = ""
-    @State private var flight: Flight? = nil
-    @State private var cardId = UUID() // Unique ID for CardView
-    @State private var isLoading = false
-    @ObservedObject private var flightSearch = FlightSearch()
-
-    var body: some View {
-        VStack {
-            ScrollView {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                    TextField("Search by hex or registration", text: self.$searchText)
-                        .onSubmit {
-                            if(self.searchText != ""){
-                                self.searchFlight(self.searchText)
-                            }
-                        }
-                }
-                .foregroundColor(Color(UIColor.secondaryLabel))
-                .padding(.vertical, 8)
-                .padding(.horizontal, 5)
-                .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
-                .padding([.horizontal, .bottom])
-                
-                
-                if isLoading {
-                    ProgressView()
-                        .padding()
-                } else if let flight = flight {
-                    ImageLoaderView(flight: flight, imageURL: flight.imageURL!)
-                        .padding(.horizontal)
-                        .id(cardId) // Assign unique ID to CardView
-                } else {
-                    Text("No flight found")
-                        .foregroundColor(.gray)
-                        .padding()
-                }
-            }
-        }
-        .clipped()
-    }
-
-    private func searchFlight(_ searchText: String) {
-        isLoading = true
-        flightSearch.searchFlight(hexOrReg: searchText) { flight in
-            DispatchQueue.main.async {
-                isLoading = false
-                // Create a new instance of Flight with updated properties
-                self.flight = flight
-                self.cardId = UUID()
-                if flight == nil{
-                    self.flight = nil
-                    return
-                }
-                return
-            }
-        }
-    }
-}
-
-
 @available(iOS 17.0, *)
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
@@ -113,6 +51,7 @@ struct ContentView: View {
             .onAppear {
                 // Check the user settings and refresh if needed
                 if userSettings.isRefreshOnTap {
+                    isFetching = true
                     flightFetcher.refreshFlights()
                     print("-------------------- REFRESHING --------------------")
                 }

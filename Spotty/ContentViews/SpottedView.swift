@@ -160,6 +160,7 @@ struct MapView: View {
                         }
                     }
                     
+                    
                 }
                 .customBackground {
                     Color.white
@@ -172,6 +173,7 @@ struct MapView: View {
                             )
                         )
                 }
+                .ignoresSafeArea(.keyboard)
             }
         }
     }
