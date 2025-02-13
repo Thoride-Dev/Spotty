@@ -29,7 +29,7 @@ struct MapView: View {
     @State private var showSheet: Bool = true
     @State var searchText: String = ""
 
-
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         GeometryReader { geometry in
             ZStack{
@@ -54,16 +54,18 @@ struct MapView: View {
                 ], headerContent: {
                     //A SearchBar as headerContent.
                     VStack {
+                        
                         HStack{
                             Text("My Spots")
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
                                 .font(.title)
-                                .foregroundColor(Color(UIColor.label))
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             Button(action: {
                                 exportCSV(flights: spottedFlightsStore.spottedFlights)
                             }) {
                                 Image(systemName: "square.and.arrow.up")
+                                    .foregroundColor(.blue)
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                     .bold()
                             }
@@ -85,6 +87,7 @@ struct MapView: View {
                             self.bottomSheetPosition = .relativeTop(0.99)
                         }
                     }
+
                 }) {
                     
                     ScrollView{
@@ -163,7 +166,7 @@ struct MapView: View {
                     
                 }
                 .customBackground {
-                    Color.white
+                    (colorScheme == .dark ? Color.black : Color.white)
                         .clipShape(
                             .rect(
                                 topLeadingRadius: 30,
@@ -173,11 +176,14 @@ struct MapView: View {
                             )
                         )
                 }
+
+
                 .ignoresSafeArea(.keyboard)
             }
         }
     }
 }
+    
 
 @available(iOS 17.0, *)
 struct FlightPieChartView: View {
@@ -222,6 +228,7 @@ struct FlightPieChartView: View {
                     let frame = geometry[chartProxy.plotAreaFrame]
                     VStack {
                         Text("Most Common\nAircraft") // Display the count of the selected aircraft
+                            .foregroundColor(.primary)
                             .font(.system(size: 12))
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -258,6 +265,7 @@ struct AirlineBarChartView: View {
         VStack {
             Text("Top 5 Airlines")
                 .font(.title)
+                .foregroundColor(.primary)
                 .bold()
                 .padding(EdgeInsets(top: 20, leading: 40, bottom: 0, trailing: 40))
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -307,6 +315,7 @@ struct ICAOProgressView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("\(uniqueICAOTypesCount) / \(totalICAOTypes) Planes Discovered")
+                .foregroundColor(.primary)
                 .font(.title3)
                 .bold()
                 .padding(.bottom, 5)
