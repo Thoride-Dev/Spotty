@@ -12,10 +12,21 @@ struct SearchView: View {
     var body: some View {
         VStack {
             ScrollView {
-                SearchBar(text: $searchText, placeholder: "Search by hex or registration") { text in
-                    self.searchFlight(text)
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                    TextField("Search by hex or registration", text: self.$searchText)
+                        .onSubmit {
+                            if(self.searchText != ""){
+                                self.searchFlight(self.searchText)
+                            }
+                        }
                 }
-                .padding()
+                .foregroundColor(Color(UIColor.secondaryLabel))
+                .padding(.vertical, 8)
+                .padding(.horizontal, 5)
+                .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
+                .padding([.horizontal, .bottom])
+                
                 
                 if isLoading {
                     ProgressView()
@@ -44,6 +55,7 @@ struct SearchView: View {
                 self.cardId = UUID()
                 if flight == nil{
                     self.flight = nil
+                    return
                 }
                 return
             }
@@ -51,23 +63,6 @@ struct SearchView: View {
     }
 }
 
-struct SearchBar: View {
-    @Binding var text: String
-    var placeholder: String
-    var onCommit: (String) -> Void
-
-    var body: some View {
-        HStack {
-            TextField(placeholder, text: $text, onCommit: {
-                self.onCommit(self.text)
-            })
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            .padding(.horizontal)
-            .disableAutocorrection(true)
-            .autocapitalization(.none)
-        }
-    }
-}
 
 @available(iOS 17.0, *)
 struct ContentView: View {
@@ -101,12 +96,15 @@ struct ContentView: View {
                 }
             }
             .onAppear {
-                flightFetcher.startLocationUpdates()
                 // Check the user settings and refresh if needed
                 if userSettings.isRefreshOnTap {
                     flightFetcher.refreshFlights()
                     print("-------------------- REFRESHING --------------------")
                 }
+
+            }
+            .onFirstAppear {
+                flightFetcher.refreshFlights()
             }
             .tabItem {
                 Image(systemName: "dot.radiowaves.left.and.right")
@@ -154,6 +152,31 @@ struct ClearSpottedFlightsButton: View {
         .background(Color.red) // Styling for the button
         .foregroundColor(.white)
         .clipShape(Capsule()) // Makes the button have rounded corners
+    }
+}
+
+public struct OnFirstAppearModifier: ViewModifier {
+
+    private let onFirstAppearAction: () -> ()
+    @State private var hasAppeared = false
+    
+    public init(_ onFirstAppearAction: @escaping () -> ()) {
+        self.onFirstAppearAction = onFirstAppearAction
+    }
+    
+    public func body(content: Content) -> some View {
+        content
+            .onAppear {
+                guard !hasAppeared else { return }
+                hasAppeared = true
+                onFirstAppearAction()
+            }
+    }
+}
+
+extension View {
+    func onFirstAppear(_ onFirstAppearAction: @escaping () -> () ) -> some View {
+        return modifier(OnFirstAppearModifier(onFirstAppearAction))
     }
 }
 

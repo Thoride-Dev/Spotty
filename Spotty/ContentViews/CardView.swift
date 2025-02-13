@@ -150,6 +150,11 @@ struct CardView: View {
             } label: {
                 Label("Open Camera", systemImage: "camera")
             }
+            Button {
+                // Open camera picker and select photo
+            } label: {
+                Label("Choose Photo", systemImage: "photo")
+            }
             
             if(self.isChecked){
                 Button {

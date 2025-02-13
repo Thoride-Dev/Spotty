@@ -9,8 +9,11 @@ import Foundation
 import SwiftUI
 
 class UserSettings: ObservableObject {
+    static let shared = UserSettings() // Singleton instance
+
     @Published var isDebugModeEnabled: Bool = false
-    @Published var isRefreshOnTap: Bool = false
+    @Published var isRefreshOnTap: Bool = true
+    @Published var radiusKm: Double = 20
 }
 
 struct SettingsView: View {
@@ -23,10 +26,16 @@ struct SettingsView: View {
                     debugModeToggled(newValue)
                 }
             Section(header: Text("Nearby")) {
-                Toggle("Refresh on Tap", isOn: $userSettings.isRefreshOnTap)
+                Toggle("Refresh on Appear", isOn: $userSettings.isRefreshOnTap)
                     .onChange(of: userSettings.isRefreshOnTap) { newValue in
                         refreshTapToggle(newValue)
                     }
+                VStack(alignment: .leading) {
+                    Text("Search Radius: \(Int(userSettings.radiusKm)) km")
+                        .font(.subheadline)
+                    
+                    Slider(value: $userSettings.radiusKm, in: 1...50, step: 1)
+                }
             }
         }
         .navigationTitle("Settings")

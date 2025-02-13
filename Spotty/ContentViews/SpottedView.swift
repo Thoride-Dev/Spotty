@@ -9,7 +9,8 @@ import SwiftUI
 import MapKit
 import BottomSheet
 import Charts
-
+import UniformTypeIdentifiers
+import UIKit
 
 @available(iOS 17.0, *)
 struct SpottedView: View {
@@ -59,9 +60,14 @@ struct MapView: View {
                                 .foregroundColor(Color(UIColor.label))
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Image(systemName: "square.and.arrow.up")
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .bold()
+                            Button(action: {
+                                exportCSV(flights: spottedFlightsStore.spottedFlights)
+                            }) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .bold()
+                            }
+                            //.buttonStyle(.plain)
 
                         }
                         .padding(.horizontal, 20)
@@ -109,7 +115,7 @@ struct MapView: View {
                                 .offset(y: offsetY)  // Apply the animated offset
                                 .onAppear {
                                     // Initialize isChecked based on whether the flight is spotted
-                                    withAnimation(.easeOut(duration: 0.4).delay(0.2)) {
+                                    withAnimation(.easeIn(duration: 1).delay(0.2)) {
                                         offsetY = 0  // Move it to its final position
                                     }
                                 }
@@ -127,7 +133,7 @@ struct MapView: View {
                                 .offset(y: offsetY_2)  // Apply the animated offset
                                 .onAppear {
                                     // Initialize isChecked based on whether the flight is spotted
-                                    withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
+                                    withAnimation(.easeIn(duration: 1).delay(0.4)) {
                                         offsetY_2 = 0  // Move it to its final position
                                     }
                                 }
@@ -325,6 +331,71 @@ struct ICAOProgressView: View {
             }
         }
         .padding(EdgeInsets(top: 0, leading: 40, bottom: 10, trailing: 40))
+    }
+}
+
+
+//-----------------------CSV Stuff--------------------------//
+
+
+func generateCSV(from flights: [Flight]) -> String {
+    var csvString = "ID,CallSign,Registration,Type,ICAO_Type,Origin,Destination,Operator_Flag_Code,Latitude,Longitude,Date_Spotted,Time\n"
+
+    for flight in flights {
+        let latitude = flight.position?.latitude.map { "\($0)" } ?? "" // Empty string if nil
+        let longitude = flight.position?.longitude.map { "\($0)" } ?? ""
+        let operatorFlagCode = flight.OperatorFlagCode ?? "" // Handle nil case
+
+
+        let row = [
+            flight.id ?? "",
+            flight.callSign ?? "",
+            flight.registration ?? "",
+            flight.type ?? "",
+            flight.icaoType ?? "",
+            flight.origin?.name ?? "",
+            flight.destination?.name ?? "",
+            operatorFlagCode,
+            latitude,
+            longitude,
+            flight.formattedDate
+        ].joined(separator: ",")
+
+        csvString.append("\(row)\n")
+    }
+
+    return csvString
+}
+
+
+func saveCSVToDocuments(csvString: String) -> URL? {
+    let fileName = "SpottedFlights.csv"
+    let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+    
+    do {
+        try csvString.write(to: fileURL, atomically: true, encoding: .utf8)
+        return fileURL
+    } catch {
+        print("Error saving file: \(error)")
+        return nil
+    }
+}
+
+
+
+func exportCSV(flights: [Flight]) {
+    let csvString = generateCSV(from: flights)
+    
+    if let fileURL = saveCSVToDocuments(csvString: csvString) {
+        let picker = UIDocumentPickerViewController(forExporting: [fileURL])
+        picker.modalPresentationStyle = .fullScreen
+        
+        if let topVC = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow })?.rootViewController {
+            topVC.present(picker, animated: true)
+        }
     }
 }
 
