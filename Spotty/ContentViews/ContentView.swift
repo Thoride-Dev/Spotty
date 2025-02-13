@@ -32,7 +32,7 @@ struct SearchView: View {
                     ProgressView()
                         .padding()
                 } else if let flight = flight {
-                    ImageLoaderView(flight: flight, imageURL: flight.imageURL!)
+                    ImageLoaderView(flight: .constant(flight), imageURL: flight.imageURL!) //TODO Fix this being constant
                         .padding(.horizontal)
                         .id(cardId) // Assign unique ID to CardView
                 } else {
@@ -81,9 +81,9 @@ struct ContentView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 10) {
-                            ForEach(flightFetcher.flights) { flight in
+                            ForEach($flightFetcher.flights) { $flight in
                                 let imageURL = flight.imageURL
-                                ImageLoaderView(flight: flight, imageURL: imageURL!)
+                                ImageLoaderView(flight: $flight, imageURL: imageURL!)
                             }
                         }
                         .padding(.horizontal)

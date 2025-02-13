@@ -9,8 +9,10 @@ import SwiftUI
 
 struct CardView: View {
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
-    let flight: Flight
+    @Binding var flight: Flight
     let loadedImage: Image?
+    @State private var showImagePicker = false
+    @State private var selectedImage: UIImage?
     @State private var isChecked: Bool = false
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height // Start off-screen
 
@@ -152,6 +154,10 @@ struct CardView: View {
             }
             Button {
                 // Open camera picker and select photo
+                showImagePicker = true
+                withAnimation(.easeIn(duration: 0.15)) {
+                    self.isChecked.toggle()
+                }
             } label: {
                 Label("Choose Photo", systemImage: "photo")
             }
@@ -166,7 +172,13 @@ struct CardView: View {
                 
             }
         }
-       
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerView { image in
+                if let imageData = image.jpegData(compressionQuality: 0.8) {
+                    flight.userImageData = imageData  // Save image to flight
+                }
+            }
+        }
     }
 }
 
@@ -174,14 +186,14 @@ struct CardView: View {
 struct ImageLoaderView: View {
     @State private var isImageLoaded = false // Track if the image has been loaded
     @State private var loadedImage: Image? = nil // Store the loaded image
-    let flight: Flight
+    @Binding var flight: Flight
     let imageURL: URL
 
     var body: some View {
         VStack {
 
             if isImageLoaded {
-                CardView(flight: flight, loadedImage: loadedImage) // Show CardView once image is fully loaded
+                CardView(flight: $flight, loadedImage: loadedImage) // Show CardView once image is fully loaded
             }
         }
         .onAppear {
