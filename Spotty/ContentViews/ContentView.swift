@@ -69,37 +69,56 @@ struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     @EnvironmentObject var userSettings: UserSettings
-
+    @State private var isFetching: Bool = true
 
     var body: some View {
         TabView {
             // Nearby flights tab
-            VStack {
-                if flightFetcher.flights.isEmpty {
-                    Text("Fetching flights nearby...")
-                    ProgressView()
+            ScrollView {
+                if isFetching {
+                    VStack {
+                        Text("Fetching nearby flights...")
+                            .font(.title3)
+                        ProgressView()
+                    }
+                    .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.8) // Push to center
+                } else if flightFetcher.flights.isEmpty {
+                    VStack {
+                        Text("No flights found :(")
+                            .font(.title3)
+                        Text("Try increasing the radius!")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.8) // Push to center
                 } else {
-                    ScrollView {
-                        VStack(spacing: 10) {
-                            ForEach(flightFetcher.flights) { flight in
-                                let imageURL = flight.imageURL
-                                ImageLoaderView(flight: flight, imageURL: imageURL!)
-                            }
+                    VStack(spacing: 10) {
+                        ForEach(flightFetcher.flights) { flight in
+                            let imageURL = flight.imageURL
+                            ImageLoaderView(flight: flight, imageURL: imageURL!)
                         }
-                        .padding(.horizontal)
                     }
-                    .refreshable {
-                        flightFetcher.refreshFlights()
-                        print("-------------------- REFRESHING --------------------")
-                    }
-                    //.clipped()
+                    .padding(.horizontal)
                 }
             }
+            .refreshable {
+                flightFetcher.refreshFlights()
+                isFetching = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                   isFetching = false  // Stop fetching indicator
+                }
+                print("-------------------- REFRESHING --------------------")
+            }
+            //.clipped()
             .onAppear {
                 // Check the user settings and refresh if needed
                 if userSettings.isRefreshOnTap {
                     flightFetcher.refreshFlights()
                     print("-------------------- REFRESHING --------------------")
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                   isFetching = false  // Stop fetching indicator
                 }
 
             }

@@ -34,7 +34,7 @@ struct SettingsView: View {
                     Text("Search Radius: \(Int(userSettings.radiusKm)) km")
                         .font(.subheadline)
                     
-                    Slider(value: $userSettings.radiusKm, in: 1...50, step: 1)
+                    Slider(value: $userSettings.radiusKm, in: 1...40, step: 1)
                 }
             }
         }
