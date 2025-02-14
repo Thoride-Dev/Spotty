@@ -1,0 +1,1367 @@
+[
+    {
+        "ICAO_Code":"A140",
+        "Alternative_Code":"A40",
+        "Aircraft_Name":"Antonov An-140"
+    },
+    {
+        "ICAO_Code":"A148",
+        "Alternative_Code":"A81",
+        "Aircraft_Name":"Antonov An-148"
+    },
+    {
+        "ICAO_Code":"A158",
+        "Alternative_Code":"A58",
+        "Aircraft_Name":"Antonov An-158"
+    },
+    {
+        "ICAO_Code":"A19N",
+        "Alternative_Code":"31N",
+        "Aircraft_Name":"Airbus A319neo"
+    },
+    {
+        "ICAO_Code":"A20N",
+        "Alternative_Code":"32N",
+        "Aircraft_Name":"Airbus A320neo"
+    },
+    {
+        "ICAO_Code":"A21N",
+        "Alternative_Code":"32Q",
+        "Aircraft_Name":"Airbus A321neo"
+    },
+    {
+        "ICAO_Code":"A225",
+        "Alternative_Code":"A5F",
+        "Aircraft_Name":"Antonov An-225 Mriya"
+    },
+    {
+        "ICAO_Code":"A306",
+        "Alternative_Code":"AB6",
+        "Aircraft_Name":"Airbus A300-600"
+    },
+    {
+        "ICAO_Code":"A306",
+        "Alternative_Code":"ABY",
+        "Aircraft_Name":"Airbus A300-600 Freighter[4]"
+    },
+    {
+        "ICAO_Code":"A30B",
+        "Alternative_Code":"AB4",
+        "Aircraft_Name":"Airbus A300B2, A300B4 and A300C4"
+    },
+    {
+        "ICAO_Code":"A310",
+        "Alternative_Code":312,
+        "Aircraft_Name":"Airbus A310-200"
+    },
+    {
+        "ICAO_Code":"A310",
+        "Alternative_Code":313,
+        "Aircraft_Name":"Airbus A310-300"
+    },
+    {
+        "ICAO_Code":"A318",
+        "Alternative_Code":318,
+        "Aircraft_Name":"Airbus A318"
+    },
+    {
+        "ICAO_Code":"A318",
+        "Alternative_Code":"32C",
+        "Aircraft_Name":"Airbus A318 (sharklets)"
+    },
+    {
+        "ICAO_Code":"A319",
+        "Alternative_Code":319,
+        "Aircraft_Name":"Airbus A319"
+    },
+    {
+        "ICAO_Code":"A319",
+        "Alternative_Code":"32D",
+        "Aircraft_Name":"Airbus A319 (sharklets)"
+    },
+    {
+        "ICAO_Code":"A320",
+        "Alternative_Code":320,
+        "Aircraft_Name":"Airbus A320"
+    },
+    {
+        "ICAO_Code":"A320",
+        "Alternative_Code":"32A",
+        "Aircraft_Name":"Airbus A320 (sharklets)"
+    },
+    {
+        "ICAO_Code":"A321",
+        "Alternative_Code":321,
+        "Aircraft_Name":"Airbus A321"
+    },
+    {
+        "ICAO_Code":"A321",
+        "Alternative_Code":"32B",
+        "Aircraft_Name":"Airbus A321 (sharklets)"
+    },
+    {
+        "ICAO_Code":"A332",
+        "Alternative_Code":332,
+        "Aircraft_Name":"Airbus A330-200"
+    },
+    {
+        "ICAO_Code":"A333",
+        "Alternative_Code":333,
+        "Aircraft_Name":"Airbus A330-300"
+    },
+    {
+        "ICAO_Code":"A332",
+        "Alternative_Code":"33X",
+        "Aircraft_Name":"Airbus A330-200 Freighter"
+    },
+    {
+        "ICAO_Code":"A333",
+        "Alternative_Code":"33Y",
+        "Aircraft_Name":"Airbus A330-300 Freighter"
+    },
+    {
+        "ICAO_Code":"A337",
+        "Alternative_Code":"[to be determined]",
+        "Aircraft_Name":"Airbus A330-700 \"BelugaXL\""
+    },
+    {
+        "ICAO_Code":"A338",
+        "Alternative_Code":338,
+        "Aircraft_Name":"Airbus A330-800"
+    },
+    {
+        "ICAO_Code":"A339",
+        "Alternative_Code":339,
+        "Aircraft_Name":"Airbus A330-900"
+    },
+    {
+        "ICAO_Code":"A342",
+        "Alternative_Code":342,
+        "Aircraft_Name":"Airbus A340-200"
+    },
+    {
+        "ICAO_Code":"A343",
+        "Alternative_Code":343,
+        "Aircraft_Name":"Airbus A340-300"
+    },
+    {
+        "ICAO_Code":"A345",
+        "Alternative_Code":345,
+        "Aircraft_Name":"Airbus A340-500"
+    },
+    {
+        "ICAO_Code":"A346",
+        "Alternative_Code":346,
+        "Aircraft_Name":"Airbus A340-600"
+    },
+    {
+        "ICAO_Code":"A359",
+        "Alternative_Code":359,
+        "Aircraft_Name":"Airbus A350-900"
+    },
+    {
+        "ICAO_Code":"A35K",
+        "Alternative_Code":351,
+        "Aircraft_Name":"Airbus A350-1000"
+    },
+    {
+        "ICAO_Code":"A388",
+        "Alternative_Code":388,
+        "Aircraft_Name":"Airbus A380-800"
+    },
+    {
+        "ICAO_Code":"A3ST",
+        "Alternative_Code":"ABB",
+        "Aircraft_Name":"Airbus A300-600ST \"Super Transporter\" \/ \"Beluga\""
+    },
+    {
+        "ICAO_Code":"A400",
+        "Alternative_Code":null,
+        "Aircraft_Name":"Airbus A400M Atlas"
+    },
+    {
+        "ICAO_Code":"A748",
+        "Alternative_Code":"HS7",
+        "Aircraft_Name":"Hawker Siddeley HS 748"
+    },
+    {
+        "ICAO_Code":"AC90",
+        "Alternative_Code":"ACT",
+        "Aircraft_Name":"Gulfstream\/Rockwell (Aero) Turbo Commander 690"
+    },
+    {
+        "ICAO_Code":"AJ27",
+        "Alternative_Code":"C27",
+        "Aircraft_Name":"COMAC ARJ21"
+    },
+    {
+        "ICAO_Code":"AN12",
+        "Alternative_Code":"ANF",
+        "Aircraft_Name":"Antonov An-12"
+    },
+    {
+        "ICAO_Code":"AN24",
+        "Alternative_Code":"AN4",
+        "Aircraft_Name":"Antonov An-24"
+    },
+    {
+        "ICAO_Code":"AN26",
+        "Alternative_Code":"A26",
+        "Aircraft_Name":"Antonov An-26"
+    },
+    {
+        "ICAO_Code":"AN28",
+        "Alternative_Code":"A28",
+        "Aircraft_Name":"Antonov An-28"
+    },
+    {
+        "ICAO_Code":"AN30",
+        "Alternative_Code":"A30",
+        "Aircraft_Name":"Antonov An-30"
+    },
+    {
+        "ICAO_Code":"AN32",
+        "Alternative_Code":"A32",
+        "Aircraft_Name":"Antonov An-32"
+    },
+    {
+        "ICAO_Code":"AN72",
+        "Alternative_Code":"AN7",
+        "Aircraft_Name":"Antonov An-72 \/ An-74"
+    },
+    {
+        "ICAO_Code":"AT43",
+        "Alternative_Code":"AT4",
+        "Aircraft_Name":"Aerospatiale\/Alenia ATR 42-300 \/ 320"
+    },
+    {
+        "ICAO_Code":"AT45",
+        "Alternative_Code":"AT5",
+        "Aircraft_Name":"Aerospatiale\/Alenia ATR 42-500"
+    },
+    {
+        "ICAO_Code":"AT46",
+        "Alternative_Code":"ATR",
+        "Aircraft_Name":"Aerospatiale\/Alenia ATR 42-600"
+    },
+    {
+        "ICAO_Code":"AT72",
+        "Alternative_Code":"AT7",
+        "Aircraft_Name":"Aerospatiale\/Alenia ATR 72-201\/-202"
+    },
+    {
+        "ICAO_Code":"AT73",
+        "Alternative_Code":"ATR",
+        "Aircraft_Name":"Aerospatiale\/Alenia ATR 72-211\/-212"
+    },
+    {
+        "ICAO_Code":"AT75",
+        "Alternative_Code":"ATR",
+        "Aircraft_Name":"Aerospatiale\/Alenia ATR 72-212A (500)"
+    },
+    {
+        "ICAO_Code":"AT76",
+        "Alternative_Code":"ATR",
+        "Aircraft_Name":"Aerospatiale\/Alenia ATR 72-212A (600)"
+    },
+    {
+        "ICAO_Code":"ATP",
+        "Alternative_Code":"ATP",
+        "Aircraft_Name":"British Aerospace ATP"
+    },
+    {
+        "ICAO_Code":"B190",
+        "Alternative_Code":"BEH",
+        "Aircraft_Name":"Beechcraft 1900"
+    },
+    {
+        "ICAO_Code":"B37M",
+        "Alternative_Code":"7M7",
+        "Aircraft_Name":"Boeing 737 MAX 7"
+    },
+    {
+        "ICAO_Code":"B38M",
+        "Alternative_Code":"7M8",
+        "Aircraft_Name":"Boeing 737 MAX 8"
+    },
+    {
+        "ICAO_Code":"B39M",
+        "Alternative_Code":"7M9",
+        "Aircraft_Name":"Boeing 737 MAX 9"
+    },
+    {
+        "ICAO_Code":"B3XM",
+        "Alternative_Code":"7MJ",
+        "Aircraft_Name":"Boeing 737 MAX 10"
+    },
+    {
+        "ICAO_Code":"B461",
+        "Alternative_Code":141,
+        "Aircraft_Name":"BAe 146-100"
+    },
+    {
+        "ICAO_Code":"B462",
+        "Alternative_Code":142,
+        "Aircraft_Name":"BAe 146-200"
+    },
+    {
+        "ICAO_Code":"B463",
+        "Alternative_Code":143,
+        "Aircraft_Name":"BAe 146-300"
+    },
+    {
+        "ICAO_Code":"B52",
+        "Alternative_Code":null,
+        "Aircraft_Name":"Boeing B-52 Stratofortress"
+    },
+    {
+        "ICAO_Code":"B703",
+        "Alternative_Code":703,
+        "Aircraft_Name":"Boeing 707"
+    },
+    {
+        "ICAO_Code":"B712",
+        "Alternative_Code":717,
+        "Aircraft_Name":"Boeing 717"
+    },
+    {
+        "ICAO_Code":"B720",
+        "Alternative_Code":"B72",
+        "Aircraft_Name":"Boeing 720B"
+    },
+    {
+        "ICAO_Code":"B721",
+        "Alternative_Code":721,
+        "Aircraft_Name":"Boeing 727-100"
+    },
+    {
+        "ICAO_Code":"B722",
+        "Alternative_Code":722,
+        "Aircraft_Name":"Boeing 727-200"
+    },
+    {
+        "ICAO_Code":"B732",
+        "Alternative_Code":732,
+        "Aircraft_Name":"Boeing 737-200"
+    },
+    {
+        "ICAO_Code":"B732",
+        "Alternative_Code":"73F",
+        "Aircraft_Name":"Boeing 737-200 Freighter"
+    },
+    {
+        "ICAO_Code":"B732",
+        "Alternative_Code":"73L",
+        "Aircraft_Name":"Boeing 737-200 Combi[4]"
+    },
+    {
+        "ICAO_Code":"B733",
+        "Alternative_Code":733,
+        "Aircraft_Name":"Boeing 737-300"
+    },
+    {
+        "ICAO_Code":"B733",
+        "Alternative_Code":"73C",
+        "Aircraft_Name":"Boeing 737-300 Winglets"
+    },
+    {
+        "ICAO_Code":"B733",
+        "Alternative_Code":"73Y",
+        "Aircraft_Name":"Boeing 737-300 Freighter"
+    },
+    {
+        "ICAO_Code":"B734",
+        "Alternative_Code":734,
+        "Aircraft_Name":"Boeing 737-400"
+    },
+    {
+        "ICAO_Code":"B734",
+        "Alternative_Code":"73P",
+        "Aircraft_Name":"Boeing 737-400 Freighter"
+    },
+    {
+        "ICAO_Code":"B735",
+        "Alternative_Code":735,
+        "Aircraft_Name":"Boeing 737-500"
+    },
+    {
+        "ICAO_Code":"B735",
+        "Alternative_Code":"73E",
+        "Aircraft_Name":"Boeing 737-500 Winglets"
+    },
+    {
+        "ICAO_Code":"B736",
+        "Alternative_Code":736,
+        "Aircraft_Name":"Boeing 737-600"
+    },
+    {
+        "ICAO_Code":"B738",
+        "Alternative_Code":738,
+        "Aircraft_Name":"Boeing 737-800"
+    },
+    {
+        "ICAO_Code":"B739",
+        "Alternative_Code":739,
+        "Aircraft_Name":"Boeing 737-900 \/ Boeing 737-900ER"
+    },
+    {
+        "ICAO_Code":"B737",
+        "Alternative_Code":"73G",
+        "Aircraft_Name":"Boeing 737-700 \/ Boeing 737-700ER"
+    },
+    {
+        "ICAO_Code":"B737",
+        "Alternative_Code":"73W",
+        "Aircraft_Name":"Boeing 737-700 Winglets"
+    },
+    {
+        "ICAO_Code":"B738",
+        "Alternative_Code":"73H",
+        "Aircraft_Name":"Boeing 737-800 Winglets"
+    },
+    {
+        "ICAO_Code":"B738",
+        "Alternative_Code":"73K",
+        "Aircraft_Name":"Boeing 737-800 Freighter Winglets"
+    },
+    {
+        "ICAO_Code":"B738",
+        "Alternative_Code":"73U",
+        "Aircraft_Name":"Boeing 737-800 Freighter"
+    },
+    {
+        "ICAO_Code":"B739",
+        "Alternative_Code":"73J",
+        "Aircraft_Name":"Boeing 737-900 Winglets"
+    },
+    {
+        "ICAO_Code":"B741",
+        "Alternative_Code":741,
+        "Aircraft_Name":"Boeing 747-100"
+    },
+    {
+        "ICAO_Code":"B741",
+        "Alternative_Code":"74T",
+        "Aircraft_Name":"Boeing 747-100 Freighter"
+    },
+    {
+        "ICAO_Code":"B742",
+        "Alternative_Code":742,
+        "Aircraft_Name":"Boeing 747-200"
+    },
+    {
+        "ICAO_Code":"B742",
+        "Alternative_Code":"74C",
+        "Aircraft_Name":"Boeing 747-200M"
+    },
+    {
+        "ICAO_Code":"B742",
+        "Alternative_Code":"74X",
+        "Aircraft_Name":"Boeing 747-200F"
+    },
+    {
+        "ICAO_Code":"B743",
+        "Alternative_Code":743,
+        "Aircraft_Name":"Boeing 747-300"
+    },
+    {
+        "ICAO_Code":"B743",
+        "Alternative_Code":"74D",
+        "Aircraft_Name":"Boeing 747-300M"
+    },
+    {
+        "ICAO_Code":"B744",
+        "Alternative_Code":744,
+        "Aircraft_Name":"Boeing 747-400 \/ Boeing 747-400ER"
+    },
+    {
+        "ICAO_Code":"B744",
+        "Alternative_Code":"74E",
+        "Aircraft_Name":"Boeing 747-400M"
+    },
+    {
+        "ICAO_Code":"B744",
+        "Alternative_Code":"74Y",
+        "Aircraft_Name":"Boeing 747-400F \/ Boeing 747-400ERF"
+    },
+    {
+        "ICAO_Code":"B748",
+        "Alternative_Code":"74H",
+        "Aircraft_Name":"Boeing 747-8I"
+    },
+    {
+        "ICAO_Code":"B748",
+        "Alternative_Code":"74N",
+        "Aircraft_Name":"Boeing 747-8F"
+    },
+    {
+        "ICAO_Code":"B74R",
+        "Alternative_Code":"74R",
+        "Aircraft_Name":"Boeing 747SR"
+    },
+    {
+        "ICAO_Code":"B74R",
+        "Alternative_Code":"74V",
+        "Aircraft_Name":"Boeing 747SR Freighter"
+    },
+    {
+        "ICAO_Code":"B74S",
+        "Alternative_Code":"74L",
+        "Aircraft_Name":"Boeing 747SP"
+    },
+    {
+        "ICAO_Code":"B752",
+        "Alternative_Code":752,
+        "Aircraft_Name":"Boeing 757-200"
+    },
+    {
+        "ICAO_Code":"B752",
+        "Alternative_Code":"75F",
+        "Aircraft_Name":"Boeing 757F"
+    },
+    {
+        "ICAO_Code":"B752",
+        "Alternative_Code":"75W",
+        "Aircraft_Name":"Boeing 757-200 Winglets[4]"
+    },
+    {
+        "ICAO_Code":"B753",
+        "Alternative_Code":753,
+        "Aircraft_Name":"Boeing 757-300"
+    },
+    {
+        "ICAO_Code":"B762",
+        "Alternative_Code":762,
+        "Aircraft_Name":"Boeing 767-200 \/ Boeing 767-200ER"
+    },
+    {
+        "ICAO_Code":"B762",
+        "Alternative_Code":"76X",
+        "Aircraft_Name":"Boeing 767-200 Freighter \/ Boeing 767-200ER"
+    },
+    {
+        "ICAO_Code":"B763",
+        "Alternative_Code":763,
+        "Aircraft_Name":"Boeing 767-300"
+    },
+    {
+        "ICAO_Code":"B763",
+        "Alternative_Code":"76W",
+        "Aircraft_Name":"Boeing 767-300 Winglets \/ Boeing 767-300ER"
+    },
+    {
+        "ICAO_Code":"B763",
+        "Alternative_Code":"76Y",
+        "Aircraft_Name":"Boeing 767-300 Freighter"
+    },
+    {
+        "ICAO_Code":"B764",
+        "Alternative_Code":764,
+        "Aircraft_Name":"Boeing 767-400ER"
+    },
+    {
+        "ICAO_Code":"B772",
+        "Alternative_Code":772,
+        "Aircraft_Name":"Boeing 777-200 \/ Boeing 777-200ER"
+    },
+    {
+        "ICAO_Code":"B773",
+        "Alternative_Code":773,
+        "Aircraft_Name":"Boeing 777-300"
+    },
+    {
+        "ICAO_Code":"B778",
+        "Alternative_Code":778,
+        "Aircraft_Name":"Boeing 777-8"
+    },
+    {
+        "ICAO_Code":"B779",
+        "Alternative_Code":779,
+        "Aircraft_Name":"Boeing 777-9"
+    },
+    {
+        "ICAO_Code":"B77L",
+        "Alternative_Code":"77X",
+        "Aircraft_Name":"Boeing 777-200 Freighter"
+    },
+    {
+        "ICAO_Code":"B77L",
+        "Alternative_Code":"77L",
+        "Aircraft_Name":"Boeing 777-200LR"
+    },
+    {
+        "ICAO_Code":"B77W",
+        "Alternative_Code":"77W",
+        "Aircraft_Name":"Boeing 777-300ER"
+    },
+    {
+        "ICAO_Code":"B788",
+        "Alternative_Code":788,
+        "Aircraft_Name":"Boeing 787-8"
+    },
+    {
+        "ICAO_Code":"B789",
+        "Alternative_Code":789,
+        "Aircraft_Name":"Boeing 787-9"
+    },
+    {
+        "ICAO_Code":"B78X",
+        "Alternative_Code":781,
+        "Aircraft_Name":"Boeing 787-10"
+    },
+    {
+        "ICAO_Code":"BA11",
+        "Alternative_Code":"B11",
+        "Aircraft_Name":"British Aerospace (BAC) One Eleven"
+    },
+    {
+        "ICAO_Code":"BCS1",
+        "Alternative_Code":221,
+        "Aircraft_Name":"Airbus A220-100"
+    },
+    {
+        "ICAO_Code":"BCS3",
+        "Alternative_Code":223,
+        "Aircraft_Name":"Airbus A220-300"
+    },
+    {
+        "ICAO_Code":"BE20",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Beechcraft (Super) King Air 200"
+    },
+    {
+        "ICAO_Code":"BE40",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Hawker 400"
+    },
+    {
+        "ICAO_Code":"BE99",
+        "Alternative_Code":null,
+        "Aircraft_Name":"Beechcraft Model 99"
+    },
+    {
+        "ICAO_Code":"BELF",
+        "Alternative_Code":"SHB",
+        "Aircraft_Name":"Shorts SC-5 Belfast"
+    },
+    {
+        "ICAO_Code":"BER2",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Beriev Be-200 Altair"
+    },
+    {
+        "ICAO_Code":"BLCF",
+        "Alternative_Code":"74B",
+        "Aircraft_Name":"Boeing 747-400 LCF Dreamlifter"
+    },
+    {
+        "ICAO_Code":"C130",
+        "Alternative_Code":"LOH",
+        "Aircraft_Name":"Lockheed L-182 \/ 282 \/ 382 (L-100) Hercules"
+    },
+    {
+        "ICAO_Code":"C212",
+        "Alternative_Code":"CS2",
+        "Aircraft_Name":"CASA \/ IPTN 212 Aviocar"
+    },
+    {
+        "ICAO_Code":"C25A",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation CJ2"
+    },
+    {
+        "ICAO_Code":"C25B",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation CJ3"
+    },
+    {
+        "ICAO_Code":"C25C",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation CJ4"
+    },
+    {
+        "ICAO_Code":"C30J",
+        "Alternative_Code":"LOH",
+        "Aircraft_Name":"Lockheed Martin C-130J Hercules"
+    },
+    {
+        "ICAO_Code":"C5M",
+        "Alternative_Code":null,
+        "Aircraft_Name":"Lockheed C-5M Super Galaxy"
+    },
+    {
+        "ICAO_Code":"C500",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation I"
+    },
+    {
+        "ICAO_Code":"C510",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation Mustang"
+    },
+    {
+        "ICAO_Code":"C525",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna CitationJet"
+    },
+    {
+        "ICAO_Code":"C550",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation II"
+    },
+    {
+        "ICAO_Code":"C560",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation V"
+    },
+    {
+        "ICAO_Code":"C56X",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation Excel"
+    },
+    {
+        "ICAO_Code":"C650",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation III, VI, VII"
+    },
+    {
+        "ICAO_Code":"C680",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation Sovereign"
+    },
+    {
+        "ICAO_Code":"C68A",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation Latitude"
+    },
+    {
+        "ICAO_Code":"C700",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation Longitude"
+    },
+    {
+        "ICAO_Code":"C750",
+        "Alternative_Code":"CNJ",
+        "Aircraft_Name":"Cessna Citation X"
+    },
+    {
+        "ICAO_Code":"C919",
+        "Alternative_Code":919,
+        "Aircraft_Name":"COMAC C919"
+    },
+    {
+        "ICAO_Code":"CL2T",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Bombardier 415"
+    },
+    {
+        "ICAO_Code":"CL30",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Bombardier BD-100 Challenger 300"
+    },
+    {
+        "ICAO_Code":"CL60",
+        "Alternative_Code":"CCJ",
+        "Aircraft_Name":"Canadair Challenger 600"
+    },
+    {
+        "ICAO_Code":"CN35",
+        "Alternative_Code":"CS5",
+        "Aircraft_Name":"CASA\/IPTN CN-235"
+    },
+    {
+        "ICAO_Code":"CRJ1",
+        "Alternative_Code":"CR1",
+        "Aircraft_Name":"Canadair Regional Jet 100"
+    },
+    {
+        "ICAO_Code":"CRJ2",
+        "Alternative_Code":"CR2",
+        "Aircraft_Name":"Canadair Regional Jet 200"
+    },
+    {
+        "ICAO_Code":"CRJ7",
+        "Alternative_Code":"CR7",
+        "Aircraft_Name":"Canadair Regional Jet 700 | Regional Jet 550"
+    },
+    {
+        "ICAO_Code":"CRJ9",
+        "Alternative_Code":"CR9",
+        "Aircraft_Name":"Canadair Regional Jet 900"
+    },
+    {
+        "ICAO_Code":"CRJX",
+        "Alternative_Code":"CRK",
+        "Aircraft_Name":"Canadair Regional Jet 1000"
+    },
+    {
+        "ICAO_Code":"CVLT",
+        "Alternative_Code":"CV5",
+        "Aircraft_Name":"Convair CV-580, Convair CV-600, Convair CV-640"
+    },
+    {
+        "ICAO_Code":"D228",
+        "Alternative_Code":"D28",
+        "Aircraft_Name":"Dornier 228"
+    },
+    {
+        "ICAO_Code":"D328",
+        "Alternative_Code":"D38",
+        "Aircraft_Name":"Fairchild Dornier Do.328"
+    },
+    {
+        "ICAO_Code":"DC10",
+        "Alternative_Code":"D11",
+        "Aircraft_Name":"Douglas DC-10-10 \/ -15 Passenger"
+    },
+    {
+        "ICAO_Code":"DC10",
+        "Alternative_Code":"D1C",
+        "Aircraft_Name":"Douglas DC-10-30 \/ -40 Passenger"
+    },
+    {
+        "ICAO_Code":"DC10",
+        "Alternative_Code":"D1M",
+        "Aircraft_Name":"Douglas DC-10-30 Combi"
+    },
+    {
+        "ICAO_Code":"DC10",
+        "Alternative_Code":"D1X",
+        "Aircraft_Name":"Douglas DC-10-10 Freighter"
+    },
+    {
+        "ICAO_Code":"DC10",
+        "Alternative_Code":"D1Y",
+        "Aircraft_Name":"Douglas DC-10-30 \/ -40 Freighter"
+    },
+    {
+        "ICAO_Code":"DC85",
+        "Alternative_Code":"D8T",
+        "Aircraft_Name":"Douglas DC-8-50"
+    },
+    {
+        "ICAO_Code":"DC86",
+        "Alternative_Code":"D8L",
+        "Aircraft_Name":"Douglas DC-8-62"
+    },
+    {
+        "ICAO_Code":"DC87",
+        "Alternative_Code":"D8Q",
+        "Aircraft_Name":"Douglas DC-8-72"
+    },
+    {
+        "ICAO_Code":"DC91",
+        "Alternative_Code":"D91",
+        "Aircraft_Name":"Douglas DC-9-10"
+    },
+    {
+        "ICAO_Code":"DC92",
+        "Alternative_Code":"D92",
+        "Aircraft_Name":"Douglas DC-9-20"
+    },
+    {
+        "ICAO_Code":"DC93",
+        "Alternative_Code":"D93",
+        "Aircraft_Name":"Douglas DC-9-30"
+    },
+    {
+        "ICAO_Code":"DC94",
+        "Alternative_Code":"D94",
+        "Aircraft_Name":"Douglas DC-9-40"
+    },
+    {
+        "ICAO_Code":"DC95",
+        "Alternative_Code":"D95",
+        "Aircraft_Name":"Douglas DC-9-50"
+    },
+    {
+        "ICAO_Code":"DH8A",
+        "Alternative_Code":"DH1",
+        "Aircraft_Name":"De Havilland Canada DHC-8-100 Dash 8 \/ 8Q"
+    },
+    {
+        "ICAO_Code":"DH8B",
+        "Alternative_Code":"DH2",
+        "Aircraft_Name":"De Havilland Canada DHC-8-200 Dash 8 \/ 8Q"
+    },
+    {
+        "ICAO_Code":"DH8C",
+        "Alternative_Code":"DH3",
+        "Aircraft_Name":"De Havilland Canada DHC-8-300 Dash 8 \/ 8Q"
+    },
+    {
+        "ICAO_Code":"DH8D",
+        "Alternative_Code":"DH4",
+        "Aircraft_Name":"De Havilland Canada DHC-8-400 Dash 8Q"
+    },
+    {
+        "ICAO_Code":"DHC5",
+        "Alternative_Code":"DHC",
+        "Aircraft_Name":"De Havilland Canada DHC-5 Buffalo"
+    },
+    {
+        "ICAO_Code":"DHC6",
+        "Alternative_Code":"DHT",
+        "Aircraft_Name":"De Havilland Canada DHC-6 Twin Otter"
+    },
+    {
+        "ICAO_Code":"DHC7",
+        "Alternative_Code":"DH7",
+        "Aircraft_Name":"De Havilland Canada DHC-7 Dash 7"
+    },
+    {
+        "ICAO_Code":"E110",
+        "Alternative_Code":"EMB",
+        "Aircraft_Name":"Embraer EMB 110 Bandeirante"
+    },
+    {
+        "ICAO_Code":"E120",
+        "Alternative_Code":"EM2",
+        "Aircraft_Name":"Embraer EMB 120 Brasilia"
+    },
+    {
+        "ICAO_Code":"E135",
+        "Alternative_Code":"ER3",
+        "Aircraft_Name":"Embraer RJ135"
+    },
+    {
+        "ICAO_Code":"E135",
+        "Alternative_Code":"ERD",
+        "Aircraft_Name":"Embraer RJ140"
+    },
+    {
+        "ICAO_Code":"E145",
+        "Alternative_Code":"ER4",
+        "Aircraft_Name":"Embraer RJ145"
+    },
+    {
+        "ICAO_Code":"E170",
+        "Alternative_Code":"E70",
+        "Aircraft_Name":"Embraer 170"
+    },
+    {
+        "ICAO_Code":"E190",
+        "Alternative_Code":"E90",
+        "Aircraft_Name":"Embraer 190 \/ Lineage 1000"
+    },
+    {
+        "ICAO_Code":"E195",
+        "Alternative_Code":"E95",
+        "Aircraft_Name":"Embraer 195"
+    },
+    {
+        "ICAO_Code":"E290",
+        "Alternative_Code":290,
+        "Aircraft_Name":"Embraer E190-E2"
+    },
+    {
+        "ICAO_Code":"E295",
+        "Alternative_Code":295,
+        "Aircraft_Name":"Embraer E195-E2"
+    },
+    {
+        "ICAO_Code":"E35L",
+        "Alternative_Code":"ER3",
+        "Aircraft_Name":"Embraer Legacy 600 \/ Legacy 650"
+    },
+    {
+        "ICAO_Code":"E50P",
+        "Alternative_Code":"EP1",
+        "Aircraft_Name":"Embraer Phenom 100"
+    },
+    {
+        "ICAO_Code":"E545",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Embraer Legacy 450 \/ Praetor 500"
+    },
+    {
+        "ICAO_Code":"E550",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Embraer Legacy 500 \/ Praetor 600"
+    },
+    {
+        "ICAO_Code":"E55P",
+        "Alternative_Code":"EP3",
+        "Aircraft_Name":"Embraer Phenom 300"
+    },
+    {
+        "ICAO_Code":"E75L",
+        "Alternative_Code":"E7W",
+        "Aircraft_Name":"Embraer 175 (long wing)"
+    },
+    {
+        "ICAO_Code":"E75S",
+        "Alternative_Code":"E75",
+        "Aircraft_Name":"Embraer 175 (short wing)"
+    },
+    {
+        "ICAO_Code":"EA50",
+        "Alternative_Code":null,
+        "Aircraft_Name":"Eclipse 500"
+    },
+    {
+        "ICAO_Code":"F100",
+        "Alternative_Code":100,
+        "Aircraft_Name":"Fokker 100"
+    },
+    {
+        "ICAO_Code":"F27",
+        "Alternative_Code":"F27",
+        "Aircraft_Name":"Fokker F27 Friendship"
+    },
+    {
+        "ICAO_Code":"F28",
+        "Alternative_Code":"F21",
+        "Aircraft_Name":"Fokker F28 Fellowship"
+    },
+    {
+        "ICAO_Code":"F2TH",
+        "Alternative_Code":"D20",
+        "Aircraft_Name":"Dassault Falcon 2000"
+    },
+    {
+        "ICAO_Code":"F406",
+        "Alternative_Code":"CNT",
+        "Aircraft_Name":"Reims-Cessna F406 Caravan II"
+    },
+    {
+        "ICAO_Code":"F50",
+        "Alternative_Code":"F50",
+        "Aircraft_Name":"Fokker 50"
+    },
+    {
+        "ICAO_Code":"F70",
+        "Alternative_Code":"F70",
+        "Aircraft_Name":"Fokker 70"
+    },
+    {
+        "ICAO_Code":"F900",
+        "Alternative_Code":"DF9",
+        "Aircraft_Name":"Dassault Falcon 900"
+    },
+    {
+        "ICAO_Code":"FA50",
+        "Alternative_Code":"DF3",
+        "Aircraft_Name":"Dassault Falcon 50"
+    },
+    {
+        "ICAO_Code":"FA7X",
+        "Alternative_Code":"DF7",
+        "Aircraft_Name":"Dassault Falcon 7X"
+    },
+    {
+        "ICAO_Code":"G159",
+        "Alternative_Code":"GRS",
+        "Aircraft_Name":"Gulfstream Aerospace G-159 Gulfstream I"
+    },
+    {
+        "ICAO_Code":"G280",
+        "Alternative_Code":"GR3",
+        "Aircraft_Name":"Gulfstream G280"
+    },
+    {
+        "ICAO_Code":"G73T",
+        "Alternative_Code":"GRM",
+        "Aircraft_Name":"Grumman G-73 Turbo Mallard"
+    },
+    {
+        "ICAO_Code":"GL5T",
+        "Alternative_Code":"CCX",
+        "Aircraft_Name":"Bombardier BD-700 Global 5000"
+    },
+    {
+        "ICAO_Code":"GLEX",
+        "Alternative_Code":"CCX",
+        "Aircraft_Name":"Bombardier Global Express \/ Raytheon Sentinel"
+    },
+    {
+        "ICAO_Code":"GLF4",
+        "Alternative_Code":"GJ4",
+        "Aircraft_Name":"Gulfstream IV"
+    },
+    {
+        "ICAO_Code":"GLF5",
+        "Alternative_Code":"GJ5",
+        "Aircraft_Name":"Gulfstream V"
+    },
+    {
+        "ICAO_Code":"GLF6",
+        "Alternative_Code":"GJ6",
+        "Aircraft_Name":"Gulfstream G650"
+    },
+    {
+        "ICAO_Code":"GA7C",
+        "Alternative_Code":null,
+        "Aircraft_Name":"Gulfstream G700"
+    },
+    {
+        "ICAO_Code":"H25B",
+        "Alternative_Code":"H25",
+        "Aircraft_Name":"British Aerospace 125 series \/ Hawker\/Raytheon 700\/800\/800XP\/850\/900"
+    },
+    {
+        "ICAO_Code":"H25C",
+        "Alternative_Code":"H25",
+        "Aircraft_Name":"British Aerospace 125-1000 series \/ Hawker\/Raytheon 1000"
+    },
+    {
+        "ICAO_Code":"HDJT",
+        "Alternative_Code":"HHJ",
+        "Aircraft_Name":"Honda HA-420"
+    },
+    {
+        "ICAO_Code":"I114",
+        "Alternative_Code":"I14",
+        "Aircraft_Name":"Ilyushin Il-114"
+    },
+    {
+        "ICAO_Code":"IL18",
+        "Alternative_Code":"IL8",
+        "Aircraft_Name":"Ilyushin Il-18"
+    },
+    {
+        "ICAO_Code":"IL62",
+        "Alternative_Code":"IL6",
+        "Aircraft_Name":"Ilyushin Il-62"
+    },
+    {
+        "ICAO_Code":"IL76",
+        "Alternative_Code":"IL7",
+        "Aircraft_Name":"Ilyushin Il-76"
+    },
+    {
+        "ICAO_Code":"IL86",
+        "Alternative_Code":"ILW",
+        "Aircraft_Name":"Ilyushin Il-86"
+    },
+    {
+        "ICAO_Code":"IL96",
+        "Alternative_Code":"I93",
+        "Aircraft_Name":"Ilyushin Il-96"
+    },
+    {
+        "ICAO_Code":"J328",
+        "Alternative_Code":"FRJ",
+        "Aircraft_Name":"Fairchild Dornier 328JET"
+    },
+    {
+        "ICAO_Code":"JS31",
+        "Alternative_Code":"J31",
+        "Aircraft_Name":"British Aerospace Jetstream 31"
+    },
+    {
+        "ICAO_Code":"JS32",
+        "Alternative_Code":"J32",
+        "Aircraft_Name":"British Aerospace Jetstream 32"
+    },
+    {
+        "ICAO_Code":"JS41",
+        "Alternative_Code":"J41",
+        "Aircraft_Name":"British Aerospace Jetstream 41"
+    },
+    {
+        "ICAO_Code":"K35R",
+        "Alternative_Code":"K35",
+        "Aircraft_Name":"Boeing KC-135 Stratotanker"
+    },
+    {
+        "ICAO_Code":"L101",
+        "Alternative_Code":"L10",
+        "Aircraft_Name":"Lockheed L-1011 Tristar"
+    },
+    {
+        "ICAO_Code":"L188",
+        "Alternative_Code":"LOE",
+        "Aircraft_Name":"Lockheed L-188 Electra"
+    },
+    {
+        "ICAO_Code":"L410",
+        "Alternative_Code":"L4T",
+        "Aircraft_Name":"LET 410"
+    },
+    {
+        "ICAO_Code":"LJ35",
+        "Alternative_Code":"LRJ",
+        "Aircraft_Name":"Learjet 35 \/ 36 \/ C-21A"
+    },
+    {
+        "ICAO_Code":"LJ60",
+        "Alternative_Code":"LRJ",
+        "Aircraft_Name":"Learjet 60"
+    },
+    {
+        "ICAO_Code":"MD11",
+        "Alternative_Code":"M11",
+        "Aircraft_Name":"McDonnell Douglas MD-11"
+    },
+    {
+        "ICAO_Code":"MD11",
+        "Alternative_Code":"M1F",
+        "Aircraft_Name":"McDonnell Douglas MD-11F"
+    },
+    {
+        "ICAO_Code":"MD11",
+        "Alternative_Code":"M1M",
+        "Aircraft_Name":"McDonnell Douglas MD-11C"
+    },
+    {
+        "ICAO_Code":"MD81",
+        "Alternative_Code":"M81",
+        "Aircraft_Name":"McDonnell Douglas MD-81"
+    },
+    {
+        "ICAO_Code":"MD82",
+        "Alternative_Code":"M82",
+        "Aircraft_Name":"McDonnell Douglas MD-82"
+    },
+    {
+        "ICAO_Code":"MD83",
+        "Alternative_Code":"M83",
+        "Aircraft_Name":"McDonnell Douglas MD-83"
+    },
+    {
+        "ICAO_Code":"MD87",
+        "Alternative_Code":"M87",
+        "Aircraft_Name":"McDonnell Douglas MD-87"
+    },
+    {
+        "ICAO_Code":"MD88",
+        "Alternative_Code":"M88",
+        "Aircraft_Name":"McDonnell Douglas MD-88"
+    },
+    {
+        "ICAO_Code":"MD90",
+        "Alternative_Code":"M90",
+        "Aircraft_Name":"McDonnell Douglas MD-90"
+    },
+    {
+        "ICAO_Code":"MU2",
+        "Alternative_Code":"MU2",
+        "Aircraft_Name":"Mitsubishi Mu-2"
+    },
+    {
+        "ICAO_Code":"N262",
+        "Alternative_Code":"ND2",
+        "Aircraft_Name":"Aerospatiale (Nord) 262"
+    },
+    {
+        "ICAO_Code":"NOMA",
+        "Alternative_Code":"CD2",
+        "Aircraft_Name":"Government Aircraft Factories N22B \/ N24A Nomad"
+    },
+    {
+        "ICAO_Code":"P8",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"Boeing P-8 Poseidon"
+    },
+    {
+        "ICAO_Code":"P180",
+        "Alternative_Code":"P18",
+        "Aircraft_Name":"Piaggio P.180 Avanti"
+    },
+    {
+        "ICAO_Code":"PAY2",
+        "Alternative_Code":"\u2014",
+        "Aircraft_Name":"PIPER Cheyenne 2"
+    },
+    {
+        "ICAO_Code":"PC24",
+        "Alternative_Code":"PL4",
+        "Aircraft_Name":"Pilatus PC-24"
+    },
+    {
+        "ICAO_Code":"RJ1H",
+        "Alternative_Code":"AR1",
+        "Aircraft_Name":"Avro RJ100"
+    },
+    {
+        "ICAO_Code":"RJ70",
+        "Alternative_Code":"AR7",
+        "Aircraft_Name":"Avro RJ70"
+    },
+    {
+        "ICAO_Code":"RJ85",
+        "Alternative_Code":"AR8",
+        "Aircraft_Name":"Avro RJ85"
+    },
+    {
+        "ICAO_Code":"S601",
+        "Alternative_Code":"NDC",
+        "Aircraft_Name":"Aerospatiale SN.601 Corvette"
+    },
+    {
+        "ICAO_Code":"SB20",
+        "Alternative_Code":"S20",
+        "Aircraft_Name":"Saab 2000"
+    },
+    {
+        "ICAO_Code":"SC7",
+        "Alternative_Code":"SHS",
+        "Aircraft_Name":"Shorts SC-7 Skyvan"
+    },
+    {
+        "ICAO_Code":"SF34",
+        "Alternative_Code":"SF3",
+        "Aircraft_Name":"Saab SF340A\/B"
+    },
+    {
+        "ICAO_Code":"SH33",
+        "Alternative_Code":"SH3",
+        "Aircraft_Name":"Shorts SD.330"
+    },
+    {
+        "ICAO_Code":"SH36",
+        "Alternative_Code":"SH6",
+        "Aircraft_Name":"Shorts SD.360"
+    },
+    {
+        "ICAO_Code":"SU95",
+        "Alternative_Code":"SU9",
+        "Aircraft_Name":"Sukhoi Superjet 100-95"
+    },
+    {
+        "ICAO_Code":"SW4",
+        "Alternative_Code":"SW4",
+        "Aircraft_Name":"Fairchild Swearingen Metroliner"
+    },
+    {
+        "ICAO_Code":"T134",
+        "Alternative_Code":"TU3",
+        "Aircraft_Name":"Tupolev Tu-134"
+    },
+    {
+        "ICAO_Code":"T154",
+        "Alternative_Code":"TU5",
+        "Aircraft_Name":"Tupolev Tu-154"
+    },
+    {
+        "ICAO_Code":"T204",
+        "Alternative_Code":"T20",
+        "Aircraft_Name":"Tupolev Tu-204 \/ Tu-214"
+    },
+    {
+        "ICAO_Code":"WW24",
+        "Alternative_Code":"WWP",
+        "Aircraft_Name":"Israel Aircraft Industries 1124 Westwind"
+    },
+    {
+        "ICAO_Code":"Y12",
+        "Alternative_Code":"YN2",
+        "Aircraft_Name":"Harbin Y-12"
+    },
+    {
+        "ICAO_Code":"YK40",
+        "Alternative_Code":"YK4",
+        "Aircraft_Name":"Yakovlev Yak-40"
+    },
+    {
+        "ICAO_Code":"YK42",
+        "Alternative_Code":"YK2",
+        "Aircraft_Name":"Yakovlev Yak-42"
+    },
+    {
+        "ICAO_Code":"YS11",
+        "Alternative_Code":"YS1",
+        "Aircraft_Name":"NAMC YS-11"
+    }
+]

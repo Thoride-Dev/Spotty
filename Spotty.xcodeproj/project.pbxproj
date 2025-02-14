@@ -2048,6 +2048,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		436321012D5EF63400C27026 /* Data */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Data; sourceTree = "<group>"; };
 		43FBDE8E2CBF786C00447302 /* ContentViews */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ContentViews; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -3102,6 +3103,7 @@
 			isa = PBXGroup;
 			children = (
 				5194A65A2D5EFB7A00975080 /* RootView.swift */,
+				436321012D5EF63400C27026 /* Data */,
 				43FBDE8E2CBF786C00447302 /* ContentViews */,
 				4322453C2BC8885D002FC755 /* logos */,
 				43F82E772BB614D50003107C /* SpottyApp.swift */,
@@ -3158,6 +3160,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				436321012D5EF63400C27026 /* Data */,
 				43FBDE8E2CBF786C00447302 /* ContentViews */,
 			);
 			name = Spotty;
@@ -4440,7 +4443,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 964RU98ZVN;
+				DEVELOPMENT_TEAM = 49L67B6252;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
@@ -4455,7 +4458,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = PatrickFortin;
+				PRODUCT_BUNDLE_IDENTIFIER = ArchonDevs;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -4471,7 +4474,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 964RU98ZVN;
+				DEVELOPMENT_TEAM = 49L67B6252;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
@@ -4486,7 +4489,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = PatrickFortin;
+				PRODUCT_BUNDLE_IDENTIFIER = ArchonDevs;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

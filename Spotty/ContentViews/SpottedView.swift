@@ -26,6 +26,8 @@ struct MapView: View {
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height // Start off-screen
     @State private var offsetY_2: CGFloat = UIScreen.main.bounds.height // Start off-screen
     
+    @State private var showingCompletionSheet: Bool = false
+    
     @State private var showSheet: Bool = true
     @State var searchText: String = ""
 
@@ -108,10 +110,11 @@ struct MapView: View {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 30)
                                         .fill(LinearGradient(
-                                            gradient: .init(colors: [Color(red: 185 / 255, green: 221 / 255, blue: 237 / 255), Color(red: 211 / 255, green: 198 / 255, blue: 245 / 255)]),
+                                            gradient: .init(colors: [Color(red: 96 / 255, green: 207 / 255, blue: 255 / 255), Color(red: 139 / 255, green: 56 / 255, blue: 232 / 255)]),
                                             startPoint: .init(x: 0.7, y: 0),
                                             endPoint: .init(x: 0.3, y: 0.6)
                                         ))
+                                        .opacity(0.35)
                                         .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.32 , alignment: .bottomLeading)
                                     FlightPieChartView(flights: spottedFlightsStore.spottedFlights)
                                 }
@@ -140,24 +143,32 @@ struct MapView: View {
                                         offsetY_2 = 0  // Move it to its final position
                                     }
                                 }
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 30)
-                                        .fill(LinearGradient(
-                                            gradient: .init(colors: [Color(red: 242 / 255, green: 156 / 255, blue: 70 / 255), Color(red: 218 / 255, green: 224 / 255, blue: 136 / 255)]),
-                                            startPoint: .init(x: 0.4, y: 0.8),
-                                            endPoint: .init(x: 0, y: 0.2)
-                                        ))
-                                        .opacity(0.35)
-                                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.15 , alignment: .bottomLeading)
-                                    ICAOProgressView(flights: spottedFlightsStore.spottedFlights)
-                                }
-                                .offset(y: offsetY_2)  // Apply the animated offset
-                                .onAppear {
-                                    // Initialize isChecked based on whether the flight is spotted
-                                    withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
-                                        offsetY_2 = 0  // Move it to its final position
+                                Button(action: {
+                                    showingCompletionSheet.toggle()
+                                }) {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 30)
+                                            .fill(LinearGradient(
+                                                gradient: .init(colors: [Color(red: 242 / 255, green: 156 / 255, blue: 70 / 255), Color(red: 218 / 255, green: 224 / 255, blue: 136 / 255)]),
+                                                startPoint: .init(x: 0.4, y: 0.8),
+                                                endPoint: .init(x: 0, y: 0.2)
+                                            ))
+                                            .opacity(0.35)
+                                            .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.15 , alignment: .bottomLeading)
+                                        ICAOProgressView(flights: spottedFlightsStore.spottedFlights)
+                                    }
+                                    .offset(y: offsetY_2)  // Apply the animated offset
+                                    .onAppear {
+                                        // Initialize isChecked based on whether the flight is spotted
+                                        withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
+                                            offsetY_2 = 0  // Move it to its final position
+                                        }
                                     }
                                 }
+                                .fullScreenCover(isPresented: $showingCompletionSheet) {
+                                    IcaoCompletionView(flights: spottedFlightsStore.spottedFlights)
+                                }
+                                
                                 //SpottedFlightsView()
                             }
                         }
