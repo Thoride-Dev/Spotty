@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MessageUI
 
 enum Appearance: String, CaseIterable, Identifiable, Codable {
     case system
@@ -59,66 +60,141 @@ struct SettingsView: View {
     @EnvironmentObject var userSettings: UserSettings
 
     var body: some View {
-        Form {
-            Section(header: Text("Nearby")) {
-                Toggle("Refresh on Appear", isOn: $userSettings.isRefreshOnTap)
-                    .onChange(of: userSettings.isRefreshOnTap) { newValue in
-                        refreshTapToggle(newValue)
-                    }
-                
-                VStack(alignment: .leading) {
-                    Text("Search Radius: \(formattedRadius)")
-                        .font(.subheadline)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 20) {
+                    
+                    // MARK: - Nearby Settings
+                    SettingsCard(title: "Nearby Settings") {
+                        Toggle("Auto Refresh", isOn: $userSettings.isRefreshOnTap)
+                            .onChange(of: userSettings.isRefreshOnTap, perform: refreshTapToggle)
+                        
+                        VStack(alignment: .leading) {
+                            Text("Search Radius: \(formattedRadius)")
+                                .font(.subheadline)
+                                .padding(.top, 4)
 
-                    Slider(value: $userSettings.radiusKm, in: 1...40, step: 1)
-                }
-            }
-
-            Section(header: Text("Appearance")) {
-                Picker("Appearance", selection: $userSettings.appearance) {
-                    ForEach(Appearance.allCases) { appearance in
-                        Text(appearance.rawValue.capitalized).tag(appearance)
+                            Slider(value: $userSettings.radiusKm, in: 1...40, step: 1)
+                        }
                     }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-            }
-            
-            Section {
-                Button(action: sendEmail) {
-                    HStack {
-                        Spacer()
-                        Text("Contact Support")
-                            .foregroundColor(.blue)
-                            .font(.headline)
-                        Spacer()
+                    
+                    // MARK: - Appearance Settings
+                    SettingsCard(title: "Appearance") {
+                        Picker("Appearance", selection: $userSettings.appearance) {
+                            ForEach(Appearance.allCases) { appearance in
+                                Text(appearance.rawValue.capitalized).tag(appearance)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
                     }
+                    
+                    // MARK: - Additional Settings
+                    SettingsCard(title: "Additional Settings") {
+                        Picker("Unit System", selection: $userSettings.unitSystem) {
+                            Text("Metric").tag(UnitSystem.metric)
+                            Text("Imperial").tag(UnitSystem.imperial)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
+                    
+                    // MARK: - Contact Support
+                    Button(action: sendEmail) {
+                        HStack {
+                            Spacer()
+                            Text("Contact Support")
+                                .foregroundColor(.blue)
+                                .font(.headline)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                    
                 }
+                .padding()
             }
+            .navigationTitle("Settings")
         }
-        .navigationTitle("Settings")
     }
-
+    
     var formattedRadius: String {
         let radius = userSettings.radiusKm
-        if userSettings.unitSystem == .imperial {
-            return "\(Int(radius * 0.621371)) mi" // Convert km to miles
-        } else {
-            return "\(Int(radius)) km"
-        }
+        return userSettings.unitSystem == .imperial ? "\(Int(radius * 0.621371)) mi" : "\(Int(radius)) km"
     }
+    
     func sendEmail() {
-        if let url = URL(string: "mailto:contact@thespottyapp.com") {
-            UIApplication.shared.open(url)
+        if MFMailComposeViewController.canSendMail() {
+            let mailComposeVC = MFMailComposeViewController()
+            mailComposeVC.setToRecipients(["contact@thespottyapp.com"])
+            mailComposeVC.setSubject("Spotty Support Request")
+            mailComposeVC.setMessageBody("Hello, I need assistance with Spotty.", isHTML: false)
+
+            if let topController = UIApplication.shared.connectedScenes
+                .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
+                .first?.rootViewController {
+                topController.present(mailComposeVC, animated: true, completion: nil)
+            }
+        } else {
+            let email = "contact@thespottyapp.com"
+            let subject = "Spotty Support Request"
+            let body = "Hello, I need assistance with Spotty."
+            let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+
+            let mailtoURL = URL(string: "mailto:\(email)?subject=\(encodedSubject)&body=\(encodedBody)")
+
+            if let url = mailtoURL, UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            } else {
+                // Show alert if no email app is available
+                if let topController = UIApplication.shared.connectedScenes
+                    .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
+                    .first?.rootViewController {
+                    let alert = UIAlertController(
+                        title: "No Email App",
+                        message: "No email app is installed. Please install an email app to contact support.",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    topController.present(alert, animated: true)
+                }
+            }
         }
     }
+
     func refreshTapToggle(_ isEnabled: Bool) {
-        if isEnabled {
-            print("Refreshing on tap")
-        } else {
-            print("Not refreshing on tap")
-        }
+        print(isEnabled ? "Refreshing on tap" : "Not refreshing on tap")
     }
 }
+
+// MARK: - Settings Card Component
+struct SettingsCard<Content: View>: View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.primary)
+            
+            content
+                .padding(.horizontal)
+            
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
 
 
 
