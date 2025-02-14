@@ -75,7 +75,6 @@ struct IcaoCompletionView: View {
                     Text("Aircraft Discovery")
                         .font(.subheadline)
                         .bold()
-                        .padding(.top, 10)
                     Spacer()
                 }
                 

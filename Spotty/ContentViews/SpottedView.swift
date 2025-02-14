@@ -250,10 +250,10 @@ struct FlightPieChartView: View {
                     .position(x: frame.midX, y: frame.midY)
                 }
             }
-            .chartLegend(alignment: .center, spacing: 16)
+            .chartLegend(position: .trailing, alignment: .leading, spacing: -40)
             
         }
-        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        .padding(EdgeInsets(top: 10, leading: -40, bottom: 10, trailing: 40))
     }
 }
 
