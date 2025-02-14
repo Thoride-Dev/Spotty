@@ -82,8 +82,40 @@ struct IcaoCompletionView: View {
                 
                 // Boeing Progress Bar
                 VStack(alignment: .leading) {
-                    Text("Boeing Aircraft Spotted: \(boeingSpottedCount) / \(totalBoeingCount)")
-                        .font(.headline)
+                    HStack{
+                        VStack(alignment: .leading){
+                            Text("Boeing Aircraft")
+                                .font(.subheadline)
+                            Text("\(boeingSpottedCount) / \(totalBoeingCount)")
+                                .font(.title)
+                                .bold()
+                            ZStack{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.regularMaterial)
+                                    .frame(width: 90, height: 20)
+                                Text("\(Int(boeingProgress * 100))% Spotted")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
+                        VStack(alignment: .leading){
+                            Text("Airbus Aircraft")
+                                .font(.subheadline)
+                            Text("\(airbusSpottedCount) / \(totalAirbusCount)")
+                                .font(.title)
+                                .bold()
+                            ZStack{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.regularMaterial)
+                                    .frame(width: 90, height: 20)
+                                Text("\(Int(airbusProgress * 100))% Spotted")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
+                    }
                     
                     ProgressView(value: boeingProgress)
                         .progressViewStyle(LinearProgressViewStyle())
@@ -117,17 +149,55 @@ struct IcaoCompletionView: View {
         }
     }
     
+    
+    //MARK: Boeing Logic
     private var totalBoeingCount: Int {
-        aircraftList.filter { $0.Aircraft_Name.contains("Boeing") }.count
+        let uniqueBoeingTypes = Set(
+            aircraftList
+                .filter { $0.Aircraft_Name.contains("Boeing") }
+                .map { $0.ICAO_Code } // Extract only ICAO codes
+        )
+        return uniqueBoeingTypes.count
     }
     
     private var boeingSpottedCount: Int {
-        flights.filter { flight in
-            flight.icaoType != nil && aircraftList.contains { $0.ICAO_Code == flight.icaoType && $0.Aircraft_Name.contains("Boeing") }
-        }.count
+        let uniqueBoeingTypes = Set(
+            flights.compactMap { flight in
+                flight.icaoType != nil && aircraftList.contains {
+                    $0.ICAO_Code == flight.icaoType && $0.Aircraft_Name.contains("Boeing")
+                } ? flight.icaoType : nil
+            }
+        )
+        return uniqueBoeingTypes.count
     }
     
     private var boeingProgress: Double {
         totalBoeingCount > 0 ? Double(boeingSpottedCount) / Double(totalBoeingCount) : 0
+    }
+    
+    
+    //MARK: Airbus Logic
+    private var totalAirbusCount: Int {
+        let uniqueAirbusTypes = Set(
+                aircraftList
+                    .filter { $0.Aircraft_Name.contains("Airbus") }
+                    .map { $0.ICAO_Code } // Extract only ICAO codes
+            )
+        return uniqueAirbusTypes.count
+    }
+    
+    private var airbusSpottedCount: Int {
+        let uniqueAirbusTypes = Set(
+            flights.compactMap { flight in
+                flight.icaoType != nil && aircraftList.contains {
+                    $0.ICAO_Code == flight.icaoType && $0.Aircraft_Name.contains("Airbus")
+                } ? flight.icaoType : nil
+            }
+        )
+        return uniqueAirbusTypes.count
+    }
+    
+    private var airbusProgress: Double {
+        totalAirbusCount > 0 ? Double(airbusSpottedCount) / Double(totalAirbusCount) : 0
     }
 }
