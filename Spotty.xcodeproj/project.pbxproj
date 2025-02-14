@@ -1011,6 +1011,8 @@
 		43F82E982BB614D70003107C /* SpottyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E972BB614D70003107C /* SpottyUITests.swift */; };
 		43F82E9A2BB614D70003107C /* SpottyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */; };
 		43FBDE992CC7218E00447302 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 43FBDE982CC7218E00447302 /* BottomSheet */; };
+		5194A65B2D5EFB7E00975080 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5194A65A2D5EFB7A00975080 /* RootView.swift */; };
+		5194A66D2D5F2E9900975080 /* Spotty_Splash.mov in Resources */ = {isa = PBXBuildFile; fileRef = 5194A66C2D5F2E9900975080 /* Spotty_Splash.mov */; };
 		51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */; };
 		51F4B8252BC06D6000CC4B71 /* SpottedFlightsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */; };
 /* End PBXBuildFile section */
@@ -2039,6 +2041,8 @@
 		43F82E932BB614D70003107C /* SpottyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpottyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		43F82E972BB614D70003107C /* SpottyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyUITests.swift; sourceTree = "<group>"; };
 		43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		5194A65A2D5EFB7A00975080 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		5194A66C2D5F2E9900975080 /* Spotty_Splash.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Spotty_Splash.mov; sourceTree = "<group>"; };
 		51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightFetcher.swift; sourceTree = "<group>"; };
 		51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpottedFlightsStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2803,6 +2807,7 @@
 				4322442E2BC8885D002FC755 /* PTI.png */,
 				4322442F2BC8885D002FC755 /* PUA.png */,
 				432244302BC8885D002FC755 /* PWD.png */,
+				5194A66C2D5F2E9900975080 /* Spotty_Splash.mov */,
 				432244312BC8885D002FC755 /* PYA.png */,
 				432244322BC8885D002FC755 /* QAJ.png */,
 				432244332BC8885D002FC755 /* QFA.png */,
@@ -3097,6 +3102,7 @@
 		43F82E762BB614D50003107C /* Spotty */ = {
 			isa = PBXGroup;
 			children = (
+				5194A65A2D5EFB7A00975080 /* RootView.swift */,
 				436321012D5EF63400C27026 /* Data */,
 				43FBDE8E2CBF786C00447302 /* ContentViews */,
 				4322453C2BC8885D002FC755 /* logos */,
@@ -3783,6 +3789,7 @@
 				432245BF2BC8885D002FC755 /* BBR.png in Resources */,
 				432245C02BC8885D002FC755 /* BCC.png in Resources */,
 				432248B12BC8885D002FC755 /* THA.png in Resources */,
+				5194A66D2D5F2E9900975080 /* Spotty_Splash.mov in Resources */,
 				432248DA2BC8885D002FC755 /* UIA.png in Resources */,
 				432248C02BC8885D002FC755 /* TOS.png in Resources */,
 				432248F42BC8885D002FC755 /* VLG.png in Resources */,
@@ -4275,6 +4282,7 @@
 				43F82E842BB614D70003107C /* Spotty.xcdatamodeld in Sources */,
 				51F4B8252BC06D6000CC4B71 /* SpottedFlightsStore.swift in Sources */,
 				43F82E782BB614D50003107C /* SpottyApp.swift in Sources */,
+				5194A65B2D5EFB7E00975080 /* RootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
