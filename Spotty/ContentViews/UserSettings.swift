@@ -63,12 +63,18 @@ struct SettingsView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
+                    Text("Settings") // Explicitly set the title at the top
+                        .font(.largeTitle)
+                        .bold()
+                        .padding(.top)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
                     
                     // MARK: - Nearby Settings
                     SettingsCard(title: "Nearby Settings") {
                         Toggle("Auto Refresh", isOn: $userSettings.isRefreshOnTap)
                             .onChange(of: userSettings.isRefreshOnTap, perform: refreshTapToggle)
-                        
+
                         VStack(alignment: .leading) {
                             Text("Search Radius: \(formattedRadius)")
                                 .font(.subheadline)
@@ -111,19 +117,18 @@ struct SettingsView: View {
                         .cornerRadius(10)
                     }
                     .padding(.horizontal)
-                    
                 }
                 .padding()
             }
-            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline) // Allows scrolling off screen
         }
     }
-    
+
     var formattedRadius: String {
         let radius = userSettings.radiusKm
         return userSettings.unitSystem == .imperial ? "\(Int(radius * 0.621371)) mi" : "\(Int(radius)) km"
     }
-    
+
     func sendEmail() {
         if MFMailComposeViewController.canSendMail() {
             let mailComposeVC = MFMailComposeViewController()
@@ -168,6 +173,11 @@ struct SettingsView: View {
         print(isEnabled ? "Refreshing on tap" : "Not refreshing on tap")
     }
 }
+
+    func refreshTapToggle(_ isEnabled: Bool) {
+        print(isEnabled ? "Refreshing on tap" : "Not refreshing on tap")
+    }
+
 
 // MARK: - Settings Card Component
 struct SettingsCard<Content: View>: View {
