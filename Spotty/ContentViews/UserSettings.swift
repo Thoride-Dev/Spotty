@@ -59,11 +59,20 @@ class UserSettings: ObservableObject {
 struct SettingsView: View {
     @EnvironmentObject var userSettings: UserSettings
 
+    init() {
+        if UserDefaults.standard.object(forKey: "unitSystem") == nil {
+            let locale = Locale.current
+            let usesMetric = locale.measurementSystem == .metric
+            userSettings.unitSystem = usesMetric ? .metric : .imperial
+            UserDefaults.standard.set(userSettings.unitSystem.rawValue, forKey: "unitSystem")
+        }
+    }
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    Text("Settings") // Explicitly set the title at the top
+                    Text("Settings")
                         .font(.largeTitle)
                         .bold()
                         .padding(.top)
@@ -108,6 +117,21 @@ struct SettingsView: View {
                         HStack {
                             Spacer()
                             Text("Contact Support")
+                                .foregroundColor(.blue)
+                                .font(.headline)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                    
+                    // MARK: - Visit Website
+                    Button(action: visitWebsite) {
+                        HStack {
+                            Spacer()
+                            Text("Visit Website")
                                 .foregroundColor(.blue)
                                 .font(.headline)
                             Spacer()
@@ -168,15 +192,19 @@ struct SettingsView: View {
             }
         }
     }
+    
+    func visitWebsite() {
+        if let url = URL(string: "https://www.thespottyapp.com"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
 
     func refreshTapToggle(_ isEnabled: Bool) {
         print(isEnabled ? "Refreshing on tap" : "Not refreshing on tap")
     }
 }
 
-    func refreshTapToggle(_ isEnabled: Bool) {
-        print(isEnabled ? "Refreshing on tap" : "Not refreshing on tap")
-    }
+
 
 
 // MARK: - Settings Card Component
