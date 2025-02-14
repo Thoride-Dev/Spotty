@@ -57,79 +57,97 @@ struct IcaoCompletionView: View {
             .edgesIgnoringSafeArea(.all)
             .background(Color(UIColor.systemBackground))  // Matches system background
 
-            
-            VStack {
-                HStack {
-                    Button(action: {
-                        dismiss()  // Dismiss the view
-                    }) {
-                        Image(systemName: "xmark")  // Close icon
-                            .font(.title2)
-                            .foregroundColor(.blue)
-                            .padding()
-                    }
-                    .padding(.leading)
-                    .buttonStyle(.plain)
-                    
-                    Spacer()
-                    Text("Aircraft Discovery")
-                        .font(.subheadline)
-                        .bold()
-                    Spacer()
-                }
-                
-                
-                
-                // Boeing Progress Bar
-                VStack(alignment: .leading) {
-                    HStack{
-                        VStack(alignment: .leading){
-                            Text("Boeing Aircraft")
-                                .font(.subheadline)
-                            Text("\(boeingSpottedCount) / \(totalBoeingCount)")
-                                .font(.title)
-                                .bold()
-                            ZStack{
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.regularMaterial)
-                                    .frame(width: 90, height: 20)
-                                Text("\(Int(boeingProgress * 100))% Spotted")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                            }
+            GeometryReader { geometry in
+                VStack {
+                    HStack {
+                        Button(action: {
+                            dismiss()  // Dismiss the view
+                        }) {
+                            Image(systemName: "xmark")  // Close icon
+                                .font(.title2)
+                                .foregroundColor(.blue)
+                                .padding()
                         }
+                        .padding(.leading)
+                        .buttonStyle(.plain)
                         
-                        VStack(alignment: .leading){
-                            Text("Airbus Aircraft")
-                                .font(.subheadline)
-                            Text("\(airbusSpottedCount) / \(totalAirbusCount)")
-                                .font(.title)
-                                .bold()
-                            ZStack{
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.regularMaterial)
-                                    .frame(width: 90, height: 20)
-                                Text("\(Int(airbusProgress * 100))% Spotted")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        
+                        Spacer()
+                        Text("Aircraft Discovery")
+                            .font(.subheadline)
+                            .bold()
+                        Spacer()
                     }
                     
-                    ProgressView(value: boeingProgress)
-                        .progressViewStyle(LinearProgressViewStyle())
-                        .frame(height: 10)
-                        .padding(.bottom, 10)
+                    
+                    
+                    // Boeing Progress Bar
+                    VStack(alignment: .center) {
+                        HStack{
+                            VStack(alignment: .leading){
+                                Text("Boeing Aircraft")
+                                    .font(.subheadline)
+                                Text("\(boeingSpottedCount) / \(totalBoeingCount)")
+                                    .font(.title)
+                                    .bold()
+                                ZStack{
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .fill(.regularMaterial)
+                                        .frame(width: 82, height: 20)
+                                        .shadow(radius: 2)
+                                    
+                                    Text("\(Int(boeingProgress * 100))% Spotted")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer()
+                            VStack(alignment: .leading){
+                                Text("Airbus Aircraft")
+                                    .font(.subheadline)
+                                Text("\(airbusSpottedCount) / \(totalAirbusCount)")
+                                    .font(.title)
+                                    .bold()
+                                ZStack{
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .fill(.regularMaterial)
+                                        .frame(width: 82, height: 20)
+                                        .shadow(radius: 2)
+                                    
+                                    Text("\(Int(airbusProgress * 100))% Spotted")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer()
+                            VStack(alignment: .leading){
+                                Text("Regional Aircraft")
+                                    .font(.subheadline)
+                                Text("\(regionalSpottedCount) / \(totalRegionalCount)")
+                                    .font(.title)
+                                    .bold()
+                                ZStack{
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .fill(.regularMaterial)
+                                        .frame(width: 82, height: 20)
+                                        .shadow(radius: 2)
+                                    Text("\(Int(regionalProgress * 100))% Spotted")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                    .padding(EdgeInsets(top: 10, leading: 15, bottom: 15, trailing: 15))
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(width: geometry.size.width * 0.9,  height: 1)
+                        .foregroundColor(Color(.systemGray4))
+                    
+                    Spacer()
                 }
-                .padding()
-                
-                
-                Spacer()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .onAppear {
-                loadAircraftData()  // Load JSON when view appears
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    loadAircraftData()  // Load JSON when view appears
+                }
             }
         }
     }
@@ -199,5 +217,45 @@ struct IcaoCompletionView: View {
     
     private var airbusProgress: Double {
         totalAirbusCount > 0 ? Double(airbusSpottedCount) / Double(totalAirbusCount) : 0
+    }
+    
+    //MARK: Regional Jet Logic
+    private var totalRegionalCount: Int {
+        let regionalJetTypes = ["Regional", "Embraer 170", "De Havilland", "CRJ", "Embraer RJ","Embraer 190", "Embraer 195", "Embraer 175" ]
+
+        let uniqueRegionalTypes = Set(
+            aircraftList
+                .filter { aircraft in
+                    regionalJetTypes.contains { keyword in aircraft.Aircraft_Name.contains(keyword) }
+                }
+                .map { $0.ICAO_Code } // Extract unique ICAO codes
+        )
+        
+        return uniqueRegionalTypes.count
+    }
+    
+    private var regionalSpottedCount: Int {
+        let regionalJetTypes = ["Regional", "Embraer 170", "De Havilland", "CRJ", "Embraer RJ","Embraer 190", "Embraer 195", "Embraer 175" ]
+
+        let uniqueRegionalTypes: Set<String> = Set(
+            flights.compactMap { flight in
+                guard let icaoType = flight.icaoType else { return nil } // Ensure ICAO type exists
+
+                // Check if the aircraft list contains a regional jet with this ICAO code
+                let isRegional = aircraftList.contains { aircraft in
+                    aircraft.ICAO_Code == icaoType &&
+                    regionalJetTypes.contains { keyword in aircraft.Aircraft_Name.contains(keyword) }
+                }
+
+                return isRegional ? icaoType : nil // Return ICAO code if it's a regional jet
+            }
+        )
+
+        return uniqueRegionalTypes.count
+    }
+
+    
+    private var regionalProgress: Double {
+        totalRegionalCount > 0 ? Double(regionalSpottedCount) / Double(totalRegionalCount) : 0
     }
 }
