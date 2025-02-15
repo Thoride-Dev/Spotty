@@ -12,14 +12,14 @@ import Charts
 import UniformTypeIdentifiers
 import UIKit
 
-@available(iOS 17.0, *)
+@available(iOS 18.0, *)
 struct SpottedView: View {
     var body: some View {
         MapView()
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 18.0, *)
 struct MapView: View {
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     @State var bottomSheetPosition: BottomSheetPosition = .relative(0.55)
@@ -32,6 +32,7 @@ struct MapView: View {
     @State var searchText: String = ""
 
     @Environment(\.colorScheme) var colorScheme
+    @available(iOS 18.0, *)
     var body: some View {
         GeometryReader { geometry in
             ZStack{
@@ -168,11 +169,12 @@ struct MapView: View {
                                 .fullScreenCover(isPresented: $showingCompletionSheet) {
                                     IcaoCompletionView(flights: spottedFlightsStore.spottedFlights)
                                 }
-                                
+                                Spacer()
                                 //SpottedFlightsView()
                             }
                         }
                     }
+
                     
                     
                 }
@@ -313,7 +315,7 @@ struct AirlineBarChartView: View {
 
 struct ICAOProgressView: View {
     let flights: [Flight]
-    let totalICAOTypes = 274
+    let totalICAOTypes = 273
     
     var uniqueICAOTypesCount: Int {
         Set(flights.compactMap { $0.icaoType }).count
@@ -325,7 +327,7 @@ struct ICAOProgressView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("\(uniqueICAOTypesCount) / \(totalICAOTypes) Planes Discovered")
+            Text("\(uniqueICAOTypesCount) / \(totalICAOTypes) Aircraft Discovered")
                 .foregroundColor(.primary)
                 .font(.title3)
                 .bold()
@@ -423,7 +425,7 @@ func exportCSV(flights: [Flight]) {
 
 
 
-@available(iOS 17.0, *)
+@available(iOS 18.0, *)
 #Preview {
     ContentView()
 }
