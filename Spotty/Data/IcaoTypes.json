@@ -30,11 +30,6 @@
         "Aircraft_Name":"Airbus A321neo"
     },
     {
-        "ICAO_Code":"A225",
-        "Alternative_Code":"A5F",
-        "Aircraft_Name":"Antonov An-225 Mriya"
-    },
-    {
         "ICAO_Code":"A306",
         "Alternative_Code":"AB6",
         "Aircraft_Name":"Airbus A300-600"
