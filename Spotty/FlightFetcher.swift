@@ -84,7 +84,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         self.userSettings = userSettings
         super.init()
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
+        checkLocationAuthorization()
         radiusKm = self.userSettings.radiusKm;
         
         cancellable = UserSettings.shared.$radiusKm.sink { newValue in
@@ -97,21 +97,13 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     func checkLocationAuthorization() {
-        DispatchQueue.global(qos: .background).async {
-            if CLLocationManager.locationServicesEnabled() {
-                let status = self.locationManager.authorizationStatus
-                DispatchQueue.main.async {
-                    self.authorizationStatus = status
-                    self.handleAuthorization(status)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    print("Location services are disabled.")
-                }
-            }
+        if CLLocationManager.locationServicesEnabled() {
+            authorizationStatus = locationManager.authorizationStatus
+            handleAuthorization(authorizationStatus)
+        } else {
+            print("Location services are disabled.")
         }
     }
-
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
@@ -161,39 +153,18 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         self.fetchFlightData(coordinates: location.coordinate, distance: distance)
     }
     
-private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Double) {
-        // Validate coordinate range and distance
-        guard distance > 0,
-              coordinates.latitude >= -90, coordinates.latitude <= 90,
-              coordinates.longitude >= -180, coordinates.longitude <= 180 else {
-            if userSettings.isDebugModeEnabled {
-                print("Invalid coordinates or distance: lat=\(coordinates.latitude), lon=\(coordinates.longitude), dist=\(distance)")
-            }
-            return
-        }
-
-        // Construct and validate URL
+    private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Double) {
         let urlString = "https://api.adsb.lol/v2/lat/\(coordinates.latitude)/lon/\(coordinates.longitude)/dist/\(distance)"
+        guard let url = URL(string: urlString) else { return }
         
-        guard let url = URL(string: urlString) else {
-            if userSettings.isDebugModeEnabled {
-                print("Failed to create URL from: \(urlString)")
-            }
-            return
-        }
-
-        if userSettings.isDebugModeEnabled {
-            print("Fetching flight data from: \(url)")
-        }
-
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self, let data = data, error == nil else {
-                if self?.userSettings.isDebugModeEnabled == true {
-                    print("Network request failed: \(error?.localizedDescription ?? "Unknown error")")
+                if self!.userSettings.isDebugModeEnabled {
+                    print("Network request failed: \(error?.localizedDescription ?? "No error description")")
                 }
                 return
             }
-
+            
             do {
                 if let jsonResult = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let planes = jsonResult["ac"] as? [[String: Any]] {
@@ -207,18 +178,23 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                         let current_lat = plane["lat"] as? Double
                         let callSign = callSignUnwrapped.trimmingCharacters(in: .whitespaces)
                         let current_pos = Position(longitude: current_long, latitude: current_lat)
-
+                
+                        
+                        // Filter out call signs that are too short or don't have enough information
                         if callSign.isEmpty || callSign.count < 3 || !callSign.contains(where: { $0.isNumber }) { continue }
+                        
+                        // Ensure we don't process duplicate call signs
                         if localSeenCallSigns.contains(callSign) { continue }
                         localSeenCallSigns.insert(callSign)
                         
                         self.fetchAircraftInfo(hex: icao24) { aircraftInfoOptional in
                             guard let aircraftInfo = aircraftInfoOptional else { return }
-
+                            
                             let hasRelevantInfo =
-                                aircraftInfo.registration != nil ||
-                                aircraftInfo.type != nil
-
+                            aircraftInfo.registration != nil ||
+                            aircraftInfo.type != nil
+                            print("\(String(describing: aircraftInfo.modeS))/\(callSign)")
+                            
                             self.getRouteInfo(for: callSign) { (origin, destination) in
                                 DispatchQueue.main.async {
                                     self.lastUpdated = Date()
@@ -229,6 +205,7 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
 
                                     var originAirport: Airport?
                                     var destinationAirport: Airport?
+
                                     let group = DispatchGroup()
 
                                     if let origin = origin {
@@ -246,65 +223,62 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                                             group.leave()
                                         }
                                     }
-
+                                    
                                     var ofc = aircraftInfo.operatorFlagCode
                                     if UIImage(named: aircraftInfo.operatorFlagCode ?? "") == nil {
                                         ofc = "preview-airline"
                                     }
-
+                                    
                                     var imageURL: URL?
                                     if let hex = aircraftInfo.modeS {
                                         group.enter()
                                         self.getImageURL(hex: hex) { url in
-                                            if let validURL = url {
-                                                imageURL = validURL
-                                            } else {
-                                                imageURL = nil
-                                                if self.userSettings.isDebugModeEnabled {
-                                                    print("No image found for hex: \(hex) — using placeholder.")
-                                                }
-                                            }
+                                            imageURL = url
                                             group.leave()
                                         }
                                     }
-
+                                    
 
                                     group.notify(queue: .main) {
                                         guard let existingFlightIndex = self.flights.firstIndex(where: { $0.id == aircraftInfo.modeS }) else {
+                                            // Flight not in list, add new flight
                                             let cur_flight = Flight(id: aircraftInfo.modeS,
-                                                                    callSign: callSign,
-                                                                    registration: aircraftInfo.registration,
-                                                                    type: aircraftInfo.type,
-                                                                    icaoType: aircraftInfo.icaoTypeCode,
-                                                                    tailNumber: aircraftInfo.registration,
-                                                                    origin: originAirport,
-                                                                    destination: destinationAirport,
-                                                                    OperatorFlagCode: ofc,
-                                                                    position: current_pos,
-                                                                    imageURL: imageURL,
-                                                                    dateSpotted: Date())
-
+                                                                       callSign: callSign,
+                                                                       registration: aircraftInfo.registration,
+                                                                       type: aircraftInfo.type,
+                                                                       icaoType: aircraftInfo.icaoTypeCode,
+                                                                       tailNumber: aircraftInfo.registration,
+                                                                       origin: originAirport,
+                                                                       destination: destinationAirport,
+                                                                       OperatorFlagCode: ofc,
+                                                                       position: current_pos,
+                                                                       imageURL: imageURL,
+                                                                       dateSpotted: Date())
+                                            
                                             FlightSorter.addFlightToList(cur_flight, to: &self.flights)
                                             return
                                         }
 
+                                        // Flight already in list, update position
                                         self.flights[existingFlightIndex].position = current_pos
+
+                                        
                                     }
                                 }
                             }
                         }
                     }
+                    //print(self.flights)
                 }
             } catch {
                 if self.userSettings.isDebugModeEnabled {
                     print("Error decoding JSON: \(error)")
                 }
+                
             }
         }
-
         task.resume()
     }
-
     
     
     
@@ -372,7 +346,7 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                             let destination = routeComponents[1]
                             completion(origin, destination)
                         } else {
-//                            print("Error parsing routeInfo")
+                            print("Error parsing routeInfo")
                             completion(nil, nil)
                         }
                     } catch {

@@ -192,57 +192,17 @@ struct ImageLoaderView: View {
 
     // Simulate image loading from a URL or some other async source
     func loadImageFromURL() {
-        URLSession.shared.dataTask(with: imageURL) { data, response, error in
-            var uiImage: UIImage?
 
-            if let error = error as? URLError {
-                if error.code == .unsupportedURL {
-                    print("Unsupported URL (code -1002)")
-                } else {
-                    print("URLSession error: \(error.code.rawValue) — \(error.localizedDescription)")
-                }
-
-                uiImage = UIImage(named: "PLACEHOLDER")
-            } else if let data = data,
-                      let originalImage = UIImage(data: data),
-                      let cgImage = originalImage.cgImage {
-
-                let width = cgImage.width
-                let height = cgImage.height
-                let colorSpace = CGColorSpaceCreateDeviceRGB()
-                let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-                let bytesPerPixel = 4
-                let bytesPerRow = bytesPerPixel * width
-                let bitsPerComponent = 8
-
-                if let context = CGContext(
-                    data: nil,
-                    width: width,
-                    height: height,
-                    bitsPerComponent: bitsPerComponent,
-                    bytesPerRow: bytesPerRow,
-                    space: colorSpace,
-                    bitmapInfo: bitmapInfo.rawValue
-                ) {
-                    context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
-                    if let convertedCGImage = context.makeImage() {
-                        uiImage = UIImage(cgImage: convertedCGImage)
-                    }
-                }
-            } else {
-                print("Image data is nil or could not be parsed: \(imageURL.absoluteString)")
-                uiImage = UIImage(named: "PLACEHOLDER")
-            }
-
-            if let validUIImage = uiImage {
+        
+        // Load the image data asynchronously
+        DispatchQueue.global().async {
+            if let data = try? Data(contentsOf: imageURL), let uiImage = UIImage(data: data) {
+                // Once the image is loaded, update the UI on the main thread
                 DispatchQueue.main.async {
-                    self.loadedImage = Image(uiImage: validUIImage)
+                    self.loadedImage = Image(uiImage: uiImage)
                     self.isImageLoaded = true
                 }
             }
-        }.resume()
+        }
     }
-
-
-
 }
