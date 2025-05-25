@@ -84,7 +84,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         self.userSettings = userSettings
         super.init()
         locationManager.delegate = self
-        checkLocationAuthorization()
+        locationManager.requestWhenInUseAuthorization()
         radiusKm = self.userSettings.radiusKm;
         
         cancellable = UserSettings.shared.$radiusKm.sink { newValue in
@@ -97,13 +97,21 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     func checkLocationAuthorization() {
-        if CLLocationManager.locationServicesEnabled() {
-            authorizationStatus = locationManager.authorizationStatus
-            handleAuthorization(authorizationStatus)
-        } else {
-            print("Location services are disabled.")
+        DispatchQueue.global(qos: .background).async {
+            if CLLocationManager.locationServicesEnabled() {
+                let status = self.locationManager.authorizationStatus
+                DispatchQueue.main.async {
+                    self.authorizationStatus = status
+                    self.handleAuthorization(status)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Location services are disabled.")
+                }
+            }
         }
     }
+
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
