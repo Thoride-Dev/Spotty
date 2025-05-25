@@ -3,7 +3,6 @@
 //  Spotty
 //
 //  Created by Patrick Fortin on 3/29/24.
-//
 
 import Foundation
 import SwiftUI
@@ -60,54 +59,54 @@ struct SettingsView: View {
     @EnvironmentObject var userSettings: UserSettings
 
     var body: some View {
-        NavigationView {
-            Form {
-                // MARK: - Nearby Settings
-                Section(header: Text("General").font(.headline)) {
-                    Toggle("Auto Refresh", isOn: $userSettings.isRefreshOnTap)
-                    HStack {
-                        Text("Search Radius")
-                        Spacer()
-                        Text(formattedRadius).foregroundColor(.secondary)
-                    }
-                    Slider(value: $userSettings.radiusKm, in: 1...40, step: 1)
+        VStack(alignment: .leading, spacing: 24) {
+            // MARK: - General Settings
+            SettingsCard(title: "General") {
+                Toggle("Auto Refresh", isOn: $userSettings.isRefreshOnTap)
+                HStack {
+                    Text("Search Radius")
+                    Spacer()
+                    Text(formattedRadius).foregroundColor(.secondary)
                 }
+                Slider(value: $userSettings.radiusKm, in: 1...40, step: 1)
+            }
 
-                // MARK: - Appearance Settings
-                Section(header: Text("Appearance").font(.headline)) {
-                    Picker("Theme", selection: $userSettings.appearance) {
-                        ForEach(Appearance.allCases) { Text($0.rawValue.capitalized).tag($0) }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-
-                    Picker("Unit System", selection: $userSettings.unitSystem) {
-                        Text("Metric").tag(UnitSystem.metric)
-                        Text("Imperial").tag(UnitSystem.imperial)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
+            // MARK: - Appearance Settings
+            SettingsCard(title: "Appearance") {
+                Picker("Theme", selection: $userSettings.appearance) {
+                    ForEach(Appearance.allCases) { Text($0.rawValue.capitalized).tag($0) }
                 }
+                .pickerStyle(SegmentedPickerStyle())
 
-                // MARK: - Support & Legal
-                Section(header: Text("Support").font(.headline)) {
-                    SettingsButton(title: "Contact Support", icon: "envelope", action: sendEmail)
-                    SettingsButton(title: "Visit Website", icon: "globe", action: visitWebsite)
-                    NavigationLink(destination: LegalView()) {
-                        SettingsRow(title: "Legal & About", icon: "doc.text")
-                    }
+                Picker("Unit System", selection: $userSettings.unitSystem) {
+                    Text("Metric").tag(UnitSystem.metric)
+                    Text("Imperial").tag(UnitSystem.imperial)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+            }
+
+            // MARK: - Support & Legal
+            SettingsCard(title: "Support") {
+                SettingsButton(title: "Contact Support", icon: "envelope", action: sendEmail)
+                SettingsButton(title: "Visit Website", icon: "globe", action: visitWebsite)
+                NavigationLink(destination: LegalView()) {
+                    SettingsRow(title: "Legal & About", icon: "doc.text")
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
+
+            Spacer()
         }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(Color(.systemBackground))
     }
 
-    // MARK: - Computed Property for Radius Display
     var formattedRadius: String {
         let radius = userSettings.radiusKm
         return userSettings.unitSystem == .imperial ? "\(Int(radius * 0.621371)) mi" : "\(Int(radius)) km"
     }
 }
 
-// MARK: - Reusable Components
 struct SettingsButton: View {
     let title: String
     let icon: String
@@ -136,7 +135,6 @@ struct SettingsRow: View {
     }
 }
 
-// MARK: - Functions for Support Actions
 func sendEmail() {
     let email = "contact@thespottyapp.com"
     let subject = "Spotty Support Request"
@@ -144,7 +142,8 @@ func sendEmail() {
     let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
     let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
 
-    if let url = URL(string: "mailto:\(email)?subject=\(encodedSubject)&body=\(encodedBody)"), UIApplication.shared.canOpenURL(url) {
+    if let url = URL(string: "mailto:\(email)?subject=\(encodedSubject)&body=\(encodedBody)"),
+       UIApplication.shared.canOpenURL(url) {
         UIApplication.shared.open(url)
     } else {
         showAlert(title: "No Email App", message: "No email app is installed. Please install an email app to contact support.")
@@ -152,65 +151,45 @@ func sendEmail() {
 }
 
 func visitWebsite() {
-    if let url = URL(string: "https://www.thespottyapp.com"), UIApplication.shared.canOpenURL(url) {
+    if let url = URL(string: "https://www.thespottyapp.com"),
+       UIApplication.shared.canOpenURL(url) {
         UIApplication.shared.open(url)
     }
 }
 
 func showAlert(title: String, message: String) {
-    if let topController = UIApplication.shared.connectedScenes.compactMap({ ($0 as? UIWindowScene)?.keyWindow }).first?.rootViewController {
+    if let topController = UIApplication.shared.connectedScenes
+        .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
+        .first?.rootViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         topController.present(alert, animated: true)
     }
 }
 
-
-
-
-
-// MARK: - Settings Card Component
 struct SettingsCard<Content: View>: View {
     let title: String
     let content: Content
-    
+
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
-            
+
             content
                 .padding(.horizontal)
-            
         }
         .padding()
         .background(Color(.systemGray6))
         .cornerRadius(12)
     }
 }
-
-
-
-
-struct ColorSchemeTransitionOverlay: View {
-    @Binding var isTransitioning: Bool
-    @Environment(\.colorScheme) var colorScheme
-
-    var body: some View {
-        Rectangle()
-            .foregroundColor(colorScheme == .dark ? .black : .white)
-            .opacity(isTransitioning ? 1 : 0)
-            .animation(.easeInOut(duration: 0.5), value: isTransitioning)
-            .ignoresSafeArea()
-    }
-}
-
 
 struct LegalView: View {
     var body: some View {
@@ -221,18 +200,15 @@ struct LegalView: View {
                     .bold()
                     .padding(.top)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
-                // Copyright Statement
+
                 SectionView(title: "Copyright & Disclaimer") {
                     Text("© 2025 Spotty. All rights reserved.\n\nSpotty is an independent application for aviation enthusiasts. We do not claim ownership of any airline logos, aircraft liveries, or trademarks displayed in the app. These are the property of their respective owners and are used for informational purposes only.\n\nAircraft photos are sourced from **JetPhotos.com**. We do not claim ownership of these images, and all rights remain with the respective photographers.\n\nSpotty is not affiliated with, endorsed by, or officially connected to any airline, aircraft manufacturer, or aviation organization.")
                 }
 
-                // Privacy Policy
                 SectionView(title: "Privacy Policy") {
                     Text("Spotty does not collect, store, or share any personal data unless explicitly stated. Any analytics used are only for app improvements and do not personally identify users. For any concerns, contact us at **contact@thespottyapp.com**.")
                 }
 
-                // Contact Information
                 SectionView(title: "Contact Us") {
                     Text("If you have any questions or concerns, feel free to reach out to us at:")
                     Button(action: sendEmail) {
@@ -247,7 +223,7 @@ struct LegalView: View {
         .navigationTitle("Legal & About")
         .navigationBarTitleDisplayMode(.inline)
     }
-    
+
     func sendEmail() {
         if let emailURL = URL(string: "mailto:contact@thespottyapp.com") {
             UIApplication.shared.open(emailURL)
@@ -255,22 +231,21 @@ struct LegalView: View {
     }
 }
 
-// Reusable Section View for Clean Formatting
 struct SectionView<Content: View>: View {
     let title: String
     let content: Content
-    
+
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
-            
+
             content
                 .font(.subheadline)
                 .foregroundColor(.secondary)
@@ -280,7 +255,3 @@ struct SectionView<Content: View>: View {
         .cornerRadius(10)
     }
 }
-
-
-
-

@@ -49,11 +49,13 @@ struct ContentView: View {
                 } else {
                     VStack(spacing: 10) {
                         ForEach(flightFetcher.flights) { flight in
-                            let imageURL = flight.imageURL
-                            ImageLoaderView(flight: flight, imageURL: imageURL!)
+                            if let imageURL = flight.imageURL {
+                                ImageLoaderView(flight: flight, imageURL: imageURL)
+                            }
                         }
                     }
                     .padding(.horizontal)
+
                 }
             }
             .refreshable {
