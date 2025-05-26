@@ -12,13 +12,15 @@ struct SpottyApp: App {
     let persistenceController = PersistenceController.shared
     @StateObject var userSettings = UserSettings.shared
     @StateObject var spottedFlightsStore = SpottedFlightsStore()
+    @StateObject var flightFetcher = FlightFetcher(userSettings: UserSettings.shared)
 
     var body: some Scene {
         WindowGroup {
-            RootView() // This manages splash screen & transitions
+            RootView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(userSettings)
                 .environmentObject(spottedFlightsStore)
+                .environmentObject(flightFetcher) 
                 .preferredColorScheme(colorScheme(for: userSettings.appearance))
         }
     }
@@ -34,3 +36,4 @@ struct SpottyApp: App {
         }
     }
 }
+
