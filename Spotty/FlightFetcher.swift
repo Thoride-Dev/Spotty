@@ -97,13 +97,20 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     func checkLocationAuthorization() {
-        if CLLocationManager.locationServicesEnabled() {
-            authorizationStatus = locationManager.authorizationStatus
-            handleAuthorization(authorizationStatus)
-        } else {
-            print("Location services are disabled.")
+        DispatchQueue.global(qos: .userInitiated).async {
+            if CLLocationManager.locationServicesEnabled() {
+                DispatchQueue.main.async {
+                    self.authorizationStatus = self.locationManager.authorizationStatus
+                    self.handleAuthorization(self.authorizationStatus)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Location services are disabled.")
+                }
+            }
         }
     }
+
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus

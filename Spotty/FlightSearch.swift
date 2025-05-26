@@ -58,7 +58,7 @@ class FlightSearch: ObservableObject {
             aircraftInfo.registration != nil ||
             aircraftInfo.type != nil ||
             aircraftInfo.icaoTypeCode != nil
-            print("\(aircraftInfo.modeS)/\(callSign)")
+//            print("\(aircraftInfo.modeS)/\(callSign)")
             
             flightFetcher.getRouteInfo(for: callSign) { (origin, destination) in
                 DispatchQueue.main.async {
