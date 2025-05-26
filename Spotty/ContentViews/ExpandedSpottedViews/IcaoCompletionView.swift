@@ -52,8 +52,9 @@ struct IcaoCompletionView: View {
     @State private var aircraftList: [Aircraft] = []
     @State private var hideChevron = false
 
+    @State private var selectedData: ManufacturerCompletion?
+    @State private var isSheetPresented = false
 
-    
     var uniqueICAOTypesCount: Int {
         Set(flights.compactMap { $0.icaoType }).count
     }
@@ -173,22 +174,34 @@ struct IcaoCompletionView: View {
                         
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 4), spacing: 4) {
                             ForEach(manufacturerCompletionData) { data in
-                                ZStack {
-                                    Rectangle()
-                                        .fill(Color.teal.opacity(0.2 + data.completionPercentage * 0.8)) // Darker for higher completion
-                                        .frame(height: 50)
-                                        .cornerRadius(10)
-                                    VStack {
-                                        Text(data.manufacturer)
-                                            .font(.caption)
-                                            .multilineTextAlignment(.center)
-                                            .frame(width: 80, alignment: .center)
-                                        Text("\(Int(data.completionPercentage * 100))%")
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
-                                            .frame(width: 50, alignment: .center)
+                                Button(action: {
+                                    // Navigate to SelectedCategoryView with data
+                                    selectedData = data
+                                    isSheetPresented = true
+                                }) {
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(Color.teal.opacity(0.2 + data.completionPercentage * 0.8)) // Darker for higher completion
+                                            .frame(height: 50)
+                                            .cornerRadius(10)
+
+                                        VStack {
+                                            Text(data.manufacturer)
+                                                .font(.caption)
+                                                .multilineTextAlignment(.center)
+                                                .frame(width: 80, alignment: .center)
+                                            Text("\(Int(data.completionPercentage * 100))%")
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                                .frame(width: 50, alignment: .center)
+                                        }
                                     }
-                                }
+                                }.buttonStyle(.plain)
+                            }
+                        }
+                        .sheet(isPresented: $isSheetPresented) {
+                            if let selectedData = selectedData {
+                                SelectedCategoryView(data: selectedData)
                             }
                         }
                         .padding(EdgeInsets(top: 0, leading: 15, bottom: 15, trailing: 15))
@@ -208,7 +221,7 @@ struct IcaoCompletionView: View {
                             GlowingChevron() // Add the chevron animation
                                 .padding(.bottom, 20) // Adjust padding as needed
                         } else {
-                            Spacer(minLength: 41)
+                            Spacer(minLength: 42)
                         }
                     
                         
@@ -216,9 +229,8 @@ struct IcaoCompletionView: View {
                             .frame(width: geometry.size.width * 0.9,  height: 1)
                             .foregroundColor(Color(.systemGray4))
                         
-                        ForEach(flights) { flight in
-                            /*@START_MENU_TOKEN@*/Text(flight.formattedDate)/*@END_MENU_TOKEN@*/
-                        }
+                        //MARK: Boeing View
+                        BoeingView(boeingSpottedCount: boeingSpottedCount, totalBoeingCount: totalBoeingCount)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .onAppear {
@@ -443,7 +455,7 @@ struct IcaoCompletionView: View {
                     Text("Rare Aircraft Spotted")
                         .font(.headline)
                     Spacer()
-                    Text("\(spottedCount)/\(totalOneOffs)")
+                    Text("\(spottedCount) / \(totalOneOffs)")
                         .font(.subheadline)
                         .bold()
                         .foregroundColor(.secondary)
@@ -507,6 +519,18 @@ struct IcaoCompletionView: View {
                         isAnimating.toggle()
                     }
                 }
+        }
+    }
+    
+    //MARK: Selected Category View
+    struct SelectedCategoryView: View {
+        let data: ManufacturerCompletion
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text(data.manufacturer)
+                    .font(.headline)
+            }
         }
     }
 
