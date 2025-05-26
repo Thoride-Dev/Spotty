@@ -3,7 +3,6 @@
 //  Spotty
 //
 //  Created by Patrick Fortin on 2/13/25.
-//
 
 import SwiftUI
 import AVKit
@@ -61,8 +60,11 @@ struct TransparentVideoPlayer: UIViewRepresentable {
 
             playerLayer.frame = containerView.bounds
             playerLayer.backgroundColor = UIColor.clear.cgColor // Transparency fix
-            
             containerView.layer.addSublayer(playerLayer)
+
+            // Prevent background audio interruption
+            try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [])
+            try? AVAudioSession.sharedInstance().setActive(true)
 
             player.isMuted = true // Mute video
             player.play()
@@ -92,4 +94,3 @@ struct TransparentVideoPlayer: UIViewRepresentable {
         }
     }
 }
-
