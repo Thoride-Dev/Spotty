@@ -36,6 +36,14 @@ struct Flight: Codable, Identifiable {
     var position: Position?
     let imageURL: URL?
     var dateSpotted: Date
+    
+    var userImageData: Data?
+    // Computed property to convert `Data` to `UIImage`
+    var userImage: UIImage? {
+        guard let data = userImageData else { return nil }
+        return UIImage(data: data)
+    }
+    
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short // Uses the user's preferred date format
@@ -62,56 +70,87 @@ struct Airport: Codable {
 class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     private var seenCallSigns = Set<String>()
     private let locationManager = CLLocationManager()
-    private let radiusKm: Double = 15
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    private var radiusKm: Double = 40
     private let earthRadiusKm: Double = 6371
     private var userSettings: UserSettings
     
     @Published var flights: [Flight] = []
     @Published var lastUpdated: Date?
     
+    private var cancellable: AnyCancellable?
     
     init(userSettings: UserSettings) {
         self.userSettings = userSettings
         super.init()
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
+        checkLocationAuthorization()
+        radiusKm = self.userSettings.radiusKm;
+        
+        cancellable = UserSettings.shared.$radiusKm.sink { newValue in
+            self.handleRadiusChange(newValue)
+        }
     }
     
+    func handleRadiusChange(_ newRadius: Double) {
+        self.radiusKm = newRadius
+    }
+    
+    func checkLocationAuthorization() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            if CLLocationManager.locationServicesEnabled() {
+                DispatchQueue.main.async {
+                    self.authorizationStatus = self.locationManager.authorizationStatus
+                    self.handleAuthorization(self.authorizationStatus)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Location services are disabled.")
+                }
+            }
+        }
+    }
+
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        authorizationStatus = manager.authorizationStatus
+        handleAuthorization(authorizationStatus)
+    }
+
+    private func handleAuthorization(_ status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+            startLocationUpdates()
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted, .denied:
+            if userSettings.isDebugModeEnabled {
+                print("Location services denied or restricted.")
+            }
+        @unknown default:
+            break
+        }
+    }
+
+    private func startLocationUpdates() {
+        locationManager.startUpdatingLocation()
+    }
+
     func refreshFlights() {
         DispatchQueue.main.async {
             self.flights.removeAll()
             self.seenCallSigns.removeAll()
         }
-        
-        // Check if location services are enabled and if the app is authorized to use them
-        if CLLocationManager.locationServicesEnabled() {
-            switch locationManager.authorizationStatus {
-            case .authorizedWhenInUse, .authorizedAlways:
-                // Location services are authorized, start updating location
-                startLocationUpdates()
-            case .notDetermined:
-                // The user has not yet made a choice regarding whether the app can use location services
-                locationManager.requestWhenInUseAuthorization()
-            case .restricted, .denied:
-                // The app is not authorized to use location services
-                if userSettings.isDebugModeEnabled {
-                    print("Location services not authorized or restricted.")
-                }
-            @unknown default:
-                // Handle any future cases
-                break
-            }
+
+        if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {
+            startLocationUpdates()
+        } else if authorizationStatus == .notDetermined {
+            locationManager.requestWhenInUseAuthorization()
         } else {
-            // Location services are not enabled
             if userSettings.isDebugModeEnabled {
-                print("Location services not enabled.")
+                print("Location services not authorized or restricted.")
             }
         }
-    }
-    
-    
-    func startLocationUpdates() {
-        locationManager.startUpdatingLocation()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -142,10 +181,11 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                         guard let icao24 = plane["hex"] as? String,
                               let callSignUnwrapped = plane["flight"] as? String else { continue }
                         
-                        let current_long = plane["lat"] as? Double
-                        let current_lat = plane["lon"] as? Double
+                        let current_long = plane["lon"] as? Double
+                        let current_lat = plane["lat"] as? Double
                         let callSign = callSignUnwrapped.trimmingCharacters(in: .whitespaces)
                         let current_pos = Position(longitude: current_long, latitude: current_lat)
+                
                         
                         // Filter out call signs that are too short or don't have enough information
                         if callSign.isEmpty || callSign.count < 3 || !callSign.contains(where: { $0.isNumber }) { continue }
@@ -214,7 +254,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                                                                        registration: aircraftInfo.registration,
                                                                        type: aircraftInfo.type,
                                                                        icaoType: aircraftInfo.icaoTypeCode,
-                                                                       tailNumber: aircraftInfo.registeredOwners,
+                                                                       tailNumber: aircraftInfo.registration,
                                                                        origin: originAirport,
                                                                        destination: destinationAirport,
                                                                        OperatorFlagCode: ofc,
