@@ -74,6 +74,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     private var radiusKm: Double = 40
     private let earthRadiusKm: Double = 6371
     private var userSettings: UserSettings
+    @Published var userLocation: CLLocation?
     
     @Published var flights: [Flight] = []
     @Published var lastUpdated: Date?
@@ -156,6 +157,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager.stopUpdatingLocation()
         guard let location = locations.last else { return }
+        self.userLocation = location
         let distance = radiusKm
         self.fetchFlightData(coordinates: location.coordinate, distance: distance)
     }

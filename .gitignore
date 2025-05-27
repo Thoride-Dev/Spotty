@@ -91,3 +91,5 @@ iOSInjectionProject/
 
 # Ignore specific project file for Spotty.xcodeproj
 Spotty.xcodeproj/project.pbxproj
+.DS_Store
+Spotty/.DS_Store
