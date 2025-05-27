@@ -9,17 +9,34 @@ struct ContentView: View {
     @EnvironmentObject var userSettings: UserSettings
     @State private var isFetching: Bool = true
 
+    @State private var fetchingMessage: String = "Fetching flights..."
+
+    let loadingMessages = [
+        "Scanning the Skies...",
+        "Clearing the Runway for Nearby Flights...",
+        "Radar Engaged! Looking for Planes...",
+        "Acquiring Targets – I Mean, Flights...",
+        "Fasten Your Seatbelt – Fetching Planes!",
+        "Tuning into Air Traffic Control...",
+        "Preparing for Takeoff – Loading Flights!",
+        "Air Traffic Control is tracking flights..."
+    ]
+
+    
     var body: some View {
         TabView {
             // Nearby flights tab
             ScrollView {
                 if isFetching {
                     VStack {
-                        Text("Fetching nearby flights...")
+                        Text(fetchingMessage)
                             .font(.title3)
                         ProgressView()
                     }
                     .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.8) // Push to center
+                    .onAppear {
+                        fetchingMessage = loadingMessages.randomElement() ?? "Fetching flights..."
+                    }
                 } else if flightFetcher.flights.isEmpty {
                     VStack {
                         Text("No flights found :(")
@@ -32,11 +49,13 @@ struct ContentView: View {
                 } else {
                     VStack(spacing: 10) {
                         ForEach(flightFetcher.flights) { flight in
-                            let imageURL = flight.imageURL
-                            ImageLoaderView(flight: flight, imageURL: imageURL!)
+                            if let imageURL = flight.imageURL {
+                                ImageLoaderView(flight: flight, imageURL: imageURL)
+                            }
                         }
                     }
                     .padding(.horizontal)
+
                 }
             }
             .refreshable {
