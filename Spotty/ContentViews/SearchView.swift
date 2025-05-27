@@ -4,16 +4,27 @@
 //
 //  Created by Kush Dalal on 2/12/25.
 //
+
 import SwiftUI
 import WebKit
+import CoreLocation
+
+struct AirportOption: Identifiable, Hashable {
+    let id = UUID()
+    let icao: String
+    let name: String
+}
 
 struct SearchView: View {
     @State private var searchText: String = ""
     @State private var flight: Flight? = nil
-    @State private var cardId = UUID() // Unique ID for CardView
+    @State private var cardId = UUID()
     @State private var isLoading = false
     @ObservedObject private var flightSearch = FlightSearch()
-    @State private var showWebView = false // State to control when to show WebView
+    @State private var showWebView = false
+    @State private var airportOptions: [AirportOption] = []
+    @State private var selectedAirport: AirportOption? = nil
+    @EnvironmentObject var flightFetcher: FlightFetcher
 
     var body: some View {
         GeometryReader { geometry in
@@ -26,12 +37,13 @@ struct SearchView: View {
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
+
                         HStack {
                             Image(systemName: "magnifyingglass")
-                            TextField("Search by hex or registration", text: self.$searchText)
+                            TextField("Search by hex or registration", text: $searchText)
                                 .onSubmit {
-                                    if(self.searchText != ""){
-                                        self.searchFlight(self.searchText)
+                                    if !searchText.isEmpty {
+                                        searchFlight(searchText)
                                     }
                                 }
                         }
@@ -40,61 +52,89 @@ struct SearchView: View {
                         .padding(.horizontal, 5)
                         .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
                         .padding([.horizontal, .bottom])
-                        
+
                         if isLoading {
                             ProgressView()
                                 .padding()
                         } else if let flight = flight {
                             ImageLoaderView(flight: flight, imageURL: flight.imageURL!)
                                 .padding(.horizontal)
-                                .id(cardId) // Assign unique ID to CardView
+                                .id(cardId)
                         } else {
                             Text("No flight found")
                                 .foregroundColor(.gray)
                                 .padding()
                         }
-                        
+
                         Spacer()
+
                         Text("Tools")
                             .font(.title)
                             .foregroundColor(Color(UIColor.label))
                             .bold()
                             .frame(maxWidth: geometry.size.width * 0.9, alignment: .leading)
-                            //.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0))
+
                         RoundedRectangle(cornerRadius: 16)
-                            .frame(width: geometry.size.width * 0.9,  height: 1)
+                            .frame(width: geometry.size.width * 0.9, height: 1)
                             .foregroundColor(Color(.systemGray4))
-                        HStack{
+
+                        HStack {
                             Button("Where to Spot", systemImage: "location.fill.viewfinder") {
-                                showWebView.toggle() // Toggle state to show WebView
+                                showWebView.toggle()
                             }
                             .font(.title2)
                             .padding()
                             .buttonStyle(.bordered)
-                            
-                            Button("Live Atc", systemImage: "waveform.badge.microphone") {
-                                if let url = URL(string: "https://www.liveatc.net/") {
-                                    UIApplication.shared.open(url)
+
+                            Button("Live ATC", systemImage: "waveform.badge.microphone") {
+                                guard let selected = selectedAirport,
+                                      let url = URL(string: "https://www.liveatc.net/search/?icao=\(selected.icao)") else {
+                                    return
                                 }
+                                UIApplication.shared.open(url)
                             }
                             .font(.title2)
                             .padding()
                             .buttonStyle(.bordered)
                         }
-                
+
+                        if !airportOptions.isEmpty {
+                            Picker("Nearest Airports", selection: $selectedAirport) {
+                                ForEach(airportOptions) { option in
+                                    Text("\(option.name) (\(option.icao))").tag(option as AirportOption?)
+                                }
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            .padding()
+                        }
                     }
                 }
+                .onAppear {
+                    if let userLocation = flightFetcher.userLocation {
+                        print("Location used for nearest airport: \(userLocation.coordinate.latitude), \(userLocation.coordinate.longitude)")
+                        fetchNearestAirportsFromCSV(limit: 5, using: userLocation) { options in
+                            DispatchQueue.main.async {
+                                self.airportOptions = options
+                                self.selectedAirport = options.first
+                            }
+                        }
+                    } else {
+                        print("No user location available in FlightFetcher")
+                    }
+                }
+
                 .ignoresSafeArea(.keyboard)
-                
-                // WebView with slide-in animation
+
                 if showWebView {
                     GeometryReader { geometry in
-                        WebView(url: URL(string: "https://www.spotterguide.net/")!, showWebView: $showWebView) // Pass binding to showWebView
-                            .frame(width: geometry.size.width, height: geometry.size.height - 3) // Adjust height to leave space for tab bar
-                            .transition(.move(edge: .leading)) // Slide-in from the right
-                            .zIndex(1) // Ensure it appears on top of other content
+                        let airportQuery = selectedAirport?.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                        let url = URL(string: "https://www.spotterguide.net/?s=\(airportQuery)")!
+
+                        WebView(url: url, showWebView: $showWebView)
+                            .frame(width: geometry.size.width, height: geometry.size.height - 3)
+                            .transition(.move(edge: .leading))
+                            .zIndex(1)
                             .onTapGesture {
-                                // Optionally, you can close WebView when tapped outside
                                 withAnimation {
                                     showWebView = false
                                 }
@@ -102,6 +142,7 @@ struct SearchView: View {
                     }
                     .transition(.move(edge: .trailing))
                 }
+
             }
         }
     }
@@ -111,68 +152,92 @@ struct SearchView: View {
         flightSearch.searchFlight(hexOrReg: searchText) { flight in
             DispatchQueue.main.async {
                 isLoading = false
-                // Create a new instance of Flight with updated properties
                 self.flight = flight
                 self.cardId = UUID()
-                if flight == nil {
-                    self.flight = nil
-                    return
-                }
-                return
             }
         }
     }
 }
 
-// WebView struct to embed the web content
 struct WebView: View {
     let url: URL
     @Binding var showWebView: Bool
-    
+
     var body: some View {
         VStack {
             HStack {
                 Button(action: {
-                    // Close WebView and return to the Search View
                     withAnimation {
                         showWebView = false
                     }
                 }) {
-                    Image(systemName: "chevron.left") // Back button
+                    Image(systemName: "chevron.left")
                         .foregroundColor(.blue)
                         .padding()
                         .bold()
                 }
-                Text("Where to Spot") // Custom title for WebView
+                Text("Where to Spot")
                     .font(.title)
                     .bold()
                     .foregroundColor(.primary)
                 Spacer()
             }
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: -10, trailing: 0))
-            
-            WebViewContainer(url: url) // Custom WebView container
+            .padding(.bottom, -10)
+
+            WebViewContainer(url: url)
                 .edgesIgnoringSafeArea(.all)
         }
-        
     }
 }
 
-// WebView container that wraps WKWebView
 struct WebViewContainer: UIViewRepresentable {
     let url: URL
-    
+
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
-        webView.load(URLRequest(url: url)) // Load the URL in WebView
+        webView.load(URLRequest(url: url))
         return webView
     }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        // You can update the WebView here if necessary
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
+
+// Updated to use a provided CLLocation instead of requesting again
+func fetchNearestAirportsFromCSV(limit: Int, using userLocation: CLLocation, completion: @escaping ([AirportOption]) -> Void) {
+    guard let path = Bundle.main.path(forResource: "icao_airports", ofType: "csv"),
+          let data = try? String(contentsOfFile: path) else {
+        print("Failed to load CSV file.")
+        completion([])
+        return
     }
+
+    let rows = data.components(separatedBy: "\n").dropFirst()
+    var airportsWithDistance: [(AirportOption, CLLocationDistance)] = []
+
+    for row in rows {
+        let columns = row.components(separatedBy: ",")
+        if columns.count < 14 { continue }
+
+        let type = columns[2].replacingOccurrences(of: "\"", with: "")
+        let ident = columns[1].replacingOccurrences(of: "\"", with: "")
+        let name = columns[3].replacingOccurrences(of: "\"", with: "")
+        let latStr = columns[4].replacingOccurrences(of: "\"", with: "")
+        let lonStr = columns[5].replacingOccurrences(of: "\"", with: "")
+
+        guard type == "large_airport",
+              let lat = Double(latStr),
+              let lon = Double(lonStr) else { continue }
+
+        let airportLocation = CLLocation(latitude: lat, longitude: lon)
+        let distance = userLocation.distance(from: airportLocation)
+        let option = AirportOption(icao: ident, name: name)
+        airportsWithDistance.append((option, distance))
+    }
+
+    let nearest = airportsWithDistance.sorted(by: { $0.1 < $1.1 }).prefix(limit).map { $0.0 }
+    completion(nearest)
 }
 
 #Preview {
-    SearchView()
+    SearchView().environmentObject(FlightFetcher(userSettings: UserSettings()))
 }
