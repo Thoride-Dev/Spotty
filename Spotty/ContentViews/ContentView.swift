@@ -1,13 +1,12 @@
 import SwiftUI
 
-
-
 @available(iOS 18.0, *)
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
     @EnvironmentObject var userSettings: UserSettings
     @State private var isFetching: Bool = true
+    @State private var search: String = ""
 
     @State private var fetchingMessage: String = "Fetching flights..."
 
@@ -25,95 +24,81 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            // Nearby flights tab
-            ScrollView {
-                if isFetching {
-                    VStack {
-                        Text(fetchingMessage)
-                            .font(.title3)
-                        ProgressView()
-                    }
-                    .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.8) // Push to center
-                    .onAppear {
-                        fetchingMessage = loadingMessages.randomElement() ?? "Fetching flights..."
-                    }
-                } else if flightFetcher.flights.isEmpty {
-                    VStack {
-                        Text("No flights found :(")
-                            .font(.title3)
-                        Text("Try increasing the radius!")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                    .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.8) // Push to center
-                } else {
-                    VStack(spacing: 10) {
-                        ForEach(flightFetcher.flights) { flight in
-                            if let imageURL = flight.imageURL {
-                                ImageLoaderView(flight: flight, imageURL: imageURL)
+            Tab("Nearby", systemImage: "dot.radiowaves.left.and.right") {
+                // Nearby flights tab
+                ScrollView {
+                    if isFetching {
+                        VStack {
+                            Text(fetchingMessage)
+                                .font(.title3)
+                            ProgressView()
+                        }
+                        .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.8) // Push to center
+                        .onAppear {
+                            fetchingMessage = loadingMessages.randomElement() ?? "Fetching flights..."
+                        }
+                    } else if flightFetcher.flights.isEmpty {
+                        VStack {
+                            Text("No flights found :(")
+                                .font(.title3)
+                            Text("Try increasing the radius!")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.8) // Push to center
+                    } else {
+                        VStack(spacing: 10) {
+                            ForEach(flightFetcher.flights) { flight in
+                                if let imageURL = flight.imageURL {
+                                    ImageLoaderView(flight: flight, imageURL: imageURL)
+                                }
                             }
                         }
-                    }
-                    .padding(.horizontal)
+                        .padding(.horizontal)
 
+                    }
                 }
-            }
-            .refreshable {
-                flightFetcher.refreshFlights()
-                isFetching = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                   isFetching = false  // Stop fetching indicator
-                }
-                print("-------------------- REFRESHING --------------------")
-            }
-            //.clipped()
-            .onAppear {
-                // Check the user settings and refresh if needed
-                if userSettings.isRefreshOnTap {
-                    isFetching = true
+                .refreshable {
                     flightFetcher.refreshFlights()
+                    isFetching = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                       isFetching = false  // Stop fetching indicator
+                    }
                     print("-------------------- REFRESHING --------------------")
                 }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                   isFetching = false  // Stop fetching indicator
-                }
+                //.clipped()
+                .onAppear {
+                    // Check the user settings and refresh if needed
+                    if userSettings.isRefreshOnTap {
+                        isFetching = true
+                        flightFetcher.refreshFlights()
+                        print("-------------------- REFRESHING --------------------")
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                       isFetching = false  // Stop fetching indicator
+                    }
 
-            }
-            .onFirstAppear {
-                flightFetcher.refreshFlights()
-            }
-            .tabItem {
-                Image(systemName: "dot.radiowaves.left.and.right")
-                Text("Nearby")
-            }
-            SpottedView()
-                .tabItem {
-                    Image(systemName: "eye.fill")
-                    Text("Spotted")
                 }
-            
-            SearchView()
-                .tabItem{
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
+                .onFirstAppear {
+                    flightFetcher.refreshFlights()
                 }
-
-            NavigationView {
+            }
+            Tab("Spotted", systemImage: "eye.fill") {
+                SpottedView()
+            }
+            Tab("Settings", systemImage: "gear") {
                 SettingsView()
             }
-            .tabItem {
-                Label("Settings", systemImage: "gear")
+            Tab("Search", systemImage: "magnifyingglass", role: .search) {
+                NavigationStack {
+                    SearchView()
+                }
             }
         }
-        // Assuming .light mode is desired across the app; adjust as needed
-        .toolbarBackground(.hidden, for: .tabBar)
-        .onAppear {
-            let apparence = UITabBarAppearance()
-            apparence.configureWithTransparentBackground()
-            if #available(iOS 15.0, *) {UITabBar.appearance().scrollEdgeAppearance = apparence}
-        }
-        
+        .searchable(text: $search)
+        .toolbarBackgroundVisibility(.visible)
+        .toolbarBackground(.visible, for: .bottomBar)
     }
 }
 
@@ -162,6 +147,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView().environmentObject(SpottedFlightsStore())
     }
 }
-
-
-
