@@ -4443,7 +4443,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 964RU98ZVN;
+				DEVELOPMENT_TEAM = 49L67B6252;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
@@ -4458,8 +4458,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ArchonDevs;
-				PRODUCT_BUNDLE_IDENTIFIER = PatrickFortin;
+				PRODUCT_BUNDLE_IDENTIFIER = kushdalal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -4475,7 +4474,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Spotty/Preview Content\"";
-				DEVELOPMENT_TEAM = 964RU98ZVN;
+				DEVELOPMENT_TEAM = 49L67B6252;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "access to your location to show nearby flights.";
@@ -4490,8 +4489,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ArchonDevs;
-				PRODUCT_BUNDLE_IDENTIFIER = PatrickFortin;
+				PRODUCT_BUNDLE_IDENTIFIER = kushdalal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

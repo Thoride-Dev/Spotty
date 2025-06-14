@@ -172,7 +172,7 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
         }
 
         // Construct and validate URL
-        let urlString = "https://api.adsb.lol/v2/lat/\(coordinates.latitude)/lon/\(coordinates.longitude)/dist/\(distance)"
+    let urlString = "https://api.adsb.lol/v2/lat/\(coordinates.latitude)/lon/\(coordinates.longitude)/dist/\(Int(distance.rounded()))"
         
         guard let url = URL(string: urlString) else {
             if userSettings.isDebugModeEnabled {
