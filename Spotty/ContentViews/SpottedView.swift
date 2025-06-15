@@ -50,148 +50,13 @@ struct MapView: View {
                     MapUserLocationButton()
                     MapPitchToggle()
                 }
-                .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, switchablePositions: [
-                    .relative(0.25),
-                    .relative(0.55),
-                    .relativeTop(0.99)
-                ], headerContent: {
-                    //A SearchBar as headerContent.
-                    VStack {
-                        
-                        HStack{
-                            Text("My Spots")
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
-                                .font(.title)
-                                .bold()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Button(action: {
-                                exportCSV(flights: spottedFlightsStore.spottedFlights)
-                            }) {
-                                Image(systemName: "square.and.arrow.up")
-                                    .foregroundColor(.blue)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .bold()
-                            }
-                            //.buttonStyle(.plain)
-
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(EdgeInsets(top: -5, leading: 0, bottom: 0, trailing: 0))
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                            TextField("Search", text: self.$searchText)
-                        }
-                        .foregroundColor(Color(UIColor.secondaryLabel))
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 5)
-                        .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
-                        .padding([.horizontal, .bottom])
-                        .onTapGesture {
-                            self.bottomSheetPosition = .relativeTop(0.99)
-                        }
-                    }
-
-                }) {
-                    
-                    ScrollView{
-                        if(spottedFlightsStore.spottedFlights.count == 0) {
-                            VStack{
-                                Text("No flights spotted yet.")
-                                    .font(.headline)
-                                    .foregroundColor(.secondary)
-                                Text("Get out there and spot some planes, then you'll see beautiful charts here!")
-                                    .foregroundColor(.secondary)
-                                    .font(.callout)
-                                    .padding()
-                                    .multilineTextAlignment(.center)
-                            }
-                        }
-                        else {
-                            VStack{
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 30)
-                                        .fill(LinearGradient(
-                                            gradient: .init(colors: [Color(red: 96 / 255, green: 207 / 255, blue: 255 / 255), Color(red: 139 / 255, green: 56 / 255, blue: 232 / 255)]),
-                                            startPoint: .init(x: 0.7, y: 0),
-                                            endPoint: .init(x: 0.3, y: 0.6)
-                                        ))
-                                        .opacity(0.35)
-                                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.32 , alignment: .bottomLeading)
-                                    FlightPieChartView(flights: spottedFlightsStore.spottedFlights)
-                                }
-                                .offset(y: offsetY)  // Apply the animated offset
-                                .onAppear {
-                                    // Initialize isChecked based on whether the flight is spotted
-                                    withAnimation(.easeIn(duration: 1).delay(0.2)) {
-                                        offsetY = 0  // Move it to its final position
-                                    }
-                                }
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 30)
-                                        .fill(LinearGradient(
-                                            gradient: .init(colors: [Color(red: 15 / 255, green: 234 / 255, blue: 88 / 255), Color(red: 45 / 255, green: 217 / 255, blue: 236 / 255)]),
-                                            startPoint: .init(x: 0.7, y: 0),
-                                            endPoint: .init(x: 0.3, y: 0.6)
-                                        ))
-                                        .opacity(0.35)
-                                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.32 , alignment: .bottomLeading)
-                                    AirlineBarChartView(flights: spottedFlightsStore.spottedFlights)
-                                }
-                                .offset(y: offsetY_2)  // Apply the animated offset
-                                .onAppear {
-                                    // Initialize isChecked based on whether the flight is spotted
-                                    withAnimation(.easeIn(duration: 1).delay(0.4)) {
-                                        offsetY_2 = 0  // Move it to its final position
-                                    }
-                                }
-                                Button(action: {
-                                    showingCompletionSheet.toggle()
-                                }) {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 30)
-                                            .fill(LinearGradient(
-                                                gradient: .init(colors: [Color(red: 242 / 255, green: 156 / 255, blue: 70 / 255), Color(red: 218 / 255, green: 224 / 255, blue: 136 / 255)]),
-                                                startPoint: .init(x: 0.4, y: 0.8),
-                                                endPoint: .init(x: 0, y: 0.2)
-                                            ))
-                                            .opacity(0.35)
-                                            .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.15 , alignment: .bottomLeading)
-                                        ICAOProgressView(flights: spottedFlightsStore.spottedFlights)
-                                    }
-                                    .offset(y: offsetY_2)  // Apply the animated offset
-                                    .onAppear {
-                                        // Initialize isChecked based on whether the flight is spotted
-                                        withAnimation(.easeIn(duration: 0.4).delay(0.4)) {
-                                            offsetY_2 = 0  // Move it to its final position
-                                        }
-                                    }
-                                }
-                                .fullScreenCover(isPresented: $showingCompletionSheet) {
-                                    IcaoCompletionView(flights: spottedFlightsStore.spottedFlights)
-                                }
-                                Spacer()
-                                //SpottedFlightsView()
-                            }
-                        }
-                    }
-
-                    
-                    
+                .sheet(isPresented: $showSheet) {
+                    Text("Create with Swift")
+                        .presentationDetents([.medium, .fraction(0.7), .large])
                 }
-                .customBackground {
-                    (colorScheme == .dark ? Color.black : Color.white)
-                        .clipShape(
-                            .rect(
-                                topLeadingRadius: 30,
-                                bottomLeadingRadius: 0,
-                                bottomTrailingRadius: 0,
-                                topTrailingRadius: 30
-                            )
-                        )
-                }
-
-
-                .ignoresSafeArea(.keyboard)
+                .presentationBackgroundInteraction(.enabled)
+                .interactiveDismissDisabled()
+                
             }
         }
     }
@@ -425,7 +290,7 @@ func exportCSV(flights: [Flight]) {
 
 
 
-@available(iOS 18.0, *)
+@available(iOS 26.0, *)
 #Preview {
     ContentView()
 }

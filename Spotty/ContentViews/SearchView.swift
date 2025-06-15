@@ -15,8 +15,9 @@ struct AirportOption: Identifiable, Hashable {
     let name: String
 }
 
+@available(iOS 26.0, *)
 struct SearchView: View {
-    @State private var searchText: String = ""
+    @Binding var searchText: String
     @State private var flight: Flight? = nil
     @State private var cardId = UUID()
     @State private var isLoading = false
@@ -35,31 +36,17 @@ struct SearchView: View {
                             .font(.title)
                             .foregroundColor(Color(UIColor.label))
                             .bold()
+                            .padding(.top, -20)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                            TextField("Search by hex or registration", text: $searchText)
-                                .onSubmit {
-                                    if !searchText.isEmpty {
-                                        searchFlight(searchText)
-                                    }
-                                }
-                        }
-                        .foregroundColor(Color(UIColor.secondaryLabel))
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 5)
-                        .background(RoundedRectangle(cornerRadius: 30).fill(Color(UIColor.quaternaryLabel)))
-                        .padding([.horizontal, .bottom])
-
+                        //SpottedFlightsView()
                         if isLoading {
                             ProgressView()
                                 .padding()
                         } else if let flight = flight {
-                            ImageLoaderView(flight: flight, imageURL: flight.imageURL!)
-                                .padding(.horizontal)
-                                .id(cardId)
+                            ScrollView{
+                                ImageLoaderView(flight: flight, imageURL: flight.imageURL!)
+                                    .id(cardId)
+                            }
                         } else {
                             Text("No flight found")
                                 .foregroundColor(.gray)
@@ -83,8 +70,7 @@ struct SearchView: View {
                                 showWebView.toggle()
                             }
                             .font(.title2)
-                            .padding()
-                            .buttonStyle(.bordered)
+                            .buttonStyle(.glass)
 
                             Button("Live ATC", systemImage: "waveform.badge.microphone") {
                                 guard let selected = selectedAirport,
@@ -94,8 +80,7 @@ struct SearchView: View {
                                 UIApplication.shared.open(url)
                             }
                             .font(.title2)
-                            .padding()
-                            .buttonStyle(.bordered)
+                            .buttonStyle(.glass)
                         }
 
                         if !airportOptions.isEmpty {
@@ -104,8 +89,9 @@ struct SearchView: View {
                                     Text("\(option.name) (\(option.icao))").tag(option as AirportOption?)
                                 }
                             }
-                            .pickerStyle(MenuPickerStyle())
+                            .pickerStyle(.menu)
                             .padding()
+                            .buttonStyle(.glass)
                         }
                     }
                 }
@@ -122,7 +108,10 @@ struct SearchView: View {
                         print("No user location available in FlightFetcher")
                     }
                 }
-
+                .onChange(of: searchText){
+                    searchFlight(searchText)
+                }
+                .padding()
                 .ignoresSafeArea(.keyboard)
 
                 if showWebView {
@@ -147,7 +136,7 @@ struct SearchView: View {
         }
     }
 
-    private func searchFlight(_ searchText: String) {
+    public func searchFlight(_ searchText: String) {
         isLoading = true
         flightSearch.searchFlight(hexOrReg: searchText) { flight in
             DispatchQueue.main.async {
@@ -238,6 +227,3 @@ func fetchNearestAirportsFromCSV(limit: Int, using userLocation: CLLocation, com
     completion(nearest)
 }
 
-#Preview {
-    SearchView().environmentObject(FlightFetcher(userSettings: UserSettings()))
-}
