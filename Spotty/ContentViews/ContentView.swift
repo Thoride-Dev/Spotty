@@ -49,9 +49,8 @@ struct ContentView: View {
                     } else {
                         VStack(spacing: 10) {
                             ForEach(flightFetcher.flights) { flight in
-                                if let imageURL = flight.imageURL {
-                                    ImageLoaderView(flight: flight, imageURL: imageURL)
-                                }
+                                let url = flight.imageURL ?? URL(string: "placeholder-image-name")!
+                                ImageLoaderView(flight: flight, imageURL: url)
                             }
                         }
                         .padding(.horizontal)
