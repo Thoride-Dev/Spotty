@@ -47,7 +47,7 @@ class UserSettings: ObservableObject {
     }
 
     init() {
-        self.isDebugModeEnabled = UserDefaults.standard.bool(forKey: "isDebugModeEnabled")
+        self.isDebugModeEnabled = true
         self.isRefreshOnTap = UserDefaults.standard.object(forKey: "isRefreshOnTap") as? Bool ?? true
         self.radiusKm = UserDefaults.standard.object(forKey: "radiusKm") as? Double ?? 20
         self.appearance = Appearance(rawValue: UserDefaults.standard.string(forKey: "appearance") ?? "system") ?? .system
@@ -103,7 +103,7 @@ struct SettingsView: View {
 
     var formattedRadius: String {
         let radius = userSettings.radiusKm
-        return userSettings.unitSystem == .imperial ? "\(Int(radius * 0.621371)) mi" : "\(Int(radius)) km"
+        return userSettings.unitSystem == .imperial ? "\(Int((radius * 0.621371).rounded())) mi" : "\(Int(radius.rounded())) km"
     }
 }
 
