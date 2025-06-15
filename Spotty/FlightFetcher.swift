@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import CoreLocation
 import Combine
+import SwiftSoup
 
 struct AircraftInfo: Codable {
     let modeS: String?
@@ -106,7 +107,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
                 }
             } else {
                 DispatchQueue.main.async {
-                    print("Location services are disabled.")
+                    // Location services are disabled.
                 }
             }
         }
@@ -125,9 +126,8 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .restricted, .denied:
-            if userSettings.isDebugModeEnabled {
-                print("Location services denied or restricted.")
-            }
+            // Debug: Location services denied or restricted.
+            _ = userSettings.isDebugModeEnabled
         @unknown default:
             break
         }
@@ -148,9 +148,7 @@ class FlightFetcher: NSObject, CLLocationManagerDelegate, ObservableObject {
         } else if authorizationStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
         } else {
-            if userSettings.isDebugModeEnabled {
-                print("Location services not authorized or restricted.")
-            }
+            _ = userSettings.isDebugModeEnabled
         }
     }
     
@@ -167,9 +165,7 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
         guard distance > 0,
               coordinates.latitude >= -90, coordinates.latitude <= 90,
               coordinates.longitude >= -180, coordinates.longitude <= 180 else {
-            if userSettings.isDebugModeEnabled {
-                print("Invalid coordinates or distance: lat=\(coordinates.latitude), lon=\(coordinates.longitude), dist=\(distance)")
-            }
+            _ = userSettings.isDebugModeEnabled
             return
         }
 
@@ -177,21 +173,15 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
     let urlString = "https://api.adsb.lol/v2/lat/\(coordinates.latitude)/lon/\(coordinates.longitude)/dist/\(Int(distance.rounded()))"
         
         guard let url = URL(string: urlString) else {
-            if userSettings.isDebugModeEnabled {
-                print("Failed to create URL from: \(urlString)")
-            }
+            _ = userSettings.isDebugModeEnabled
             return
         }
 
-        if userSettings.isDebugModeEnabled {
-            print("Fetching flight data from: \(url)")
-        }
+        _ = userSettings.isDebugModeEnabled
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self, let data = data, error == nil else {
-                if self?.userSettings.isDebugModeEnabled == true {
-                    print("Network request failed: \(error?.localizedDescription ?? "Unknown error")")
-                }
+                _ = self?.userSettings.isDebugModeEnabled == true
                 return
             }
 
@@ -216,14 +206,10 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                         self.fetchAircraftInfo(hex: icao24) { aircraftInfoOptional in
                             guard let aircraftInfo = aircraftInfoOptional else { return }
 
-                            let hasRelevantInfo =
-                                aircraftInfo.registration != nil ||
-                                aircraftInfo.type != nil
 
                             self.getRouteInfo(for: callSign) { (origin, destination) in
                                 DispatchQueue.main.async {
                                     self.lastUpdated = Date()
-                                    guard hasRelevantInfo else { return }
 
                                     let flightExists = self.flights.contains { $0.id == aircraftInfo.modeS }
                                     guard !flightExists else { return }
@@ -248,8 +234,12 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                                         }
                                     }
 
-                                    var ofc = aircraftInfo.operatorFlagCode
-                                    if UIImage(named: aircraftInfo.operatorFlagCode ?? "") == nil {
+                                    // Safely resolve operator flag asset name, avoiding empty-string warnings
+                                    let rawFlagCode = aircraftInfo.operatorFlagCode ?? ""
+                                    let ofc: String
+                                    if !rawFlagCode.isEmpty, UIImage(named: rawFlagCode) != nil {
+                                        ofc = rawFlagCode
+                                    } else {
                                         ofc = "preview-airline"
                                     }
 
@@ -259,13 +249,15 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                                         self.getImageURL(hex: hex) { url in
                                             if let validURL = url {
                                                 imageURL = validURL
+                                                group.leave()
                                             } else {
-                                                imageURL = nil
-                                                if self.userSettings.isDebugModeEnabled {
-                                                    print("No image found for hex: \(hex) — using placeholder.")
+                                                // Fallback using registration or callsign if no registration
+                                                let lookupKey = aircraftInfo.registration ?? callSign
+                                                self.getJetPhotosImageURL(registration: lookupKey) { jetURL in
+                                                    imageURL = jetURL
+                                                    group.leave()
                                                 }
                                             }
-                                            group.leave()
                                         }
                                     }
 
@@ -297,9 +289,7 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                     }
                 }
             } catch {
-                if self.userSettings.isDebugModeEnabled {
-                    print("Error decoding JSON: \(error)")
-                }
+                _ = self.userSettings.isDebugModeEnabled
             }
         }
 
@@ -313,17 +303,13 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
     
     public func fetchAircraftInfo(hex: String, completion: @escaping (AircraftInfo?) -> Void) {
         guard let url = URL(string: "https://hexdb.io/api/v1/aircraft/\(hex)") else {
-            if self.userSettings.isDebugModeEnabled {
-                print("Invalid URL")
-            }
+            _ = self.userSettings.isDebugModeEnabled
             return
         }
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
-                if self.userSettings.isDebugModeEnabled {
-                    print("Error fetching aircraft info: \(error?.localizedDescription ?? "Unknown error")")
-                }
+                _ = self.userSettings.isDebugModeEnabled
                 completion(nil)  // If there's an error, don't proceed with this aircraft.
                 return
             }
@@ -334,14 +320,10 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                 completion(aircraftInfo)  // Successfully decoded, all keys are present.
             } catch DecodingError.keyNotFound(_, let context) {
                 // If a key is missing, don't proceed with this aircraft.
-                if self.userSettings.isDebugModeEnabled {
-                    print("Missing key: \(context.debugDescription)")
-                }
+                _ = self.userSettings.isDebugModeEnabled
                 completion(nil)
             } catch {
-                if self.userSettings.isDebugModeEnabled {
-                    print("Error decoding aircraft info: \(error)")
-                }
+                _ = self.userSettings.isDebugModeEnabled
                 completion(nil)  // There was a problem decoding, so don't proceed with this aircraft.
             }
         }
@@ -353,11 +335,9 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
         if let url = URL(string: urlString) {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let error = error {
-                    print("Error: \(error)")
                     completion(nil, nil)
                     return
                 }
-                
                 
                 if let data = data {
                     do {
@@ -365,7 +345,6 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                            let route = routeInfo["route"] as? String {
                             let routeComponents = route.components(separatedBy: "-")
                             guard routeComponents.count <= 3 && routeComponents.count > 1 else {
-                                print("Invalid route format")
                                 completion(nil, nil)
                                 return
                             }
@@ -373,18 +352,15 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                             let destination = routeComponents[1]
                             completion(origin, destination)
                         } else {
-//                            print("Error parsing routeInfo")
                             completion(nil, nil)
                         }
                     } catch {
-                        print("Error parsing JSON: \(error)")
                         completion(nil, nil)
                     }
                 }
             }
             task.resume()
         } else {
-            print("Invalid URL")
             completion(nil, nil)
         }
     }
@@ -395,14 +371,12 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
         if let url = URL(string: urlString) {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let error = error {
-                    print("Error: \(error)")
                     completion(nil)
                     return
                 }
                 
                 guard let httpResponse = response as? HTTPURLResponse,
                       (200...299).contains(httpResponse.statusCode) else {
-                    print("Error: Invalid response")
                     completion(nil)
                     return
                 }
@@ -420,36 +394,41 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
                             completion(airportInfo)
                         }
                     } catch {
-                        print("Error parsing JSON: \(error)")
                         completion(nil)
                     }
                 }
             }
             task.resume()
         } else {
-            print("Invalid URL")
             completion(nil)
         }
     }
 
-    func getImageURL(hex: String, completion: @escaping (URL?) -> Void) {
+    func getImageURL(hex: String, attempt: Int = 0, completion: @escaping (URL?) -> Void) {
         let imageLinkURL = URL(string: "https://hexdb.io/hex-image-thumb?hex=\(hex)")!
         
         let task = URLSession.shared.dataTask(with: imageLinkURL) { (data, response, error) in
-            guard let data = data else {
-                print("Error: No data")
+            // Retry for 500 errors up to 1 time
+            if let http = response as? HTTPURLResponse, http.statusCode == 500, attempt < 1 {
+                self.getImageURL(hex: hex, attempt: attempt + 1, completion: completion)
+                return
+            }
+            // Guard against any non-200 HTTP response (other than retries for 500 above)
+            if let http = response as? HTTPURLResponse, http.statusCode != 200 {
                 completion(nil)
                 return
             }
-            
+            guard let data = data else {
+                completion(nil)
+                return
+            }
+            let rawResponse = String(data: data, encoding: .utf8) ?? "Unable to decode response"
             guard let imageURLString = String(data: data, encoding: .utf8) else {
-                print("Error: Invalid image URL")
                 completion(nil)
                 return
             }
             
             guard let imageURL = URL(string: imageURLString) else {
-                print("Error: Invalid image URL format")
                 completion(nil)
                 return
             }
@@ -460,4 +439,53 @@ private func fetchFlightData(coordinates: CLLocationCoordinate2D, distance: Doub
         task.resume()
     }
     
+// JetPhotos Fallback
+    private func getJetPhotosImageURL(registration: String, completion: @escaping (URL?) -> Void) {
+        // Construct the JetPhotos search URL
+        guard let searchURL = URL(string: "https://www.jetphotos.com/registration/\(registration)") else {
+            completion(nil)
+            return
+        }
+        URLSession.shared.dataTask(with: searchURL) { data, response, error in
+            guard let data = data, error == nil,
+                  let html = String(data: data, encoding: .utf8) else {
+                completion(nil)
+                return
+            }
+            do {
+                let document = try SwiftSoup.parse(html)
+                // Try selecting the main photo element first
+                if let imgElement = try document.select("img.result__photo").first() {
+                    var src = try imgElement.attr("src")
+                    // Handle protocol-relative URLs
+                    if src.hasPrefix("//") {
+                        src = "https:" + src
+                    }
+                    if let jetURL = URL(string: src) {
+                        completion(jetURL)
+                        return
+                    }
+                }
+                // Fallback to any thumbnail images
+                let imgThumbs = try document.select("img.photo_thumb")
+                if imgThumbs.isEmpty {
+                }
+                for imgElement in imgThumbs.array() {
+                    let src = imgElement.hasAttr("data-src") ? try imgElement.attr("data-src") : try imgElement.attr("src")
+                    // Handle protocol-relative URLs
+                    let finalSrc = src.hasPrefix("//") ? "https:" + src : src
+                    if let jetURL = URL(string: finalSrc) {
+                        completion(jetURL)
+                        return
+                    } else {
+                        return
+                    }
+                }
+                return
+            } catch {
+                print("getJetPhotosImageURL: parsing error: \(error)")
+            }
+            completion(nil)
+        }.resume()
+    }
 }

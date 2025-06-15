@@ -47,6 +47,19 @@ struct CardView: View {
                             .cornerRadius(30)
                     }
                     
+                    // Marker for JetPhotos fallback images
+                    if let url = flight.imageURL,
+                       url.host?.contains("jetphotos.com") == true {
+                        Text("JetPhotos")
+                            .font(.caption2)
+                            .foregroundColor(.white)
+                            .padding(4)
+                            .background(Color.blue.opacity(0.7))
+                            .cornerRadius(4)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                            .padding(6)
+                    }
+                    
                     //Callsign
                     GeometryReader { geometry in
                         let maxSize = min(geometry.size.width, geometry.size.height) * 0.15
@@ -196,12 +209,7 @@ struct ImageLoaderView: View {
             var uiImage: UIImage?
 
             if let error = error as? URLError {
-                if error.code == .unsupportedURL {
-                    print("Unsupported URL (code -1002)")
-                } else {
-                    print("URLSession error: \(error.code.rawValue) — \(error.localizedDescription)")
-                }
-
+                print("Error loading image from \(imageURL): \(error.localizedDescription) (code: \(error.code.rawValue))")
                 uiImage = UIImage(named: "PLACEHOLDER")
             } else if let data = data,
                       let originalImage = UIImage(data: data),
