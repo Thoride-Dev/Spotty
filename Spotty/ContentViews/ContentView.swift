@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS 18.0, *)
+@available(iOS 26.0, *)
 struct ContentView: View {
     @StateObject private var flightFetcher = FlightFetcher(userSettings: UserSettings())
     @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
@@ -22,6 +22,7 @@ struct ContentView: View {
     ]
 
     
+    @available(iOS 26.0, *)
     var body: some View {
         TabView {
             Tab("Nearby", systemImage: "dot.radiowaves.left.and.right") {
@@ -92,13 +93,15 @@ struct ContentView: View {
             }
             Tab("Search", systemImage: "magnifyingglass", role: .search) {
                 NavigationStack {
-                    SearchView()
+                    SearchView(searchText: $search)
                 }
             }
         }
         .searchable(text: $search)
-        .toolbarBackgroundVisibility(.visible)
-        .toolbarBackground(.visible, for: .bottomBar)
+        .onSubmit(of: .search) {
+        }
+        //.toolbarBackgroundVisibility(.visible)
+        .tabBarMinimizeBehavior(.onScrollDown)
     }
 }
 
@@ -141,9 +144,10 @@ extension View {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 26.0, *)
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(SpottedFlightsStore())
+        ContentView()
+            .environmentObject(SpottedFlightsStore())
     }
 }

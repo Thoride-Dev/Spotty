@@ -14,7 +14,7 @@ struct RootView: View {
     var body: some View {
         ZStack {
             // ContentView starts hidden and fades in
-            if #available(iOS 18.0, *) {
+            if #available(iOS 26.0, *) {
                 ContentView()
                     .opacity(contentOpacity)
             } else {
