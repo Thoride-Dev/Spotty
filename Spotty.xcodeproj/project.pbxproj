@@ -1013,6 +1013,7 @@
 		43FBDE992CC7218E00447302 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 43FBDE982CC7218E00447302 /* BottomSheet */; };
 		5194A65B2D5EFB7E00975080 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5194A65A2D5EFB7A00975080 /* RootView.swift */; };
 		5194A66D2D5F2E9900975080 /* Spotty_Splash.mov in Resources */ = {isa = PBXBuildFile; fileRef = 5194A66C2D5F2E9900975080 /* Spotty_Splash.mov */; };
+		51EFE1772DFE484400BD781B /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 51EFE1762DFE484400BD781B /* SwiftSoup */; };
 		51F0187E2BB65FCD0082C534 /* FlightFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F0187D2BB65FCD0082C534 /* FlightFetcher.swift */; };
 		51F4B8252BC06D6000CC4B71 /* SpottedFlightsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F4B8242BC06D6000CC4B71 /* SpottedFlightsStore.swift */; };
 /* End PBXBuildFile section */
@@ -2058,6 +2059,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				43FBDE992CC7218E00447302 /* BottomSheet in Frameworks */,
+				51EFE1772DFE484400BD781B /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3085,6 +3087,7 @@
 				43F82E762BB614D50003107C /* Spotty */,
 				43F82E8C2BB614D70003107C /* SpottyTests */,
 				43F82E962BB614D70003107C /* SpottyUITests */,
+				51EFE1752DFE484400BD781B /* Frameworks */,
 				43F82E752BB614D50003107C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -3142,6 +3145,13 @@
 				43F82E992BB614D70003107C /* SpottyUITestsLaunchTests.swift */,
 			);
 			path = SpottyUITests;
+			sourceTree = "<group>";
+		};
+		51EFE1752DFE484400BD781B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3238,6 +3248,7 @@
 			mainGroup = 43F82E6B2BB614D50003107C;
 			packageReferences = (
 				43FBDE972CC7218E00447302 /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				51EFE15D2DFE47A800BD781B /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = 43F82E752BB614D50003107C /* Products */;
 			projectDirPath = "";
@@ -4503,7 +4514,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MARKETING_VERSION = 1.0;
@@ -4522,7 +4533,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MARKETING_VERSION = 1.0;
@@ -4540,7 +4551,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ArchonDevs.SpottyUITests;
@@ -4557,7 +4568,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 49L67B6252;
+				DEVELOPMENT_TEAM = 964RU98ZVN;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ArchonDevs.SpottyUITests;
@@ -4619,6 +4630,14 @@
 				minimumVersion = 3.1.1;
 			};
 		};
+		51EFE15D2DFE47A800BD781B /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.8;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -4626,6 +4645,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 43FBDE972CC7218E00447302 /* XCRemoteSwiftPackageReference "BottomSheet" */;
 			productName = BottomSheet;
+		};
+		51EFE1762DFE484400BD781B /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51EFE15D2DFE47A800BD781B /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 
