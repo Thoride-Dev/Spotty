@@ -26,31 +26,40 @@ struct SearchView: View {
     @State private var airportOptions: [AirportOption] = []
     @State private var selectedAirport: AirportOption? = nil
     @EnvironmentObject var flightFetcher: FlightFetcher
+    @EnvironmentObject var spottedFlightsStore: SpottedFlightsStore
+
+    let columns = [
+            GridItem(.flexible(), spacing: 16),
+            GridItem(.flexible(), spacing: 16)
+        ]
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 VStack {
                     if !showWebView {
-                        Text("Search")
-                            .font(.title)
-                            .foregroundColor(Color(UIColor.label))
-                            .bold()
-                            .padding(.top, -20)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        //SpottedFlightsView()
-                        if isLoading {
-                            ProgressView()
-                                .padding()
-                        } else if let flight = flight {
-                            ScrollView{
-                                ImageLoaderView(flight: flight, imageURL: flight.imageURL!)
-                                    .id(cardId)
+                        ScrollView {
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(spottedFlightsStore.spottedFlights) { flight in
+                                    ImageLoaderView(
+                                        flight: flight,
+                                        imageURL: flight.imageURL!,
+                                        isGridView: true  // Tell it to show mini card
+                                    )
+                                }
                             }
-                        } else {
-                            Text("No flight found")
-                                .foregroundColor(.gray)
-                                .padding()
+                            
+                            if isLoading {
+                                ProgressView()
+                                    .padding()
+                            } else if let flight = flight {
+                                ImageLoaderView(flight: flight, imageURL: flight.imageURL!, isGridView: false)
+                                    .id(cardId)
+                            } else {
+                                Text("No flight found")
+                                    .foregroundColor(.gray)
+                                    .padding()
+                            }
                         }
 
                         Spacer()

@@ -176,12 +176,19 @@ struct ImageLoaderView: View {
     @State private var loadedImage: Image? = nil // Store the loaded image
     let flight: Flight
     let imageURL: URL
+    let isGridView: Bool
 
     var body: some View {
         VStack {
 
             if isImageLoaded {
-                CardView(flight: flight, loadedImage: loadedImage) // Show CardView once image is fully loaded
+                if isGridView{
+                    GridCardView(flight: flight, loadedImage: loadedImage)
+                }
+                else
+                {
+                    CardView(flight: flight, loadedImage: loadedImage) // Show CardView once image is fully loaded
+                }
             }
         }
         .onAppear {

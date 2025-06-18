@@ -51,7 +51,7 @@ struct ContentView: View {
                         VStack(spacing: 10) {
                             ForEach(flightFetcher.flights) { flight in
                                 if let imageURL = flight.imageURL {
-                                    ImageLoaderView(flight: flight, imageURL: imageURL)
+                                    ImageLoaderView(flight: flight, imageURL: imageURL, isGridView: false)
                                 }
                             }
                         }
