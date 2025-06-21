@@ -34,24 +34,22 @@ struct SearchView: View {
         ]
 
     var body: some View {
+        // Filtered list based on searchText
+        let filteredFlights = spottedFlightsStore.spottedFlights.filter { flight in
+            searchText.isEmpty ||
+            (flight.registration ?? "").localizedCaseInsensitiveContains(searchText)
+        }
+
+        
         GeometryReader { geometry in
             ZStack {
                 VStack {
                     if !showWebView {
                         ScrollView {
-                            LazyVGrid(columns: columns, spacing: 16) {
-                                ForEach(spottedFlightsStore.spottedFlights) { flight in
-                                    ImageLoaderView(
-                                        flight: flight,
-                                        imageURL: flight.imageURL!,
-                                        isGridView: true  // Tell it to show mini card
-                                    )
-                                }
-                            }
-                            
                             if isLoading {
                                 ProgressView()
                                     .padding()
+                                
                             } else if let flight = flight {
                                 ImageLoaderView(flight: flight, imageURL: flight.imageURL!, isGridView: false)
                                     .id(cardId)
@@ -60,6 +58,19 @@ struct SearchView: View {
                                     .foregroundColor(.gray)
                                     .padding()
                             }
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(filteredFlights) { flight in
+                                    ImageLoaderView(
+                                        flight: flight,
+                                        imageURL: (flight.imageURL ?? URL(string: "n/a"))!,
+                                        isGridView: true  // Tell it to show mini card
+                                    )
+                                    .transition(.scale.combined(with: .opacity))
+                                }
+                            }
+                            .animation(.easeInOut, value: filteredFlights.count)
+                            
+                            
                         }
 
                         Spacer()
@@ -119,6 +130,9 @@ struct SearchView: View {
                 }
                 .onChange(of: searchText){
                     searchFlight(searchText)
+                    if(searchText == ""){
+                        isLoading = false
+                    }
                 }
                 .padding()
                 .ignoresSafeArea(.keyboard)
@@ -143,6 +157,8 @@ struct SearchView: View {
 
             }
         }
+        .padding(.top, -20)
+
     }
 
     public func searchFlight(_ searchText: String) {

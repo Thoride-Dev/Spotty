@@ -171,6 +171,7 @@ struct CardView: View {
 }
 
 
+@available(iOS 26.0, *)
 struct ImageLoaderView: View {
     @State private var isImageLoaded = false // Track if the image has been loaded
     @State private var loadedImage: Image? = nil // Store the loaded image
